@@ -3,10 +3,15 @@ from django.http import HttpResponse
 from django.template import loader
 from django.views.decorators.csrf import csrf_exempt
 
-
 # disabling csrf (cross site request forgery)
 @csrf_exempt
 def index(request):
+        # if post request is not true
+        # returing the form template
+        template = loader.get_template('index.html')
+        return HttpResponse(template.render())
+
+def login(request):
     # if post request came
     if request.method == 'POST':
         # getting values from post
@@ -20,12 +25,29 @@ def index(request):
         }
 
         # getting our showdata template
-        template = loader.get_template('showdata.html')
+        template = loader.get_template('LoginForm.html')
 
         # returing the template
         return HttpResponse(template.render(context, request))
-    else:
+
+    else: 
         # if post request is not true
         # returing the form template
-        template = loader.get_template('index.html')
+        template = loader.get_template('login.html')
         return HttpResponse(template.render())
+
+
+def homepage(request):
+        template = loader.get_template('homepage.html')
+        return HttpResponse(template.render())
+
+def create_report(request):
+        template = loader.get_template('create_report.html')
+        return HttpResponse(template.render())
+
+def report(request):
+        template = loader.get_template('report.html')
+        return HttpResponse(template.render())
+
+
+
