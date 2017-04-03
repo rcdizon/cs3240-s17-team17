@@ -5,7 +5,7 @@
     <title>Login</title>
 </head>
 <body>
-<h2>Django Forms Tutorial</h2>
+<h2>Login</h2>
 <form method="post" action="/login/">
     <table>
         <tr>
@@ -20,7 +20,8 @@
             <td>
            </td>
             <td>
-                <button>Submit Form</button>
+                <button><a href="{% url 'LokahiApp.views.homepage' %}">Submit</a></button>
+                <button><a href="{% url 'LokahiApp.views.index' %}">Back</a></button>
             </td>
         </tr>
     </table>

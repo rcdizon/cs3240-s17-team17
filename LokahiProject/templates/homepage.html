@@ -9,12 +9,11 @@
 <form method="post" action="/getdata/">
     <table>
         <tr>
-            <td>Your Email</td>
-            <td><strong>{{ email }}</strong></td>
+            <button><a href="{% url 'LokahiApp.views.index' %}">Log out</a></button>
         </tr>
         <tr>
-            <td>Your Password</td>
-            <td><strong>{{ password }}</strong></td>
+        <td>Feed</td>
+            <button><a href="{% url 'LokahiApp.views.create_report' %}">Create A Report</a></button>
         </tr>
     </table>
 </form>

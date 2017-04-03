@@ -9,12 +9,9 @@
 <form method="post" action="/getdata/">
     <table>
         <tr>
-            <td>Your Email</td>
-            <td><strong>{{ email }}</strong></td>
-        </tr>
-        <tr>
-            <td>Your Password</td>
-            <td><strong>{{ password }}</strong></td>
+            <td>Implement Report Form Here</td>
+            <button><a href="{% url 'LokahiApp.views.report' %}">Submit your Report</a></button>
+            <button><a href="{% url 'LokahiApp.views.homepage' %}">Return to homepage</a></button>
         </tr>
     </table>
 </form>
