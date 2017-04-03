@@ -1,22 +1,13 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Report</title>
-</head>
-<body>
-<h2>Report</h2>
-<form method="post" action="/getdata/">
-    <table>
-        <tr>
-            <td>Your Email</td>
-            <td><strong>{{ email }}</strong></td>
-        </tr>
-        <tr>
-            <td>Your Password</td>
-            <td><strong>{{ password }}</strong></td>
-        </tr>
-    </table>
-</form>
-</body>
-</html>
+<title>Reports</title>
+
+<div>
+    <h1>Reports</h1>
+</div>
+
+{% for report in reports %}
+    <div>
+        <h3>{{ report.companyName }}</h3>
+        <p>{{ report.currentProjects }}</p>
+        <p>timestamp: {{ report.timestamp}}</p>
+    </div>
+{% endfor %}

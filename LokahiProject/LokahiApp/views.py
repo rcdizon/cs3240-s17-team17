@@ -2,6 +2,9 @@
 from django.http import HttpResponse
 from django.template import loader
 from django.views.decorators.csrf import csrf_exempt
+from django.shortcuts import render
+from django.utils import timezone
+from .models import Report
 
 # disabling csrf (cross site request forgery)
 @csrf_exempt
@@ -41,13 +44,16 @@ def homepage(request):
         template = loader.get_template('homepage.html')
         return HttpResponse(template.render())
 
+
 def create_report(request):
         template = loader.get_template('create_report.html')
         return HttpResponse(template.render())
 
+
 def report(request):
-        template = loader.get_template('report.html')
-        return HttpResponse(template.render())
+    reports = Report.objects.filter(timestamp__lte=timezone.now()).order_by('timestamp')
+    return render(request, 'report.html', {'reports': reports})
+
 
 
 
