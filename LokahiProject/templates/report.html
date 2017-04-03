@@ -1,22 +1,29 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Report</title>
-</head>
-<body>
-<h2>Report</h2>
-<form method="post" action="/getdata/">
-    <table>
-        <tr>
-            <td>Your Email</td>
-            <td><strong>{{ email }}</strong></td>
-        </tr>
-        <tr>
-            <td>Your Password</td>
-            <td><strong>{{ password }}</strong></td>
-        </tr>
-    </table>
-</form>
-</body>
+{% load staticfiles %}
+<html>
+    <head>
+        <title>Reports</title>
+        <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+        <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
+        <link rel="stylesheet" href="{% static 'css/reports.css' %}">
+        <link href="//fonts.googleapis.com/css?family=Lobster&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+    </head>
+    <body>
+        <div class="page-header">
+            <h1>Reports</h1>
+        </div>
+        <div class="content container">
+            <div class="row">
+                <div class="col-md-8">
+                    {% for report in reports %}
+                        <div class="reports">
+                            <h3>{{ report.companyName }}</h3>
+                            <p>{{ report.currentProjects }}</p>
+                            <p>timestamp: {{ report.timestamp}}</p>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </body>
+
 </html>
