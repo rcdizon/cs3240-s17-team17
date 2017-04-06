@@ -21,4 +21,5 @@ from LokahiApp import views as LokahiApp_views
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^LokahiApp/', include('LokahiApp.urls')),
+    url(r'^$', LokahiApp_views.index),
 ]
