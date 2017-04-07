@@ -9,6 +9,7 @@
     </head>
     <body>
         <div class="page-header">
+            <a href="/LokahiApp/create_report/" class="top-menu"><span class="glyphicon glyphicon-plus"></span></a>
             <h1>Reports</h1>
         </div>
         <div class="content container">
@@ -16,9 +17,10 @@
                 <div class="col-md-8">
                     {% for report in reports %}
                         <div class="reports">
-                            <h3>{{ report.companyName }}</h3>
+                            <h3><a href="{% url 'result' pk=report.pk %}">{{ report.companyName }}</a></h3>
                             <p>{{ report.currentProjects }}</p>
-                            <p>timestamp: {{ report.timestamp}}</p>
+                            <p>{{ report.companyLocation }}</p>
+                            <p>{{ report.timestamp}}</p>
                         </div>
                     {% endfor %}
                 </div>

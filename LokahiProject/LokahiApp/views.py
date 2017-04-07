@@ -2,9 +2,12 @@
 from django.http import HttpResponse
 from django.template import loader
 from django.views.decorators.csrf import csrf_exempt
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.utils import timezone
 from .models import Report
+from .forms import CreateReport
+from django.shortcuts import redirect
+
 
 # disabling csrf (cross site request forgery)
 @csrf_exempt
@@ -46,14 +49,27 @@ def homepage(request):
 
 
 def create_report(request):
-        template = loader.get_template('create_report.html')
-        return HttpResponse(template.render())
+    if request.method == "POST":
+        form = CreateReport(request.POST)
+        if form.is_valid():
+            post = form.save()
+            # post.author = request.user
+            # post.published_date = timezone.now()
+            post.save()
+            return redirect('result.html', pk=post.pk)
+    else:
+        form = CreateReport()
+    return render(request, 'create_report.html', {'form': form})
 
 
 def report(request):
     reports = Report.objects.filter(timestamp__lte=timezone.now()).order_by('timestamp')
     return render(request, 'report.html', {'reports': reports})
 
+
+def result(request, pk):
+    reports = get_object_or_404(Report, pk=pk)
+    return render(request, 'result.html', {'reports': reports })
 
 
 
