@@ -1,19 +1,23 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Create Report</title>
-</head>
-<body>
-<h2>Create Report</h2>
-<form method="post" action="/getdata/">
-    <table>
-        <tr>
-            <td>Implement Report Form Here</td>
-            <button><a href="/LokahiApp/report/">Submit your Report</a></button>
-            <button><a href="/LokahiApp/homepage/">Return to homepage</a></button>
-        </tr>
-    </table>
-</form>
-</body>
+{% load staticfiles %}
+<html>
+    <head>
+        <title>Create Reports</title>
+        <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+        <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
+        <link rel="stylesheet" href="{% static 'css/reports.css' %}">
+        <link href="//fonts.googleapis.com/css?family=Lobster&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+    </head>
+    <body>
+        <div class="page-header">
+            <h1>Create a Report</h1>
+        </div>
+        <div class="content container">
+            <form method="post" action="/create_report/">
+                {{ form.as_p }}
+                {% csrf_token %}
+                <button type="submit" class="save btn btn-default">Save</button>
+            </form>
+        </div>
+    </body>
+
 </html>
