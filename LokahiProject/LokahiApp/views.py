@@ -7,6 +7,7 @@ from django.utils import timezone
 from .models import Report
 from .forms import CreateReport
 from django.shortcuts import redirect
+from django.contrib.auth.models import User
 
 # disabling csrf (cross site request forgery)
 @csrf_exempt
@@ -64,3 +65,8 @@ def report(request):
 def result(request, pk):
     reports = get_object_or_404(Report, pk=pk)
     return render(request, 'result.html', {'reports': reports})
+
+def submit(request):
+    info=request.POST['info']
+    user = User.objects.create_user('john', 'lennon@thebeatles.com', 'johnpassword')
+    user.save()
