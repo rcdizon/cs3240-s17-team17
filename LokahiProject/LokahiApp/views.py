@@ -53,11 +53,10 @@ def create_report(request):
     if request.method == "POST":
         form = CreateReport(request.POST)
         if form.is_valid():
-            post = form.save()
-            # post.author = request.user
-            # post.published_date = timezone.now()
-            post.save()
-            return redirect('result.html', pk=post.pk)
+            report = form.save(commit=False)
+            report.timestamp = timezone.now()
+            report.save()
+            return redirect('result', pk=report.pk)
     else:
         form = CreateReport()
     return render(request, 'create_report.html', {'form': form})

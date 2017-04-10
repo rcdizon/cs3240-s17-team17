@@ -12,9 +12,9 @@
             <h1>Create a Report</h1>
         </div>
         <div class="content container">
-            <form method="post" action="/create_report/">
-                {{ form.as_p }}
+            <form method="POST" class="post-form">
                 {% csrf_token %}
+                {{ form.as_p }}
                 <button type="submit" class="save btn btn-default">Save</button>
             </form>
         </div>
