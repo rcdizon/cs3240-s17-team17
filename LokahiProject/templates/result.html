@@ -27,8 +27,7 @@
                         <p>{{ reports.sector|linebreaksbr}}</p>
                         <p>{{ reports.industry|linebreaksbr}}</p>
                         <p>Current Projects: {{ reports.currentProjects }}</p>
-                        <a class="btn btn-default" href="/LokahiApp/report/new/"><span class="glyphicon glyphicon-pencil"></span></a>
-                        <a class="btn btn-default" href="{% url 'report_edit' pk=reports.pk %}" ><span class="glyphicon glyphicon-paperclip"></span></a>
+                        <a class="btn btn-default" href="{% url 'report_edit' pk=reports.pk %}" ><span class="glyphicon glyphicon-pencil"></span></a>
                     </div>
                 </div>
             </div>
