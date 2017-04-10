@@ -18,10 +18,13 @@ urlpatterns = [
     # Logging out takes you back to the landing page
     url(r'^logout/$', auth_views.logout, {'template_name': 'index.html'}, name='logout'),
     url(r'^homepage/', views.homepage),
-    url(r'^report/new/$', views.create_report, name="create_report"),
-    url(r'^report/', views.report),
-    url(r'^result/(?P<pk>\d+)/$', views.result, name="result"),
     url(r'^submit', views.submit),
     url(r'^$', views.index),
+
+    url(r'^report/', views.report),
+    url(r'^report/new/$', views.create_report, name="create_report"),
+    url(r'^result/(?P<pk>\d+)/$', views.result, name="result"),
+    url(r'^result/(?P<pk>\d+)/edit/$', views.report_edit, name='report_edit'),
+
 ]
 
