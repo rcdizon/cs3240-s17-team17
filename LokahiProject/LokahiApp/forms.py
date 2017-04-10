@@ -18,4 +18,4 @@ class CreateReport(forms.ModelForm):
 class SendMessage(forms.ModelForm):
 	class Meta:
 		model = Message
-		fields = ('reciever','textbox')
+		fields = ('recipient','textbox')

@@ -1,6 +1,10 @@
 {% load staticfiles %}
 <html>
     <head>
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+        <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
+        <link rel="stylesheet" href="{% static 'css/reports.css' %}">
+        <link href="//fonts.googleapis.com/css?family=Lobster&subset=latin,latin-ext" rel="stylesheet" type="text/css">
         <title>Messenger</title>
     </head>
     <body>
@@ -11,8 +15,12 @@
             <form method="POST" class="post-form">
                 {% csrf_token %}
                 {{ form.as_p }}
-                <button>Send</button>
+               <a> <button class="Send btn btn-default"> Send </button></a>
             </form>
+        </div>
+        <div class="content container">
+            <h1> Inbox </h1>
+            {{ inbox.as_p }}
         </div>
     </body>
 </html>

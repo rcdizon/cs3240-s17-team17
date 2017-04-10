@@ -31,11 +31,11 @@ class Report(models.Model):
         return self.companyName
 
 class Message(models.Model):
-     sender = models.ForeignKey(User, related_name="sender")
-     reciever = models.ForeignKey(User, related_name="reciever")
-     textbox = models.CharField(max_length=10000, default='DEFAULT')
+     recipient = models.ForeignKey(User, related_name="recipient")
+     textbox = models.TextField(max_length=10000)
      created_at = models.DateTimeField(default=timezone.now)
 
      def publish(self):
         self.published_date = timezone.now()
         self.save()
+

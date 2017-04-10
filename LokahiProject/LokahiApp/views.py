@@ -74,17 +74,12 @@ def result(request, pk):
     return render(request, 'result.html', {'reports': reports})
 
 def message(request):
-    messages = Message.objects.filter(reciever=request.user)
-    if request.method == "POST":
-        form = SendMessage(request.POST)
-        if form.is_valid():
-            message1 = form.save(commit=False)
-            message1.timestamp = timezone.now()
-            message1.save()
-        return redirect('result', pk=report.pk)
-    else:
-        form = SendMessage()
-    return render(request, 'messenger.html', {'form': form})
+    messages = Message.objects.filter(recipient=request.user)
+    form = SendMessage()
+    user_id = int(request.user.id)
+    cur_user = User.objects.get(id=user_id)
+    inbox = cur_user.recipient.all()
+    return render(request, 'messenger.html', {'form': form, 'inbox': inbox})
 
 def submit(request):
     info=request.POST['info']
