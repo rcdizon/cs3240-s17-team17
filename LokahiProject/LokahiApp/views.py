@@ -8,7 +8,6 @@ from .models import Report
 from .forms import CreateReport
 from django.shortcuts import redirect
 
-
 # disabling csrf (cross site request forgery)
 @csrf_exempt
 def index(request):
@@ -16,7 +15,6 @@ def index(request):
         # returing the form template
         template = loader.get_template('index.html')
         return HttpResponse(template.render())
-
 
 def login(request):
     # if post request came
@@ -43,11 +41,9 @@ def login(request):
         template = loader.get_template('login.html')
         return HttpResponse(template.render())
 
-
 def homepage(request):
         template = loader.get_template('homepage.html')
         return HttpResponse(template.render())
-
 
 def create_report(request):
     if request.method == "POST":
@@ -61,15 +57,10 @@ def create_report(request):
         form = CreateReport()
     return render(request, 'create_report.html', {'form': form})
 
-
 def report(request):
     reports = Report.objects.filter(timestamp__lte=timezone.now()).order_by('timestamp')
     return render(request, 'report.html', {'reports': reports})
 
-
 def result(request, pk):
     reports = get_object_or_404(Report, pk=pk)
-    return render(request, 'result.html', {'reports': reports })
-
-
-
+    return render(request, 'result.html', {'reports': reports})
