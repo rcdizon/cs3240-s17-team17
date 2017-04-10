@@ -6,6 +6,8 @@ from django.shortcuts import render, get_object_or_404
 from django.utils import timezone
 from .models import Report
 from .forms import CreateReport
+from .models import Message
+from .forms import SendMessage
 from django.shortcuts import redirect
 
 # disabling csrf (cross site request forgery)
@@ -64,3 +66,16 @@ def report(request):
 def result(request, pk):
     reports = get_object_or_404(Report, pk=pk)
     return render(request, 'result.html', {'reports': reports})
+
+def message(request):
+    messages = Message.objects.filter(reciever=request.user)
+    if request.method == "POST":
+        form = SendMessage(request.POST)
+        if form.is_valid():
+            message1 = form.save(commit=False)
+            message1.timestamp = timezone.now()
+            message1.save()
+        return redirect('result', pk=report.pk)
+    else:
+        form = SendMessage()
+    return render(request, 'messenger.html', {'form': form})

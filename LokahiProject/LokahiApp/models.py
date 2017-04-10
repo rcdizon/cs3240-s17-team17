@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils import timezone
+from django.contrib.auth.models import User
 
 ## def user_directory_path(instance, filename):
     # file will be uploaded to MEDIA_ROOT/user_<id>/<filename>
@@ -28,3 +29,13 @@ class Report(models.Model):
 
     def __str__(self):
         return self.companyName
+
+class Message(models.Model):
+     sender = models.ForeignKey(User, related_name="sender")
+     reciever = models.ForeignKey(User, related_name="reciever")
+     textbox = models.CharField(max_length=10000, default='DEFAULT')
+     created_at = models.DateTimeField(default=timezone.now)
+
+     def publish(self):
+        self.published_date = timezone.now()
+        self.save()
