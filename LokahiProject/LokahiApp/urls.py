@@ -11,7 +11,7 @@ urlpatterns = [
     url('^register/', CreateView.as_view(
             template_name='register.html',
             form_class=UserCreationForm,
-            success_url='/'
+            success_url='/LokahiApp/homepage'
     )),
     url('^accounts/', include('django.contrib.auth.urls')),
     url(r'^login/', auth_views.login, name='login'),
@@ -21,7 +21,6 @@ urlpatterns = [
     url(r'^report/new/$', views.create_report, name="create_report"),
     url(r'^report/', views.report),
     url(r'^result/(?P<pk>\d+)/$', views.result, name="result"),
-    url(r'^submit', views.submit),
     url(r'^$', views.index),
 ]
 
