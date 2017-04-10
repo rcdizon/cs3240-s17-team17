@@ -22,7 +22,6 @@ urlpatterns = [
     url(r'^report/', views.report),
     url(r'^result/(?P<pk>\d+)/$', views.result, name="result"),
     url(r'^result/(?P<pk>\d+)/edit/$', views.report_edit, name='report_edit'),
-    url(r'^submit', views.submit),
     url(r'^$', views.index),
 ]
 

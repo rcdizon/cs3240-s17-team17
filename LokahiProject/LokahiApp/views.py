@@ -8,7 +8,7 @@ from .models import Report
 from .forms import CreateReport
 from django.shortcuts import redirect
 from django.contrib.auth.models import User
-
+from django.contrib.auth.decorators import login_required
 
 @csrf_exempt
 def index(request):
@@ -16,7 +16,6 @@ def index(request):
         # returing the form template
         template = loader.get_template('index.html')
         return HttpResponse(template.render())
-
 
 def login(request):
     # if post request came
@@ -43,12 +42,12 @@ def login(request):
         template = loader.get_template('login.html')
         return HttpResponse(template.render())
 
-
+@login_required(login_url='/LokahiApp/login/')
 def homepage(request):
     reports = Report.objects.filter(timestamp__lte=timezone.now()).order_by('timestamp')
     return render(request, 'report.html', {'reports': reports})
 
-
+@login_required(login_url='/LokahiApp/login/')
 def create_report(request):
     if request.method == "POST":
         form = CreateReport(request.POST)
@@ -61,7 +60,7 @@ def create_report(request):
         form = CreateReport()
     return render(request, 'create_report.html', {'form': form})
 
-
+@login_required(login_url='/LokahiApp/login/')
 def report_edit(request, pk):
     report = get_object_or_404(Report, pk=pk)
     if request.method == "POST":
@@ -75,17 +74,12 @@ def report_edit(request, pk):
         form = CreateReport(instance=report)
     return render(request, 'create_report.html', {'form': form})
 
-
+@login_required(login_url='/LokahiApp/login/')
 def report(request):
     reports = Report.objects.filter(timestamp__lte=timezone.now()).order_by('timestamp')
     return render(request, 'report.html', {'reports': reports})
 
-
+@login_required(login_url='/LokahiApp/login/')
 def result(request, pk):
     reports = get_object_or_404(Report, pk=pk)
     return render(request, 'result.html', {'reports': reports})
-
-def submit(request):
-    info=request.POST['info']
-    user = User.objects.create_user('john', 'lennon@thebeatles.com', 'johnpassword')
-    user.save()

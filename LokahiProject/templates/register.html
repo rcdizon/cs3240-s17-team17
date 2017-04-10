@@ -8,6 +8,15 @@
 <form action="submit" method="post">
 {% csrf_token %}
 {{ form }}
+    <br>
+    User type:
+    <input type="hidden" name="category" value="volunteer" id="category">
+    <select>
+      <option value="company_user">Company User</option>
+      <option value="investor_user">Investor</option>
+      <option value="site_manager">Site Manager</option>
+    </select>
+
 <br>
 <input type="submit" value="Submit">
 </form>
