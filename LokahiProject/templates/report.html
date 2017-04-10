@@ -19,9 +19,10 @@
                     {% for report in reports %}
                         <div class="reports">
                             <h3><a href="{% url 'result' pk=report.pk %}">{{ report.companyName }}</a></h3>
-                            <p>{{ report.currentProjects }}</p>
-                            <p>{{ report.companyLocation }}</p>
                             <p>{{ report.timestamp}}</p>
+                            <p>{{ report.companyPhone}}</p>
+                            <p>{{ report.sector}}</p>
+                            <p>{{ report.industry}}</p>
                         </div>
                     {% endfor %}
                 </div>

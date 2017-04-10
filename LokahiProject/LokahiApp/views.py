@@ -62,6 +62,20 @@ def create_report(request):
     return render(request, 'create_report.html', {'form': form})
 
 
+def report_edit(request, pk):
+    report = get_object_or_404(Report, pk=pk)
+    if request.method == "POST":
+        form = CreateReport(request.POST, instance=report)
+        if form.is_valid():
+            report = form.save(commit=False)
+            report.timestamp = timezone.now()
+            report.save()
+            return redirect('result', pk=report.pk)
+    else:
+        form = CreateReport(instance=report)
+    return render(request, 'create_report.html', {'form': form})
+
+
 def report(request):
     reports = Report.objects.filter(timestamp__lte=timezone.now()).order_by('timestamp')
     return render(request, 'report.html', {'reports': reports})
@@ -70,3 +84,8 @@ def report(request):
 def result(request, pk):
     reports = get_object_or_404(Report, pk=pk)
     return render(request, 'result.html', {'reports': reports})
+
+def submit(request):
+    info=request.POST['info']
+    user = User.objects.create_user('john', 'lennon@thebeatles.com', 'johnpassword')
+    user.save()
