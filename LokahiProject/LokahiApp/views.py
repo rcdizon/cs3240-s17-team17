@@ -87,8 +87,12 @@ def result(request, pk):
 
 @login_required(login_url='/LokahiApp/login/')
 def groups(request):
-    query_results = request.user.groups.values_list('name',flat=True)
-    return render(request, 'groups.html', {'query_results': query_results})
+    my_groups = request.user.groups.values_list('name',flat=True)
+    other_groups = []
+    for g in Group.objects.all():
+        if not request.user.groups.filter(name=g.name).exists():
+            other_groups.append(g)
+    return render(request, 'groups.html', {'my_groups': my_groups, "other_groups": other_groups})
 
 @login_required(login_url='/LokahiApp/login/')
 def create_group(request):

@@ -39,7 +39,7 @@
         <form action="/LokahiApp/editGroup/" method="post">
             <table>
             {% csrf_token %}
-            {% for item in query_results %}
+            {% for item in my_groups %}
                 <tr>
                 <td>{{ item }}</td>
                 <td><input type="submit" value="Add other user" class="btn btn-primary"></td>
@@ -48,6 +48,25 @@
                 <td>User is not in any groups</td>
                 </tr>
             {% endfor %}
+            </table>
+        </form>
+    </div>
+    <br>
+
+    <!-- Join groups -->
+    <a href="#" onclick="$('#hiddenOtherGroups').show(); return false;">Other Groups</a>
+    <div style="display: none;" id="hiddenOtherGroups">
+        <form action="/LokahiApp/editGroup/" method="post">
+            <table>
+                {% csrf_token %}
+                {% for item in other_groups %}
+                <tr>
+                    <td>{{ item }}</td>
+                    <td><input type="submit" value="Join group" class="btn btn-primary"></td>
+                    {% empty %}
+                    <td>No other groups</td>
+                </tr>
+                {% endfor %}
             </table>
         </form>
     </div>
