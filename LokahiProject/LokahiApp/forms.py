@@ -14,4 +14,4 @@ class CreateReport(forms.ModelForm):
     class Meta:
         model = Report
         fields = ('companyName', 'companyLocation', 'companyPhone', 'companyCountry',
-                  'currentProjects', 'industry', 'sector')
+                  'currentProjects', 'industry', 'sector', 'upload')

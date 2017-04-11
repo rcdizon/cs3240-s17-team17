@@ -42,15 +42,17 @@ def login(request):
         template = loader.get_template('login.html')
         return HttpResponse(template.render())
 
+
 @login_required(login_url='/LokahiApp/login/')
 def homepage(request):
     reports = Report.objects.filter(timestamp__lte=timezone.now()).order_by('timestamp')
     return render(request, 'report.html', {'reports': reports})
 
+
 @login_required(login_url='/LokahiApp/login/')
 def create_report(request):
     if request.method == "POST":
-        form = CreateReport(request.POST)
+        form = CreateReport(request.POST, request.FILES)
         if form.is_valid():
             report = form.save(commit=False)
             report.timestamp = timezone.now()
@@ -59,6 +61,7 @@ def create_report(request):
     else:
         form = CreateReport()
     return render(request, 'create_report.html', {'form': form})
+
 
 @login_required(login_url='/LokahiApp/login/')
 def report_edit(request, pk):
@@ -73,6 +76,7 @@ def report_edit(request, pk):
     else:
         form = CreateReport(instance=report)
     return render(request, 'create_report.html', {'form': form})
+
 
 @login_required(login_url='/LokahiApp/login/')
 def report(request):

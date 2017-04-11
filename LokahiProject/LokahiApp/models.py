@@ -16,7 +16,7 @@ class Report(models.Model):
     industry = models.CharField(max_length=200, default='DEFAULT')
     currentProjects = models.TextField(default='DEFAULT')
     # files attached ? change reports to company name??
-    ## upload = models.FileField(upload_to=user_directory_path)
+    upload = models.FileField(upload_to='media', default=True)
     # public or private
 
 
