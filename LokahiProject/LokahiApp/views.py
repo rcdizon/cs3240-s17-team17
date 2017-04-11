@@ -1,13 +1,17 @@
 # importing required packages
+from django.http import Http404
 from django.http import HttpResponse
 from django.template import loader
+from django.utils.encoding import smart_str
 from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import render, get_object_or_404
 from django.utils import timezone
+
+from LokahiProject import settings
 from .models import Report
 from .forms import CreateReport
 from django.shortcuts import redirect
-from django.contrib.auth.models import User
+import os
 from django.contrib.auth.decorators import login_required
 
 @csrf_exempt
@@ -83,7 +87,16 @@ def report(request):
     reports = Report.objects.filter(timestamp__lte=timezone.now()).order_by('timestamp')
     return render(request, 'report.html', {'reports': reports})
 
+
 @login_required(login_url='/LokahiApp/login/')
 def result(request, pk):
     reports = get_object_or_404(Report, pk=pk)
     return render(request, 'result.html', {'reports': reports})
+
+
+def download(request, path):
+    response = HttpResponse()
+    response['Content-Type'] = ''
+    response['Content-Disposition'] = "attachment; filename=" + path
+    response['X-Sendfile'] = smart_str(os.path.join(settings.MEDIA_ROOT, path))
+    return response

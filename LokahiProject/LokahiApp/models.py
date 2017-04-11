@@ -17,6 +17,7 @@ class Report(models.Model):
     currentProjects = models.TextField(default='DEFAULT')
     # files attached ? change reports to company name??
     upload = models.FileField(upload_to='media', default=True)
+
     # public or private
 
 
