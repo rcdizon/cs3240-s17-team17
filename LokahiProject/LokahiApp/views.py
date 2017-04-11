@@ -87,3 +87,12 @@ def report(request):
 def result(request, pk):
     reports = get_object_or_404(Report, pk=pk)
     return render(request, 'result.html', {'reports': reports})
+<<<<<<< HEAD
+
+
+def submit(request):
+    info=request.POST['info']
+    user = User.objects.create_user('john', 'lennon@thebeatles.com', 'johnpassword')
+    user.save()
+=======
+>>>>>>> 7a0bac611079777fec4ec203a15eac0c699b5321
