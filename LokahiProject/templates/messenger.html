@@ -18,9 +18,14 @@
                <a> <button class="Send btn btn-default"> Send </button></a>
             </form>
         </div>
-        <div class="content container">
-            <h1> Inbox </h1>
-            {{ inbox.as_p }}
+        <h1> Inbox </h1>
+        <div class="POST">
+            {% if messages.timestamp %}
+                <div class="date">
+                    {{ messages.timestamp }}
+                </div>
+            {% endif %}
+            <p>{{ messages.textbox }}</p>
         </div>
     </body>
 </html>
