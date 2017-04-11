@@ -1,0 +1,58 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Groups</title>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="{% static 'css/reports.css' %}">
+    <link href="//fonts.googleapis.com/css?family=Lobster&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+</head>
+<body>
+<div class="page-header">
+    <a href="/LokahiApp/homepage"><h1>Lokahi FinTech</h1></a>
+    <a href="/LokahiApp/report/new/"><button class="createreport btn btn-default">Create a Report</button></a>
+    <a href="/LokahiApp/groups/"><button class="groups btn btn-default">Groups</button></a>
+    <a href="/LokahiApp/logout"><button class="logout btn btn-default">Log out</button></a>
+</div>
+<div class="content container">
+
+    <!-- TODO: Boostrapify this stuff later -->
+
+    <!-- Group creation -->
+    <a href="#" onclick="$('#hiddenForm').show(); return false;">Create group</a>
+    <div style="display: none;" id="hiddenForm">
+        <form action="/LokahiApp/createGroup/" method="post">
+          {% csrf_token %}
+            Group Name:
+          <input type="text" name="groupName" id="groupName">
+          <input type="submit" value="Create" class="btn btn-primary">
+        </form>
+    </div>
+    <br>
+
+    <!-- View groups -->
+    <a href="#" onclick="$('#hiddenUserGroups').show(); return false;">User's Groups</a>
+    <div style="display: none;" id="hiddenUserGroups">
+        <form action="/LokahiApp/editGroup/" method="post">
+            <table>
+            {% csrf_token %}
+            {% for item in query_results %}
+                <tr>
+                <td>{{ item }}</td>
+                <td><input type="submit" value="Add other user" class="btn btn-primary"></td>
+                <td><input type="submit" value="Leave group" class="btn btn-primary"></td>
+            {% empty %}
+                <td>User is not in any groups</td>
+                </tr>
+            {% endfor %}
+            </table>
+        </form>
+    </div>
+
+</div>
+
+</body>
+</html>

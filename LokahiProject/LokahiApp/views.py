@@ -7,8 +7,9 @@ from django.utils import timezone
 from .models import Report
 from .forms import CreateReport
 from django.shortcuts import redirect
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Group, Permission
 from django.contrib.auth.decorators import login_required
+import sys
 
 @csrf_exempt
 def index(request):
@@ -83,3 +84,19 @@ def report(request):
 def result(request, pk):
     reports = get_object_or_404(Report, pk=pk)
     return render(request, 'result.html', {'reports': reports})
+
+@login_required(login_url='/LokahiApp/login/')
+def groups(request):
+    query_results = request.user.groups.values_list('name',flat=True)
+    return render(request, 'groups.html', {'query_results': query_results})
+
+@login_required(login_url='/LokahiApp/login/')
+def create_group(request):
+    info = request.POST['groupName']
+    my_group = Group.objects.create(name=str(info))
+    my_group.save()
+    request.user.groups.add(my_group)
+    return render(request, 'groups.html', {'groups': groups})
+
+def edit_group(request):
+    return
