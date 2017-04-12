@@ -72,7 +72,7 @@ def create_report(request):
 def report_edit(request, pk):
     report = get_object_or_404(Report, pk=pk)
     if request.method == "POST":
-        form = CreateReport(request.POST, instance=report)
+        form = CreateReport(request.POST, request.FILES, instance=report)
         if form.is_valid():
             report = form.save(commit=False)
             report.timestamp = timezone.now()
