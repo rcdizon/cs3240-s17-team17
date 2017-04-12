@@ -56,13 +56,18 @@
     <!-- Join groups -->
     <a href="#" onclick="$('#hiddenOtherGroups').show(); return false;">Other Groups</a>
     <div style="display: none;" id="hiddenOtherGroups">
-        <form action="/LokahiApp/editGroup/" method="post">
+        <form action="/LokahiApp/joinGroup/" method="post">
+            {% if info %}
+            <h1>{{ info }}</h1>
+            {% else %}
+            <h1>lmfao u thot</h1>
+            {% endif %}
             <table>
-                {% csrf_token %}
                 {% for item in other_groups %}
+                {% csrf_token %}
                 <tr>
                     <td>{{ item }}</td>
-                    <td><input type="submit" value="Join group" class="btn btn-primary"></td>
+                    <td><input type="submit" value="Join group" class="btn btn-primary" name=item id='joinGroup'></td>
                     {% empty %}
                     <td>No other groups</td>
                 </tr>

@@ -16,6 +16,7 @@ urlpatterns = [
     url('^accounts/', include('django.contrib.auth.urls')),
     url(r'^createGroup', views.create_group),
     url(r'^editGroup', views.edit_group),
+    url(r'^joinGroup', views.join_group),
     url(r'^groups/', views.groups, name='groups'),
     url(r'^login/', auth_views.login, name='login'),
     # Logging out takes you back to the landing page

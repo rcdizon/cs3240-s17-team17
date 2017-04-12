@@ -99,8 +99,15 @@ def create_group(request):
     info = request.POST['groupName']
     my_group = Group.objects.create(name=str(info))
     my_group.save()
-    request.user.groups.add(my_group)
-    return render(request, 'groups.html', {'groups': groups})
+    # request.user.groups.add(my_group)
+    return render(request, 'group_successful.html', {'groups': groups})
 
+@login_required(login_url='/LokahiApp/login/')
 def edit_group(request):
-    return
+    return render(request, 'group_successful.html', {'groups': groups})
+
+@login_required(login_url='/LokahiApp/login/')
+def join_group(request):
+    info = request.POST['joinGroup']
+    # request.user.groups.add(Group.objects.get(name=str(info)))
+    return render(request, 'group_successful.html', {'groups': groups, 'info': info})
