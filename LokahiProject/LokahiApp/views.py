@@ -1,16 +1,21 @@
 # importing required packages
+import mimetypes
+import urllib
+
 from django.http import Http404
 from django.http import HttpResponse
 from django.template import loader
+from django.utils import html
 from django.utils.encoding import smart_str
 from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import render, get_object_or_404
 from django.utils import timezone
-
+from django.core.files import File
 from LokahiProject import settings
 from .models import Report
 from .forms import CreateReport
 from django.shortcuts import redirect
+import mimetypes
 import os
 from django.contrib.auth.decorators import login_required
 
@@ -95,8 +100,12 @@ def result(request, pk):
 
 
 def download(request, path):
-    response = HttpResponse()
-    response['Content-Type'] = ''
-    response['Content-Disposition'] = "attachment; filename=" + path
-    response['X-Sendfile'] = smart_str(os.path.join(settings.MEDIA_ROOT, path))
-    return response
+    file_path = os.path.join(settings.MEDIA_ROOT, path)
+    if os.path.exists(file_path):
+        f = open(file_path, 'rb')
+        file = File(f)
+        response = HttpResponse(file, content_type='application/force_download')
+        response['Content-Disposition'] = 'attachment; filename=%s/' % smart_str(os.path.basename(file_path))
+        return response
+    else:
+        raise Http404
