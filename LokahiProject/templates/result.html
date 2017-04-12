@@ -29,6 +29,7 @@
                         <p>{{ reports.industry|linebreaksbr}}</p>
                         <p>Current Projects: {{ reports.currentProjects }}</p>
                         <a href="/LokahiApp/{{ reports.upload }}"><p>{{ reports.upload|linebreaksbr}}</p></a>
+                        <p>Encrypted: {{ reports.encrypted|linebreaksbr}}</p>
                         <a class="btn btn-default" href="{% url 'report_edit' pk=reports.pk %}" ><span class="glyphicon glyphicon-pencil"></span></a>
                     </div>
                 </div>

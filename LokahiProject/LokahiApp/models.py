@@ -16,6 +16,13 @@ class Report(models.Model):
     industry = models.CharField(max_length=200, default='DEFAULT')
     currentProjects = models.TextField(default='DEFAULT')
     # files attached ? change reports to company name??
+    YES = 'Yes'
+    NO = 'No'
+    ENCRYPTED_CHOICES = (
+        (YES, 'Yes'),
+        (NO, 'No')
+    )
+    encrypted = models.CharField(choices=ENCRYPTED_CHOICES, default=NO, max_length=4)
     upload = models.FileField(upload_to='media', default=True)
 
     # public or private
