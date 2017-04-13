@@ -9,11 +9,16 @@ from . import views
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url('^register/', CreateView.as_view(
-            template_name='register.html',
-            form_class=UserCreationForm,
-            success_url='/LokahiApp/homepage'
+        template_name='register.html',
+        form_class=UserCreationForm,
+        success_url='/LokahiApp/homepage'
     )),
     url('^accounts/', include('django.contrib.auth.urls')),
+    url(r'^createGroup', views.create_group),
+    url(r'^editGroup/(?P<pk>[0-9]+)/(?P<qk>[0-9]+)/$', views.edit_group),
+    url(r'^joinGroup/(?P<pk>[0-9]+)/$', views.join_group),
+    url(r'^leaveGroup/(?P<pk>[0-9]+)/$', views.leave_group),
+    url(r'^groups/', views.groups, name='groups'),
     url(r'^login/', auth_views.login, name='login'),
     # Logging out takes you back to the landing page
     url(r'^logout/$', auth_views.logout, {'template_name': 'index.html'}, name='logout'),

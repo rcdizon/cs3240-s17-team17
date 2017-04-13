@@ -7,8 +7,9 @@ from django.utils import timezone
 from .models import Report
 from .forms import CreateReport
 from django.shortcuts import redirect
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Group, Permission
 from django.contrib.auth.decorators import login_required
+import sys
 
 @csrf_exempt
 def index(request):
@@ -45,8 +46,9 @@ def login(request):
 
 @login_required(login_url='/LokahiApp/login/')
 def homepage(request):
+    name = request.user
     reports = Report.objects.filter(timestamp__lte=timezone.now()).order_by('timestamp')
-    return render(request, 'report.html', {'reports': reports})
+    return render(request, 'report.html', {'reports': reports, 'name': name})
 
 
 @login_required(login_url='/LokahiApp/login/')
@@ -80,10 +82,52 @@ def report_edit(request, pk):
 
 @login_required(login_url='/LokahiApp/login/')
 def report(request):
+    name = request.user
     reports = Report.objects.filter(timestamp__lte=timezone.now()).order_by('timestamp')
-    return render(request, 'report.html', {'reports': reports})
+    return render(request, 'report.html', {'reports': reports, 'name': name})
 
 @login_required(login_url='/LokahiApp/login/')
 def result(request, pk):
     reports = get_object_or_404(Report, pk=pk)
     return render(request, 'result.html', {'reports': reports})
+
+@login_required(login_url='/LokahiApp/login/')
+def groups(request):
+    # TODO: Figure out way to sort these groups properly
+    name = request.user
+    my_groups = []
+    other_groups = []
+    # Makes two lists, groups the user is in and groups the user isn't in
+    for g in Group.objects.all():
+        if not request.user.groups.filter(name=g.name).exists():
+            other_groups.append(g)
+        else:
+            my_groups.append(g)
+    # Get list of all users, TODO: cleanup later, don't add all users to this list
+    users = User.objects.all()
+    return render(request, 'groups.html', {'name': name, 'my_groups': my_groups, "other_groups": other_groups, "users": users})
+
+@login_required(login_url='/LokahiApp/login/')
+def create_group(request):
+    info = request.POST['groupName']
+    my_group = Group.objects.create(name=str(info))
+    my_group.save()
+    return render(request, 'group_successful.html', {'groups': groups})
+
+@login_required(login_url='/LokahiApp/login/')
+def edit_group(request, pk, qk):
+    g = Group.objects.get(id=pk)
+    u = User.objects.get(id=qk)
+    g.user_set.add(u)
+    return render(request, 'group_successful.html', {'groups': groups})
+
+@login_required(login_url='/LokahiApp/login/')
+def join_group(request, pk):
+    request.user.groups.add(Group.objects.get(id=pk))
+    return render(request, 'group_successful.html', {'groups': groups})
+
+@login_required(login_url='/LokahiApp/login/')
+def leave_group(request, pk):
+    g = Group.objects.get(id=pk)
+    g.user_set.remove(request.user)
+    return render(request, 'group_successful.html', {'groups': groups})
