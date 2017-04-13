@@ -48,7 +48,9 @@
                 <div style="display: none;" id="hiddenUser">
                     <select>
                         {% for user in users %}
+                        {% if not user.is_superuser and user != name %}
                         <option>{{ user }}</option>
+                        {% endif %}
                         {% endfor %}
                     </select>
                 	<a href="/LokahiApp/editGroup/{{ item.id }}/{{ user.id }}"><button class="btn btn-primary" name=item>Add to group</button></a>
