@@ -20,6 +20,7 @@
 <div class="content container">
 
     <!-- TODO: Boostrapify this stuff later -->
+    <h1>Welcome {{ name }}!</h1>
 
     <!-- Group creation -->
     <a href="#" onclick="$('#hiddenForm').show(); return false;">Create group</a>
@@ -41,9 +42,19 @@
             {% csrf_token %}
             <tr>
             <td>{{ item }}</td>
-            <td><input type="submit" value="Add other user" class="btn btn-primary"></td>
             <td><a href="/LokahiApp/leaveGroup/{{ item.id }}/"><button class="btn btn-primary" name=item>Leave group</button></a></td>
-        {% empty %}
+            <td>
+                <a href="#" onclick="$('#hiddenUser').show(); return false;"><button class="btn btn-primary" name=item>Add other user</button></a>
+                <div style="display: none;" id="hiddenUser">
+                    <select>
+                        {% for user in users %}
+                        <option>{{ user }}</option>
+                        {% endfor %}
+                    </select>
+                	<a href="/LokahiApp/editGroup/{{ item.id }}/{{ user.id }}"><button class="btn btn-primary" name=item>Add to group</button></a>
+                </div>
+            </td>
+            {% empty %}
             <td>User is not in any groups</td>
             </tr>
         {% endfor %}

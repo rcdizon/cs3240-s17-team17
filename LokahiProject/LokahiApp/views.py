@@ -45,8 +45,9 @@ def login(request):
 
 @login_required(login_url='/LokahiApp/login/')
 def homepage(request):
+    name = request.user
     reports = Report.objects.filter(timestamp__lte=timezone.now()).order_by('timestamp')
-    return render(request, 'report.html', {'reports': reports})
+    return render(request, 'report.html', {'reports': reports, 'name': name})
 
 @login_required(login_url='/LokahiApp/login/')
 def create_report(request):
@@ -77,8 +78,9 @@ def report_edit(request, pk):
 
 @login_required(login_url='/LokahiApp/login/')
 def report(request):
+    name = request.user
     reports = Report.objects.filter(timestamp__lte=timezone.now()).order_by('timestamp')
-    return render(request, 'report.html', {'reports': reports})
+    return render(request, 'report.html', {'reports': reports, 'name': name})
 
 @login_required(login_url='/LokahiApp/login/')
 def result(request, pk):
@@ -88,25 +90,31 @@ def result(request, pk):
 @login_required(login_url='/LokahiApp/login/')
 def groups(request):
     # TODO: Figure out way to sort these groups properly
+    name = request.user
     my_groups = []
     other_groups = []
+    # Makes two lists, groups the user is in and groups the user isn't in
     for g in Group.objects.all():
         if not request.user.groups.filter(name=g.name).exists():
             other_groups.append(g)
         else:
             my_groups.append(g)
-    return render(request, 'groups.html', {'my_groups': my_groups, "other_groups": other_groups})
+    # Get list of all users, TODO: cleanup later, don't add all users to this list
+    users = User.objects.all()
+    return render(request, 'groups.html', {'name': name, 'my_groups': my_groups, "other_groups": other_groups, "users": users})
 
 @login_required(login_url='/LokahiApp/login/')
 def create_group(request):
     info = request.POST['groupName']
     my_group = Group.objects.create(name=str(info))
     my_group.save()
-    # request.user.groups.add(my_group)
     return render(request, 'group_successful.html', {'groups': groups})
 
 @login_required(login_url='/LokahiApp/login/')
-def edit_group(request):
+def edit_group(request, pk, qk):
+    g = Group.objects.get(id=pk)
+    u = User.objects.get(id=qk)
+    g.user_set.remove(u)
     return render(request, 'group_successful.html', {'groups': groups})
 
 @login_required(login_url='/LokahiApp/login/')
