@@ -1,10 +1,6 @@
 from django.db import models
 from django.utils import timezone
 
-## def user_directory_path(instance, filename):
-    # file will be uploaded to MEDIA_ROOT/user_<id>/<filename>
-  ## return 'user_{0}/{1}'.format(instance.user.id, filename)
-
 
 class Report(models.Model):
     timestamp = models.DateTimeField(default=timezone.now)
@@ -15,7 +11,7 @@ class Report(models.Model):
     sector = models.CharField(max_length=200, default='DEFAULT')
     industry = models.CharField(max_length=200, default='DEFAULT')
     currentProjects = models.TextField(default='DEFAULT')
-    # files attached ? change reports to company name??
+
     YES = 'Yes'
     NO = 'No'
     ENCRYPTED_CHOICES = (
@@ -25,10 +21,14 @@ class Report(models.Model):
     encrypted = models.CharField(choices=ENCRYPTED_CHOICES, default=NO, max_length=4)
     upload = models.FileField(upload_to='media', default=None, null=True, blank=True)
     remove_the_file = models.BooleanField(default=False)
-    # public or private
 
-
-    # NEED classes for what to do when public/private
+    PUBLIC = 'Public'
+    PRIVATE = 'Private'
+    PRIVACY_CHOICES = (
+        (PUBLIC, 'Public'),
+        (PRIVATE, 'Private')
+    )
+    privacy = models.CharField(choices=PRIVACY_CHOICES, default=PUBLIC, max_length=10)
 
     def publish(self):
         self.published_date = timezone.now()
