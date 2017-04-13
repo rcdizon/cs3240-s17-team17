@@ -76,6 +76,9 @@ def report_edit(request, pk):
         if form.is_valid():
             report = form.save(commit=False)
             report.timestamp = timezone.now()
+            if report.remove_the_file:
+                report.upload = ""
+                report.remove_the_file = False
             report.save()
             return redirect('result', pk=report.pk)
     else:
