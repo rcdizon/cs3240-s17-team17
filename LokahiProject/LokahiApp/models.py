@@ -23,7 +23,7 @@ class Report(models.Model):
         (NO, 'No')
     )
     encrypted = models.CharField(choices=ENCRYPTED_CHOICES, default=NO, max_length=4)
-    upload = models.FileField(upload_to='media', default=True)
+    upload = models.FileField(upload_to='media', default=None, blank=True)
 
     # public or private
 
