@@ -87,11 +87,14 @@ def result(request, pk):
 
 @login_required(login_url='/LokahiApp/login/')
 def groups(request):
-    my_groups = request.user.groups.values_list('name',flat=True)
+    # TODO: Figure out way to sort these groups properly
+    my_groups = []
     other_groups = []
     for g in Group.objects.all():
         if not request.user.groups.filter(name=g.name).exists():
             other_groups.append(g)
+        else:
+            my_groups.append(g)
     return render(request, 'groups.html', {'my_groups': my_groups, "other_groups": other_groups})
 
 @login_required(login_url='/LokahiApp/login/')
@@ -107,7 +110,12 @@ def edit_group(request):
     return render(request, 'group_successful.html', {'groups': groups})
 
 @login_required(login_url='/LokahiApp/login/')
-def join_group(request):
-    info = request.POST['joinGroup']
-    # request.user.groups.add(Group.objects.get(name=str(info)))
-    return render(request, 'group_successful.html', {'groups': groups, 'info': info})
+def join_group(request, pk):
+    request.user.groups.add(Group.objects.get(id=pk))
+    return render(request, 'group_successful.html', {'groups': groups})
+
+@login_required(login_url='/LokahiApp/login/')
+def leave_group(request, pk):
+    g = Group.objects.get(id=pk)
+    g.user_set.remove(request.user)
+    return render(request, 'group_successful.html', {'groups': groups})
