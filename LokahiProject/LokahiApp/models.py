@@ -32,7 +32,7 @@ class Report(models.Model):
 
 class Message(models.Model):
      recipient = models.ForeignKey(User, related_name="recipient")
-     sender = models.ForeignKey(User, related_name="sender")
+     sender = models.ForeignKey(User, related_name="sender", null=True)
      textbox = models.TextField(max_length=10000)
      timestamp = models.DateTimeField(default=timezone.now)
 

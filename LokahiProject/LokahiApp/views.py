@@ -78,12 +78,14 @@ def message(request):
     if request.method == "POST":
         form = SendMessage(request.POST)
         if form.is_valid():
-            messages = form.save(commit=False)
-            messages.timestamp = timezone.now()
-            messages.save(request.user)
+            messenger = form.save(commit=False)
+            messenger.timestamp = timezone.now()
+            messenger.save(request.user)
             textbox = form.cleaned_data['textbox']
             recipient = form.cleaned_data['recipient']
-            return redirect('result', pk=messages.pk)
+            inbox_message = get_object_or_404(Message, pk=messenger.pk)
+            inbox = Message.objects.filter(timestamp__lte=timezone.now()).order_by('timestamp')
+            return render(request, 'messenger.html', {'form': form, 'inbox': messages})
     else:
         form = SendMessage()
     return render(request, 'messenger.html', {'form': form, 'inbox': messages})

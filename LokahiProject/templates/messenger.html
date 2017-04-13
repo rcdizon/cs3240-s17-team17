@@ -15,7 +15,7 @@
             <form method="POST" class="post-form">
                 {% csrf_token %}
                 {{ form.as_p }}
-               <a> <button class="Send btn btn-default"> Send </button></a>
+                <input class="Send btn btn-default" type="submit" value="Send" />
             </form>
         </div>
         <h1> Inbox </h1>
