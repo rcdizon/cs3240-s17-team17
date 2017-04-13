@@ -114,7 +114,7 @@ def create_group(request):
 def edit_group(request, pk, qk):
     g = Group.objects.get(id=pk)
     u = User.objects.get(id=qk)
-    g.user_set.remove(u)
+    g.user_set.add(u)
     return render(request, 'group_successful.html', {'groups': groups})
 
 @login_required(login_url='/LokahiApp/login/')
