@@ -1,0 +1,86 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Groups</title>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="{% static 'css/reports.css' %}">
+    <link href="//fonts.googleapis.com/css?family=Lobster&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+</head>
+<body>
+<div class="page-header">
+    <a href="/LokahiApp/homepage"><h1>Lokahi FinTech</h1></a>
+    <a href="/LokahiApp/report/new/"><button class="createreport btn btn-default">Create a Report</button></a>
+    <a href="/LokahiApp/groups/"><button class="groups btn btn-default">Groups</button></a>
+    <a href="/LokahiApp/logout"><button class="logout btn btn-default">Log out</button></a>
+</div>
+<div class="content container">
+
+    <!-- TODO: Boostrapify this stuff later -->
+    <h1>Welcome {{ name }}!</h1>
+
+    <!-- Group creation -->
+    <a href="#" onclick="$('#hiddenForm').show(); return false;">Create group</a>
+    <div style="display: none;" id="hiddenForm">
+        <form action="/LokahiApp/createGroup/" method="post">
+          {% csrf_token %}
+            Group Name:
+          <input type="text" name="groupName" id="groupName">
+          <input type="submit" value="Create" class="btn btn-primary">
+        </form>
+    </div>
+    <br>
+
+    <!-- View groups -->
+    <a href="#" onclick="$('#hiddenUserGroups').show(); return false;">User's Groups</a>
+    <div style="display: none;" id="hiddenUserGroups">
+        <table>
+        {% for item in my_groups %}
+            {% csrf_token %}
+            <tr>
+            <td>{{ item }}</td>
+            <td><a href="/LokahiApp/leaveGroup/{{ item.id }}/"><button class="btn btn-primary" name=item>Leave group</button></a></td>
+            <td>
+                <a href="#" onclick="$('#hiddenUser').show(); return false;"><button class="btn btn-primary" name=item>Add other user</button></a>
+                <div style="display: none;" id="hiddenUser">
+                    <select>
+                        {% for user in users %}
+                        {% if not user.is_superuser and user != name %}
+                        <option>{{ user }}</option>
+                        {% endif %}
+                        {% endfor %}
+                    </select>
+                	<a href="/LokahiApp/editGroup/{{ item.id }}/{{ user.id }}"><button class="btn btn-primary" name=item>Add to group</button></a>
+                </div>
+            </td>
+            {% empty %}
+            <td>User is not in any groups</td>
+            </tr>
+        {% endfor %}
+        </table>
+    </div>
+    <br>
+
+    <!-- Join groups -->
+    <a href="#" onclick="$('#hiddenOtherGroups').show(); return false;">Other Groups</a>
+    <div style="display: none;" id="hiddenOtherGroups">
+        <table>
+            {% for item in other_groups %}
+            {% csrf_token %}
+            <tr>
+                <td>{{ item }}</td>
+                <td><a href="/LokahiApp/joinGroup/{{ item.id }}/"><button value="Join group" class="btn btn-primary" name=item id='joinGroup'>Join group</button></a></td>
+                {% empty %}
+                <td>No other groups</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+
+</div>
+
+</body>
+</html>

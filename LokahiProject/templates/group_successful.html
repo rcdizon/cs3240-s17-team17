@@ -1,0 +1,24 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Group Successful</title>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="{% static 'css/reports.css' %}">
+    <link href="//fonts.googleapis.com/css?family=Lobster&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+</head>
+<body>
+<div class="page-header">
+    <a href="/LokahiApp/homepage"><h1>Lokahi FinTech</h1></a>
+    <a href="/LokahiApp/report/new/"><button class="createreport btn btn-default">Create a Report</button></a>
+    <a href="/LokahiApp/groups/"><button class="groups btn btn-default">Groups</button></a>
+    <a href="/LokahiApp/logout"><button class="logout btn btn-default">Log out</button></a>
+</div>
+<div class="content container">
+    Success! Click <a href="/LokahiApp/groups">here</a> to return.
+</div>
+</body>
+</html>
