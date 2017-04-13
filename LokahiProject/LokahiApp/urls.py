@@ -4,6 +4,7 @@ from django.contrib.auth import views as auth_views
 from django.views.generic.edit import CreateView
 from django.contrib.auth.forms import UserCreationForm
 
+from LokahiProject import settings
 from . import views
 
 urlpatterns = [
@@ -27,6 +28,7 @@ urlpatterns = [
     url(r'^report/', views.report),
     url(r'^result/(?P<pk>\d+)/$', views.result, name="result"),
     url(r'^result/(?P<pk>\d+)/edit/$', views.report_edit, name='report_edit'),
+    url(r'^media/(?P<path>.*)$', views.download),
     url(r'^$', views.index),
 ]
 
