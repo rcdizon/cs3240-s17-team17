@@ -8,13 +8,13 @@ from django.utils import timezone
 
 class Report(models.Model):
     timestamp = models.DateTimeField(default=timezone.now)
-    companyName = models.CharField(max_length=200, default='DEFAULT')
-    companyPhone = models.CharField(max_length=200, default='DEFAULT')
-    companyLocation = models.CharField(max_length=200, default='DEFAULT')
-    companyCountry = models.CharField(max_length=200, default='DEFAULT')
-    sector = models.CharField(max_length=200, default='DEFAULT')
-    industry = models.CharField(max_length=200, default='DEFAULT')
-    currentProjects = models.TextField(default='DEFAULT')
+    companyName = models.CharField(max_length=200, default='Company Name')
+    companyPhone = models.CharField(max_length=200, default='Phone')
+    companyLocation = models.CharField(max_length=200, default='Location')
+    companyCountry = models.CharField(max_length=200, default='Country')
+    sector = models.CharField(max_length=200, default='Sector')
+    industry = models.CharField(max_length=200, default='Industry')
+    currentProjects = models.TextField(default='Current Projects')
     # files attached ? change reports to company name??
     upload = models.FileField(upload_to='media', default=True)
     # public or private
