@@ -175,3 +175,13 @@ def leave_group(request, pk):
     g = Group.objects.get(id=pk)
     g.user_set.remove(request.user)
     return render(request, 'group_successful.html', {'groups': groups})
+
+@login_required(login_url='/LokahiApp/login/')
+def sitemanagerindex(request):
+    name = request.user
+    my_groups = []
+    for g in Group.objects.all():
+        my_groups.append(g)
+    # Get list of all users, TODO: cleanup later, don't add all users to this list
+    users = User.objects.all()
+    return render(request, 'sitemanagerindex.html', {'name': name, 'my_groups': my_groups, "users": users})

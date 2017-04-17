@@ -2,16 +2,15 @@ from django.conf.urls import url, include
 from django.contrib import admin
 from django.contrib.auth import views as auth_views
 from django.views.generic.edit import CreateView
-from django.contrib.auth.forms import UserCreationForm
+from .forms import RegisterForm
 
-from LokahiProject import settings
 from . import views
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url('^register/', CreateView.as_view(
         template_name='register.html',
-        form_class=UserCreationForm,
+        form_class=RegisterForm,
         success_url='/LokahiApp/homepage'
     )),
     url('^accounts/', include('django.contrib.auth.urls')),
@@ -31,6 +30,7 @@ urlpatterns = [
     url(r'^report/', views.report),
     url(r'^result/(?P<pk>\d+)/$', views.result, name="result"),
     url(r'^result/(?P<pk>\d+)/edit/$', views.report_edit, name='report_edit'),
+    url(r'^sitemanagerindex/', views.sitemanagerindex),
     url(r'^media/(?P<path>.*)$', views.download),
     url(r'^$', views.index),
 ]
