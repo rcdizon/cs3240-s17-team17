@@ -11,6 +11,8 @@ from django.core.files import File
 from LokahiProject import settings
 from .models import Report
 from .forms import CreateReport
+from .models import Message
+from .forms import SendMessage
 from django.shortcuts import redirect
 import os
 from django.contrib.auth.models import User, Group, Permission
@@ -94,6 +96,33 @@ def report(request):
 def result(request, pk):
     reports = get_object_or_404(Report, pk=pk)
     return render(request, 'result.html', {'reports': reports})
+
+def message(request):
+    messages = Message.objects.filter(recipient = request.user)
+    if request.method == "POST":
+        form = SendMessage(request.POST)
+        if form.is_valid():
+            messenger = form.save(commit=False)
+            messenger.timestamp = timezone.now()
+            messenger.save()
+            return redirect('sent_messages', pk=messenger.pk)
+    else:
+    	data = {'sender': request.user}
+    	form = SendMessage(initial = data)
+    return render(request, 'messenger.html', {'form': form})
+
+def sent_messages(request, pk):
+    sent_messages = get_object_or_404(Message, pk=pk)
+    return render(request, 'sent_messages.html', {'sent_messages': sent_messages})
+
+def inbox(request):
+    inbox_messages = Message.objects.filter(recipient=request.user)
+    return render(request, 'inbox.html', {'inbox_messages': inbox_messages })
+
+def submit(request):
+    info=request.POST['info']
+    user = User.objects.create_user('john', 'lennon@thebeatles.com', 'johnpassword')
+    user.save()
 
 def download(request, path):
     file_path = os.path.join(settings.MEDIA_ROOT + "/media/", path)

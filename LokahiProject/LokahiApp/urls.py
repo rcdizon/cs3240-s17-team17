@@ -23,7 +23,10 @@ urlpatterns = [
     url(r'^login/', auth_views.login, name='login'),
     # Logging out takes you back to the landing page
     url(r'^logout/$', auth_views.logout, {'template_name': 'index.html'}, name='logout'),
-    url(r'^homepage/', views.homepage, name="homepage"),
+    url(r'^homepage/', views.homepage),
+    url(r'^messenger/', views.message),
+    url(r'^inbox/', views.inbox),
+    url(r'^sent_messages/(?P<pk>\d+)/$', views.sent_messages, name="sent_messages"),
     url(r'^report/new/$', views.create_report, name="create_report"),
     url(r'^report/', views.report),
     url(r'^result/(?P<pk>\d+)/$', views.result, name="result"),
