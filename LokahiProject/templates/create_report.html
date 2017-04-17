@@ -12,11 +12,12 @@
             <h1>Create a Report</h1>
         </div>
         <div class="content container">
-            <form method="POST" class="post-form">
+            <form method="POST" class="post-form" enctype='multipart/form-data'>
                 {% csrf_token %}
                 {{ form.as_p }}
                 <button type="submit" class="save btn btn-default">Save</button>
             </form>
+            <a href="/LokahiApp/report"><button class="save btn btn-default">Return</button></a>
         </div>
     </body>
 </html>
