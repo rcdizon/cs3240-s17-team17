@@ -11,6 +11,8 @@ from django.core.files import File
 from LokahiProject import settings
 from .models import Report
 from .forms import CreateReport
+from .models import Message
+from .forms import SendMessage
 from django.shortcuts import redirect
 import os
 from django.contrib.auth.models import User, Group, Permission
@@ -95,6 +97,33 @@ def result(request, pk):
     reports = get_object_or_404(Report, pk=pk)
     return render(request, 'result.html', {'reports': reports})
 
+def message(request):
+    messages = Message.objects.filter(recipient = request.user)
+    if request.method == "POST":
+        form = SendMessage(request.POST)
+        if form.is_valid():
+            messenger = form.save(commit=False)
+            messenger.timestamp = timezone.now()
+            messenger.save()
+            return redirect('sent_messages', pk=messenger.pk)
+    else:
+    	data = {'sender': request.user}
+    	form = SendMessage(initial = data)
+    return render(request, 'messenger.html', {'form': form})
+
+def sent_messages(request, pk):
+    sent_messages = get_object_or_404(Message, pk=pk)
+    return render(request, 'sent_messages.html', {'sent_messages': sent_messages})
+
+def inbox(request):
+    inbox_messages = Message.objects.filter(recipient=request.user)
+    return render(request, 'inbox.html', {'inbox_messages': inbox_messages })
+
+def submit(request):
+    info=request.POST['info']
+    user = User.objects.create_user('john', 'lennon@thebeatles.com', 'johnpassword')
+    user.save()
+
 def download(request, path):
     file_path = os.path.join(settings.MEDIA_ROOT + "/media/", path)
     if os.path.exists(file_path):
@@ -146,3 +175,13 @@ def leave_group(request, pk):
     g = Group.objects.get(id=pk)
     g.user_set.remove(request.user)
     return render(request, 'group_successful.html', {'groups': groups})
+
+@login_required(login_url='/LokahiApp/login/')
+def sitemanagerindex(request):
+    name = request.user
+    my_groups = []
+    for g in Group.objects.all():
+        my_groups.append(g)
+    # Get list of all users, TODO: cleanup later, don't add all users to this list
+    users = User.objects.all()
+    return render(request, 'sitemanagerindex.html', {'name': name, 'my_groups': my_groups, "users": users})

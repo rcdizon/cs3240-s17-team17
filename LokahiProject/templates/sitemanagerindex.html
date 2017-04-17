@@ -1,0 +1,144 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Group Successful</title>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="{% static 'css/reports.css' %}">
+    <link href="//fonts.googleapis.com/css?family=Lobster&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+</head>
+<body>
+<div class="page-header">
+    <a href="/LokahiApp/homepage"><h1>Lokahi FinTech</h1></a>
+    <a href="/LokahiApp/report/new/"><button class="createreport btn btn-default">Create a Report</button></a>
+    <a href="/LokahiApp/groups/"><button class="groups btn btn-default">Groups</button></a>
+    <!-- TODO: Remove for permissions -->
+    <a href="/LokahiApp/sitemanagerindex/"><button class="groups btn btn-default">Site Manager Panel</button></a>
+    <a href="/LokahiApp/messenger"><button class="messenger btn btn-default">Message</button></a>
+    <a href="/LokahiApp/logout"><button class="logout btn btn-default">Log out</button></a>
+</div>
+<div class="content container">
+    <!--
+    1.	SM users can give other users SM status.
+    2.	SMs can create groups, assign any user to any group
+    3.	SMs can delete any user from any group.
+    4.	SMs can suspend and restore a user's access to his or her account.
+    5.	SMs can access, edit, and delete any user's reports, even if they are private
+    -->
+
+    <h1>Welcome Site Manager</h1>
+
+    <!-- Promotion -->
+    <a href="#" onclick="$('#hiddenPromotion').show(); return false;">Promote User</a>
+    <div style="display: none;" id="hiddenPromotion">
+        <form action="/LokahiApp/createGroup/" method="post">
+            {% csrf_token %}
+            User Name:
+            <select>
+                {% for user in users %}
+                {% if not user.is_superuser and user != name %}
+                <option>{{ user }}</option>
+                {% endif %}
+                {% endfor %}
+            </select>
+        </form>
+    </div>
+    <br>
+
+    <!-- Suspend User -->
+    <a href="#" onclick="$('#hiddenSuspend').show(); return false;">Suspend User</a>
+    <div style="display: none;" id="hiddenSuspend">
+        <form action="/LokahiApp/createGroup/" method="post">
+            {% csrf_token %}
+            User Name:
+            <select>
+                {% for user in users %}
+                {% if not user.is_superuser and user != name %}
+                <option>{{ user }}</option>
+                {% endif %}
+                {% endfor %}
+            </select>
+        </form>
+    </div>
+    <br>
+
+    <!-- Restore User -->
+    <a href="#" onclick="$('#hiddenRestore').show(); return false;">Restore User</a>
+    <div style="display: none;" id="hiddenRestore">
+        <form action="/LokahiApp/createGroup/" method="post">
+            {% csrf_token %}
+            User Name:
+            <select>
+                {% for user in users %}
+                {% if not user.is_superuser and user != name %}
+                <option>{{ user }}</option>
+                {% endif %}
+                {% endfor %}
+            </select>
+        </form>
+    </div>
+    <br>
+
+    <!-- Group creation -->
+    <a href="#" onclick="$('#hiddenForm').show(); return false;">Create group</a>
+    <div style="display: none;" id="hiddenForm">
+        <form action="/LokahiApp/createGroup/" method="post">
+            {% csrf_token %}
+            Group Name:
+            <input type="text" name="groupName" id="groupName">
+            <input type="submit" value="Create" class="btn btn-primary">
+        </form>
+    </div>
+    <br>
+
+    <!-- View groups -->
+    <a href="#" onclick="$('#hiddenUserGroups').show(); return false;">User's Groups</a>
+    <div style="display: none;" id="hiddenUserGroups">
+        <table>
+            {% for item in my_groups %}
+            {% csrf_token %}
+            <tr>
+                <td>{{ item }}</td>
+                <td><a href="/LokahiApp/leaveGroup/{{ item.id }}/"><button class="btn btn-primary" name=item>Leave group</button></a></td>
+                <td>
+                    <a href="#" onclick="$('#hiddenUser').show(); return false;"><button class="btn btn-primary" name=item>Add other user</button></a>
+                    <div style="display: none;" id="hiddenUser">
+                        <select>
+                            {% for user in users %}
+                            {% if not user.is_superuser and user != name %}
+                            <option>{{ user }}</option>
+                            {% endif %}
+                            {% endfor %}
+                        </select>
+                        <a href="/LokahiApp/editGroup/{{ item.id }}/{{ user.id }}"><button class="btn btn-primary" name=item>Add to group</button></a>
+                    </div>
+                </td>
+                {% empty %}
+                <td>User is not in any groups</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+    <br>
+
+    <!-- Join groups -->
+    <a href="#" onclick="$('#hiddenOtherGroups').show(); return false;">Other Groups</a>
+    <div style="display: none;" id="hiddenOtherGroups">
+        <table>
+            {% for item in other_groups %}
+            {% csrf_token %}
+            <tr>
+                <td>{{ item }}</td>
+                <td><a href="/LokahiApp/joinGroup/{{ item.id }}/"><button value="Join group" class="btn btn-primary" name=item id='joinGroup'>Join group</button></a></td>
+                {% empty %}
+                <td>No other groups</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+</div>
+</body>
+</html>
