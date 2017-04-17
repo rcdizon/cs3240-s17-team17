@@ -18,9 +18,4 @@ class CreateReport(forms.ModelForm):
 class SendMessage(forms.ModelForm):
 	class Meta:
 		model = Message
-		fields = ('recipient','textbox')
-
-def save(self, sender):
-    m = Message()
-    m.sender = sender
-    return m
+		fields = ('recipient','textbox','sender',)

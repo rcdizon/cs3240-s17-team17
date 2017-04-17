@@ -80,10 +80,11 @@ def message(request):
         if form.is_valid():
             messenger = form.save(commit=False)
             messenger.timestamp = timezone.now()
-            messenger.save(request.user)
+            messenger.save()
             return redirect('sent_messages', pk=messenger.pk)
     else:
-        form = SendMessage()
+    	data = {'sender': request.user}
+    	form = SendMessage(initial = data)
     return render(request, 'messenger.html', {'form': form})
 
 def sent_messages(request, pk):
@@ -91,8 +92,8 @@ def sent_messages(request, pk):
     return render(request, 'sent_messages.html', {'sent_messages': sent_messages})
 
 def inbox(request):
-    inbox_messages = Message.objects.filter(timestamp__lte=timezone.now()).order_by('timestamp')
-    return render(request, 'inbox.html', {'inbox_messages ': inbox_messages })
+    inbox_messages = Message.objects.filter(recipient=request.user)
+    return render(request, 'inbox.html', {'inbox_messages': inbox_messages })
 
 def submit(request):
     info=request.POST['info']

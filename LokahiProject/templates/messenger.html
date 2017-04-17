@@ -18,14 +18,8 @@
                 <input class="Send btn btn-default" type="submit" value="Send" />
             </form>
         </div>
-        <h1> Inbox </h1>
-        <div class="POST">
-            {% if messages.timestamp %}
-                <div class="date">
-                    {{ messages.timestamp }}
-                </div>
-            {% endif %}
-            <p>{{ inbox_messages.textbox }}</p>
+         <div class="content container">
+        <a href="/LokahiApp/inbox"><button class="inbox btn btn-default">My Inbox</button></a>
         </div>
     </body>
 </html>
