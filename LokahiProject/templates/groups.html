@@ -38,7 +38,7 @@
     <br>
 
     <!-- View groups -->
-    <a href="#" onclick="$('#hiddenUserGroups').show(); return false;">User's Groups</a>
+    <a href="#" onclick="$('#hiddenUserGroups').toggle(); return false;">User's Groups</a>
     <div style="display: none;" id="hiddenUserGroups">
         <table>
         {% for item in my_groups %}
@@ -47,7 +47,7 @@
             <td>{{ item }}</td>
             <td><a href="/LokahiApp/leaveGroup/{{ item.id }}/"><button class="btn btn-primary" name=item>Leave group</button></a></td>
             <td>
-                <a href="#" onclick="$('#hiddenUser').show(); return false;"><button class="btn btn-primary" name=item>Add other user</button></a>
+                <a href="#" onclick="$('#hiddenUser').toggle(); return false;"><button class="btn btn-primary" name=item>Add other user</button></a>
                 <div style="display: none;" id="hiddenUser">
                     <select>
                         {% for user in users %}
@@ -68,7 +68,7 @@
     <br>
 
     <!-- Join groups -->
-    <a href="#" onclick="$('#hiddenOtherGroups').show(); return false;">Other Groups</a>
+    <a href="#" onclick="$('#hiddenOtherGroups').toggle(); return false;">Other Groups</a>
     <div style="display: none;" id="hiddenOtherGroups">
         <table>
             {% for item in other_groups %}
