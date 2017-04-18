@@ -119,11 +119,6 @@ def inbox(request):
     inbox_messages = Message.objects.filter(recipient=request.user)
     return render(request, 'inbox.html', {'inbox_messages': inbox_messages })
 
-def submit(request):
-    info=request.POST['info']
-    user = User.objects.create_user('john', 'lennon@thebeatles.com', 'johnpassword')
-    user.save()
-
 def download(request, path):
     file_path = os.path.join(settings.MEDIA_ROOT + "/media/", path)
     if os.path.exists(file_path):
@@ -166,6 +161,13 @@ def edit_group(request, pk, qk):
     return render(request, 'group_successful.html', {'groups': groups})
 
 @login_required(login_url='/LokahiApp/login/')
+def edit_group_remove(request, pk, qk):
+    g = Group.objects.get(id=pk)
+    u = User.objects.get(id=qk)
+    g.user_set.remove(u)
+    return render(request, 'sitemanager_successful.html', {'groups': groups})
+
+@login_required(login_url='/LokahiApp/login/')
 def join_group(request, pk):
     request.user.groups.add(Group.objects.get(id=pk))
     return render(request, 'group_successful.html', {'groups': groups})
@@ -180,8 +182,39 @@ def leave_group(request, pk):
 def sitemanagerindex(request):
     name = request.user
     my_groups = []
+    group_dict = {}
+    for g in Group.objects.all():
+        my_groups.append(g)
+        # TODO: Later refactor, use this dict to sift out users in the respective groups
+        group_dict[g] = list(User.objects.filter(groups__name=g.name))
+    # Get list of all users, TODO: cleanup later, don't add all users to this list
+    users = User.objects.all()
+    return render(request, 'sitemanagerindex.html', {'name': name, 'my_groups': my_groups, "users": users, "group_dict": group_dict})
+
+@login_required(login_url='/LokahiApp/login/')
+def suspend_user(request):
+    name = request.user
+    my_groups = []
     for g in Group.objects.all():
         my_groups.append(g)
     # Get list of all users, TODO: cleanup later, don't add all users to this list
     users = User.objects.all()
+
+    u = User.objects.get(id=request.POST.get("select"))
+    u.is_active=False
+    u.save()
+    return render(request, 'sitemanagerindex.html', {'name': name, 'my_groups': my_groups, "users": users})
+
+@login_required(login_url='/LokahiApp/login/')
+def restore_user(request):
+    name = request.user
+    my_groups = []
+    for g in Group.objects.all():
+        my_groups.append(g)
+    # Get list of all users, TODO: cleanup later, don't add all users to this list
+    users = User.objects.all()
+
+    u = User.objects.get(id=request.POST.get("select"))
+    u.is_active=True
+    u.save()
     return render(request, 'sitemanagerindex.html', {'name': name, 'my_groups': my_groups, "users": users})
