@@ -19,9 +19,9 @@ class CreateReport(forms.ModelForm):
                   'currentProjects', 'industry', 'sector', 'upload', 'encrypted', 'privacy')
 
 class SendMessage(forms.ModelForm):
-	class Meta:
-		model = Message
-		fields = ('recipient','textbox','sender',)
+    class Meta:
+        model = Message
+        fields = ('recipient','textbox',)
 
 class RegisterForm(UserCreationForm):
     fullname = forms.CharField(label="Full name")

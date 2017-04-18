@@ -104,7 +104,7 @@ def message(request):
         if form.is_valid():
             messenger = form.save(commit=False)
             messenger.timestamp = timezone.now()
-            messenger.save()
+            messenger.set(request.user)
             return redirect('sent_messages', pk=messenger.pk)
     else:
     	data = {'sender': request.user}
