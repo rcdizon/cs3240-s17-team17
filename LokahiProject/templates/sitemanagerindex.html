@@ -100,41 +100,48 @@
     <a href="#" onclick="$('#hiddenUserGroups').toggle(); return false;">All Groups</a>
     <div style="display: none;" id="hiddenUserGroups">
         <table>
-            {% for item in my_groups %}
-            {% csrf_token %}
             <tr>
-                <td>{{ item }}</td>
+                <form action="/LokahiApp/smGroups/" method="post">
+                 {% csrf_token %}
                 <td>
                     <!-- TODO: Future refactor, only list users who are(n't) already in the group -->
-                    <a href="#" onclick="$('#hiddenUser').show(); return false;"><button class="btn btn-primary" name=item>Add user</button></a>
+                    <select id="select" name="select">
+                        {% for group in my_groups %}
+                        <option value="{{ group }}">{{ group }}</option>
+                        {% endfor %}
+                    </select>
+                </td>
+                <td>
+                    <a href="#" onclick="$('#hiddenUser').toggle(); return false;"><button class="btn btn-primary" name=item>Add user</button></a>
                     <div style="display: none;" id="hiddenUser">
-                        <select>
+                        <select id="add" name="add">
+                            <option label=" "></option>
                             {% for user in users %}
                             {% if not user.is_superuser %}
                             <option>{{ user }}</option>
                             {% endif %}
                             {% endfor %}
                         </select>
-                        <a href="/LokahiApp/editGroup/{{ item.id }}/{{ user.id }}"><button class="btn btn-primary" name=item>Add to group</button></a>
                     </div>
                 </td>
                 <td>
-                    <a href="#" onclick="$('#hiddenUserRemove').show(); return false;"><button class="btn btn-primary" name=item>Remove user</button></a>
+                    <a href="#" onclick="$('#hiddenUserRemove').toggle(); return false;"><button class="btn btn-primary" name=item>Remove user</button></a>
                     <div style="display: none;" id="hiddenUserRemove">
-                        <select>
+                        <select id="remove" name="remove">
+                            <option label=" "></option>
                             {% for user in users %}
                             {% if not user.is_superuser %}
                             <option>{{ user }}</option>
                             {% endif %}
                             {% endfor %}
                         </select>
-                        <a href="/LokahiApp/editGroupRemove/{{ item.id }}/{{ user.id }}"><button class="btn btn-primary" name=item>Remove</button></a>
                     </div>
                 </td>
-                {% empty %}
-                <td>User is not in any groups</td>
+                <td>
+                    <input type="submit" value="Submit" />
+                </td>
+                </form>
             </tr>
-            {% endfor %}
         </table>
     </div>
 </div>

@@ -161,11 +161,24 @@ def edit_group(request, pk, qk):
     return render(request, 'group_successful.html', {'groups': groups})
 
 @login_required(login_url='/LokahiApp/login/')
-def edit_group_remove(request, pk, qk):
-    g = Group.objects.get(id=pk)
-    u = User.objects.get(id=qk)
-    g.user_set.remove(u)
-    return render(request, 'sitemanager_successful.html', {'groups': groups})
+def sm_groups(request):
+    name = request.user
+    my_groups = []
+    for g in Group.objects.all():
+        my_groups.append(g)
+    # Get list of all users, TODO: cleanup later, don't add all users to this list
+    users = User.objects.all()
+
+    if request.POST.get("add"):
+        g = Group.objects.get(name=request.POST.get("select"))
+        u = User.objects.get(username=request.POST.get("add"))
+        g.user_set.add(u)
+
+    if request.POST.get("remove"):
+        g = Group.objects.get(name=request.POST.get("select"))
+        u = User.objects.get(username=request.POST.get("remove"))
+        g.user_set.remove(u)
+    return render(request, 'sitemanagerindex.html', {'name': name, 'my_groups': my_groups, "users": users})
 
 @login_required(login_url='/LokahiApp/login/')
 def join_group(request, pk):
