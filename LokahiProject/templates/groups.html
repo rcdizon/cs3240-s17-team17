@@ -26,7 +26,7 @@
     <h1>Welcome {{ name }}!</h1>
 
     <!-- Group creation -->
-    <a href="#" onclick="$('#hiddenForm').show(); return false;">Create group</a>
+    <a href="#" onclick="$('#hiddenForm').toggle(); return false;">Create group</a>
     <div style="display: none;" id="hiddenForm">
         <form action="/LokahiApp/createGroup/" method="post">
           {% csrf_token %}
