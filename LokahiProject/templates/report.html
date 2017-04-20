@@ -12,7 +12,9 @@
     <body>
         <div class="page-header">
             <a href="/LokahiApp/homepage"><h1>Lokahi FinTech</h1></a>
+            {% if not request.user|has_group:"2" %}
             <a href="/LokahiApp/report/new/"><button class="createreport btn btn-default">Create a Report</button></a>
+            {% endif %}
             <a href="/LokahiApp/groups/"><button class="groups btn btn-default">Groups</button></a>
             {% if request.user|has_group:"3" %}
             <a href="/LokahiApp/sitemanagerindex/"><button class="groups btn btn-default">Site Manager Panel</button></a>

@@ -10,7 +10,9 @@
     </head>
     <div class="page-header">
         <a href="/LokahiApp/homepage"><h1>Lokahi FinTech</h1></a>
+        {% if not request.user|has_group:"2" %}
         <a href="/LokahiApp/report/new/"><button class="createreport btn btn-default">Create a Report</button></a>
+        {% endif %}
         <a href="/LokahiApp/groups/"><button class="groups btn btn-default">Groups</button></a>
         {% if request.user|has_group:"3" %}
         <a href="/LokahiApp/sitemanagerindex/"><button class="groups btn btn-default">Site Manager Panel</button></a>
@@ -19,7 +21,11 @@
         <a href="/LokahiApp/logout"><button class="logout btn btn-default">Log out</button></a>
         </div>
         <div class="content container">
-            <h1>{{ request.user }} Inbox</h1>
+            {% if request.user.first_name %}
+            <h1>{{ request.user.first_name }} Inbox</h1>
+            {% else %}
+            <h1>{{ name }} Inbox</h1>
+            {% endif %}
             <div class="row">
                 <div class="col-md-8">
                     {% for inbox in inbox_messages %}

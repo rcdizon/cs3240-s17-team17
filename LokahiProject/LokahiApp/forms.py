@@ -46,17 +46,16 @@ class RegisterForm(UserCreationForm):
         if user_type == "Company User":
             g = Group.objects.get(id=1)
             g.user_set.add(user)
-            # permission = Permission.objects.get(name='isCompanyUser')
-            # user.user_permissions.add(permission)
         elif user_type == "Investor":
             g = Group.objects.get(id=2)
             g.user_set.add(user)
-            # permission = Permission.objects.get(name='isInvestor')
-            # user.user_permissions.add(permission)
+
+        # Commented the code below because a Site Manager
+        # cannot created, only promoted
+        '''
         elif user_type == "Site Manager":
             g = Group.objects.get(id=3)
             g.user_set.add(user)
-            # permission = Permission.objects.get(name='isSiteManager')
-            # user.user_permissions.add(permission)
+        '''
 
         return user

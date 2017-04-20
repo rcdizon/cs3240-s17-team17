@@ -138,6 +138,8 @@ def groups(request):
     other_groups = []
     # Makes two lists, groups the user is in and groups the user isn't in
     for g in Group.objects.all():
+        if g.id == 1 or g.id == 2 or g.id == 3:
+            continue
         if not request.user.groups.filter(name=g.name).exists():
             other_groups.append(g)
         else:
@@ -197,6 +199,8 @@ def sitemanagerindex(request):
     my_groups = []
     group_dict = {}
     for g in Group.objects.all():
+        if g.id == 1 or g.id == 2 or g.id == 3:
+            continue
         my_groups.append(g)
         # TODO: Later refactor, use this dict to sift out users in the respective groups
         group_dict[g] = list(User.objects.filter(groups__name=g.name))
