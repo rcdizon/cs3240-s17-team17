@@ -27,6 +27,7 @@ urlpatterns = [
     url(r'^inbox/', views.inbox),
     url(r'^media/(?P<path>.*)$', views.download),
     url(r'^messenger/', views.message),
+    url(r'^promoteUser/', views.promote_user),
     url(r'^suspendUser/', views.suspend_user),
     url(r'^report/new/$', views.create_report, name="create_report"),
     url(r'^report/', views.report),

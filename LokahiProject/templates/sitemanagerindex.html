@@ -1,4 +1,6 @@
 {% load staticfiles %}
+{% load lokahi_extras %}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -15,12 +17,14 @@
     <a href="/LokahiApp/homepage"><h1>Lokahi FinTech</h1></a>
     <a href="/LokahiApp/report/new/"><button class="createreport btn btn-default">Create a Report</button></a>
     <a href="/LokahiApp/groups/"><button class="groups btn btn-default">Groups</button></a>
-    <!-- TODO: Remove for permissions -->
+    {% if request.user|has_group:"3" %}
     <a href="/LokahiApp/sitemanagerindex/"><button class="groups btn btn-default">Site Manager Panel</button></a>
+    {% endif %}
     <a href="/LokahiApp/messenger"><button class="messenger btn btn-default">Message</button></a>
     <a href="/LokahiApp/logout"><button class="logout btn btn-default">Log out</button></a>
 </div>
 <div class="content container">
+    {% if request.user|has_group:"3" %}
     <!--
     1.	SM users can give other users SM status.
     2.	SMs can create groups, assign any user to any group
@@ -30,6 +34,12 @@
     -->
 
     <h1>Welcome Site Manager</h1>
+    <script>
+        function clicked(e)
+        {
+            if(!confirm('Are you sure?'))e.preventDefault();
+        }
+    </script>
 
     <!-- Promotion -->
     <a href="#" onclick="$('#hiddenPromotion').toggle(); return false;">Promote User</a>
@@ -37,13 +47,14 @@
         <form action="/LokahiApp/promoteUser/" method="post">
             {% csrf_token %}
             User Name:
-            <select>
-                {% for user in users %}
+            <select id="select" name="select">
+                {% for user in sm_users %}
                 {% if not user.is_superuser and user != name and user.is_active %}
-                <option>{{ user }}</option>
+                <option value="{{ user.id }}">{{ user }}</option>
                 {% endif %}
                 {% endfor %}
             </select>
+            <input type="submit" value="Promote" onclick="clicked(event)" />
         </form>
     </div>
     <br>
@@ -61,7 +72,7 @@
                 {% endif %}
                 {% endfor %}
             </select>
-            <input type="submit" value="Suspend" />
+            <input type="submit" value="Suspend" onclick="clicked(event)" />
         </form>
     </div>
     <br>
@@ -79,7 +90,7 @@
                 {% endif %}
                 {% endfor %}
             </select>
-            <input type="submit" value="Restore" />
+            <input type="submit" value="Restore" onclick="clicked(event)" />
         </form>
     </div>
     <br>
@@ -91,7 +102,7 @@
             {% csrf_token %}
             Group Name:
             <input type="text" name="groupName" id="groupName">
-            <input type="submit" value="Create" class="btn btn-primary">
+            <input type="submit" value="Create" class="btn btn-primary" onclick="clicked(event)">
         </form>
     </div>
     <br>
@@ -138,12 +149,15 @@
                     </div>
                 </td>
                 <td>
-                    <input type="submit" value="Submit" />
+                    <input type="submit" value="Submit" onclick="clicked(event)" />
                 </td>
                 </form>
             </tr>
         </table>
     </div>
+    {% else %}
+    You do not have permission to access this page.
+    {% endif %}
 </div>
 </body>
 </html>

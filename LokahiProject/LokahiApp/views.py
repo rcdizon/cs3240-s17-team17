@@ -202,7 +202,23 @@ def sitemanagerindex(request):
         group_dict[g] = list(User.objects.filter(groups__name=g.name))
     # Get list of all users, TODO: cleanup later, don't add all users to this list
     users = User.objects.all()
-    return render(request, 'sitemanagerindex.html', {'name': name, 'my_groups': my_groups, "users": users, "group_dict": group_dict})
+    sm_users = User.objects.filter(groups__id=1) | User.objects.filter(groups__id=2)
+
+    return render(request, 'sitemanagerindex.html', {'name': name, 'my_groups': my_groups, "users": users, "sm_users": sm_users, "group_dict": group_dict})
+
+@login_required(login_url='/LokahiApp/login/')
+def promote_user(request):
+    name = request.user
+    my_groups = []
+    for g in Group.objects.all():
+        my_groups.append(g)
+    # Get list of all users, TODO: cleanup later, don't add all users to this list
+    users = User.objects.all()
+
+    u = User.objects.get(id=request.POST.get("select"))
+    u.groups.add(Group.objects.get(id=3))
+    u.save()
+    return render(request, 'sitemanagerindex.html', {'name': name, 'my_groups': my_groups, "users": users})
 
 @login_required(login_url='/LokahiApp/login/')
 def suspend_user(request):

@@ -32,7 +32,6 @@ class RegisterForm(UserCreationForm):
         model = User
         fields = ("username", "fullname", "user_type",)
 
-    '''
     def save(self, commit=True):
         user = super(RegisterForm, self).save(commit=False)
         first_name, last_name = self.cleaned_data["fullname"].split(None, 1)
@@ -40,17 +39,24 @@ class RegisterForm(UserCreationForm):
         user.last_name = last_name
 
         user_type = self.cleaned_data["user_type"]
-        if user_type == "Company User":
-            permission = Permission.objects.get(name='isCompanyUser')
-            user.user_permissions.add(permission)
-        elif user_type == "Investor":
-            permission = Permission.objects.get(name='isInvestor')
-            user.user_permissions.add(permission)
-        elif user_type == "Site Manager":
-            permission = Permission.objects.get(name='isSiteManager')
-            user.user_permissions.add(permission)
 
         if commit:
             user.save()
+
+        if user_type == "Company User":
+            g = Group.objects.get(id=1)
+            g.user_set.add(user)
+            # permission = Permission.objects.get(name='isCompanyUser')
+            # user.user_permissions.add(permission)
+        elif user_type == "Investor":
+            g = Group.objects.get(id=2)
+            g.user_set.add(user)
+            # permission = Permission.objects.get(name='isInvestor')
+            # user.user_permissions.add(permission)
+        elif user_type == "Site Manager":
+            g = Group.objects.get(id=3)
+            g.user_set.add(user)
+            # permission = Permission.objects.get(name='isSiteManager')
+            # user.user_permissions.add(permission)
+
         return user
-    '''
