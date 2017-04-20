@@ -25,7 +25,7 @@ class SendMessage(forms.ModelForm):
 
 class RegisterForm(UserCreationForm):
     fullname = forms.CharField(label="Full name")
-    CHOICES = (('Company User', 'Company User'), ('Investor', 'Investor'), ('Site Manager', 'Site Manager'),)
+    CHOICES = (('Company User', 'Company User'), ('Investor', 'Investor'),)
     user_type = forms.ChoiceField(choices=CHOICES)
 
     class Meta:
@@ -34,9 +34,12 @@ class RegisterForm(UserCreationForm):
 
     def save(self, commit=True):
         user = super(RegisterForm, self).save(commit=False)
-        first_name, last_name = self.cleaned_data["fullname"].split(None, 1)
-        user.first_name = first_name
-        user.last_name = last_name
+        if ' ' in self.cleaned_data["fullname"].split(None, 1):
+            first_name, last_name = self.cleaned_data["fullname"].split(None, 1)
+            user.first_name = first_name
+            user.last_name = last_name
+        else:
+            user.first_name = self.cleaned_data["fullname"]
 
         user_type = self.cleaned_data["user_type"]
 
@@ -49,13 +52,5 @@ class RegisterForm(UserCreationForm):
         elif user_type == "Investor":
             g = Group.objects.get(id=2)
             g.user_set.add(user)
-
-        # Commented the code below because a Site Manager
-        # cannot created, only promoted
-        '''
-        elif user_type == "Site Manager":
-            g = Group.objects.get(id=3)
-            g.user_set.add(user)
-        '''
 
         return user
