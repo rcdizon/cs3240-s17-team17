@@ -194,15 +194,15 @@ def sitemanagerindex(request):
 @login_required(login_url='/LokahiApp/login/')
 def search(request):
     if request.method == 'POST':
-    	reportDate = request.POST.get('reportDate')
-		companyName = request.POST.get('companyName')
-		ceoName = request.POST.get('ceoName')
-		sector = request.POST.get('sector')
-		industry = request.POST.get('industry')
-		companyLocation = request.POST.get('companyLocation')
-		companyCountry = request.POST.get('companyCountry')
-		currentProjects = request.POST.get('currentProjects')
-		filename = request.POST.get('filename')
+        reportDate = request.POST.get('reportDate')
+        companyName = request.POST.get('companyName')
+        ceoName = request.POST.get('ceoName')
+        sector = request.POST.get('sector')
+        industry = request.POST.get('industry')
+        companyLocation = request.POST.get('companyLocation')
+        companyCountry = request.POST.get('companyCountry')
+        currentProjects = request.POST.get('currentProjects')
+        filename = request.POST.get('filename')
 
         # adding the values in a context variable
         context = {
@@ -226,5 +226,11 @@ def search(request):
     else: 
         # if post request is not true
         # returing the form template
-        template = loader.get_template('login.html')
+        template = loader.get_template('search.html')
         return HttpResponse(template.render())
+
+@login_required(login_url='/LokahiApp/login/')
+def search_results(request, pk):
+    search_requests = get_object_or_404(SearchForm, pk=pk)
+    return render(request, 'search_results.html', {'search_results': search_requests})
+

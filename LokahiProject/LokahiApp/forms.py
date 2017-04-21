@@ -54,7 +54,7 @@ class RegisterForm(UserCreationForm):
             user.save()
         return user
     '''
-class SearchForm(forms.Form)
+class SearchForm(forms.Form):
 	reportDate = forms.DateTimeField()
 	companyName = forms.CharField(label="Company Name")
 	ceoName = forms.CharField(label="CEO Name")
