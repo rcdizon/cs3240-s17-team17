@@ -190,3 +190,41 @@ def sitemanagerindex(request):
     # Get list of all users, TODO: cleanup later, don't add all users to this list
     users = User.objects.all()
     return render(request, 'sitemanagerindex.html', {'name': name, 'my_groups': my_groups, "users": users})
+
+@login_required(login_url='/LokahiApp/login/')
+def search(request):
+    if request.method == 'POST':
+    	reportDate = request.POST.get('reportDate')
+		companyName = request.POST.get('companyName')
+		ceoName = request.POST.get('ceoName')
+		sector = request.POST.get('sector')
+		industry = request.POST.get('industry')
+		companyLocation = request.POST.get('companyLocation')
+		companyCountry = request.POST.get('companyCountry')
+		currentProjects = request.POST.get('currentProjects')
+		filename = request.POST.get('filename')
+
+        # adding the values in a context variable
+        context = {
+            'reportDate': reportDate,
+			'companyName': companyName, 
+			'ceoName':ceoName,
+			'sector':sector,
+			'industry':industry,
+			'companyLocation':companyLocation,
+			'companyCountry':companyCountry,
+			'currentProjects':currentProjects,
+			'filename':filename
+		}
+
+        # getting our showdata template
+        template = loader.get_template('search.html')
+
+        # returing the template
+        return HttpResponse(template.render(context, request))
+
+    else: 
+        # if post request is not true
+        # returing the form template
+        template = loader.get_template('login.html')
+        return HttpResponse(template.render())

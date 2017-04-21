@@ -26,6 +26,7 @@ urlpatterns = [
     url(r'^messenger/', views.message),
     url(r'^inbox/', views.inbox),
     url(r'^sent_messages/(?P<pk>\d+)/$', views.sent_messages, name="sent_messages"),
+    url(r'^search/$', views.search),
     url(r'^report/new/$', views.create_report, name="create_report"),
     url(r'^report/', views.report),
     url(r'^result/(?P<pk>\d+)/$', views.result, name="result"),
