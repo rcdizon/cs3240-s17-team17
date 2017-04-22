@@ -1,4 +1,6 @@
 {% load staticfiles %}
+{% load lokahi_extras %}
+
 <html>
     <head>
         <title>Report</title>
@@ -10,10 +12,13 @@
     <body>
         <div class="page-header">
             <a href="/LokahiApp/homepage"><h1>Lokahi FinTech</h1></a>
+            {% if not request.user|has_group:"2" %}
             <a href="/LokahiApp/report/new/"><button class="createreport btn btn-default">Create a Report</button></a>
+            {% endif %}
             <a href="/LokahiApp/groups/"><button class="groups btn btn-default">Groups</button></a>
-            <!-- TODO: Remove for permissions -->
+            {% if request.user|has_group:"3" %}
             <a href="/LokahiApp/sitemanagerindex/"><button class="groups btn btn-default">Site Manager Panel</button></a>
+            {% endif %}
             <a href="/LokahiApp/messenger"><button class="messenger btn btn-default">Message</button></a>
             <a href="/LokahiApp/logout"><button class="logout btn btn-default">Log out</button></a>
         </div>
@@ -40,6 +45,15 @@
                         <p>Encrypted: {{ reports.encrypted|linebreaksbr}}</p>
                         <p>Privacy: {{ reports.privacy|linebreaksbr}}</p>
                         <a class="btn btn-default" href="{% url 'report_edit' pk=reports.pk %}" ><span class="glyphicon glyphicon-pencil"></span></a>
+                        {% if request.user|has_group:"3" %}
+                        <a class="btn btn-default" href="{% url 'report_edit' pk=reports.pk %}" onclick="clicked(event)"><span class="glyphicon glyphicon-remove-circle"></span></a>
+                        {% endif %}
+                        <script>
+                            function clicked(e)
+                            {
+                                if(!confirm('Are you sure you want to delete this report?'))e.preventDefault();
+                            }
+                        </script>
                     </div>
                 </div>
             </div>
