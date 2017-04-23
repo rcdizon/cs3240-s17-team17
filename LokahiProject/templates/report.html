@@ -39,7 +39,7 @@
                 </div>
             </div>
         </nav>
-        <header class="intro-header" style="background-image: url({% static 'startbootstrap-clean-blog/img/money2.png' %})">
+        <header class="intro-header" style="background-image: url({% static 'startbootstrap-clean-blog/img/background2.png' %}); background-color: #ccc">
             <div class="container">
                 <div class="row">
                     <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
@@ -53,18 +53,30 @@
             </div>
         </header>
         <div class="container">
+            <!-- Marketing Icons Section -->
             <div class="row">
-                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-                        {% for report in reports %}
-                            <div class="post-preview">
-                                <h2 class="post-title"><a href="{% url 'result' pk=report.pk %}">{{ report.companyName }}</a></h2>
-                                <p class="post-subtitle">{{ report.sector}}, {{ report.industry}}</p>
-                                <p class="post-meta">{{ report.timestamp}}</p>
-                            <hr>
-                            </div>
-                        {% endfor %}
+                <div class="col-lg-12">
+                    <h1 class="page-header">
+                        Reports
+                    </h1>
                 </div>
+                {% for report in reports %}
+                    <div class="col-md-4">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h4><i class="fa fa-fw fa-check"></i>{{ report.companyName }}</h4>
+                            </div>
+                            <div class="panel-body">
+                                <p class="post-subtitle">Sector: {{ report.sector}}</p>
+                                <p class="post-subtitle">Industry: {{ report.industry}}</p>
+                                <p class="post-meta">{{ report.timestamp}}</p>
+                                <a href="{% url 'result' pk=report.pk %}" class="btn btn-default">Learn More</a>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
             </div>
+            <!-- /.row -->
         </div>
     </body>
 </html>
