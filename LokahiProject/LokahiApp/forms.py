@@ -1,6 +1,7 @@
 from django import forms
 from .models import Report
 from .models import Message
+from .models import Search
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User, Group, Permission
 
@@ -54,13 +55,13 @@ class RegisterForm(UserCreationForm):
             user.save()
         return user
     '''
-class SearchForm(forms.Form):
-	reportDate = forms.DateTimeField()
-	companyName = forms.CharField(label="Company Name")
-	ceoName = forms.CharField(label="CEO Name")
-	sector = forms.CharField(label="Sector")
-	industry = forms.CharField(label="Industry")
-	companyLocation = forms.CharField(label="Company Location")
-	companyCountry = forms.CharField(label="Company Country")
-	currentProjects = forms.CharField(label="Current Projects")
-	filename = forms.CharField(label="Uploaded Files")
+class SearchForm(forms.ModelForm):
+	class Meta:
+		model = Search
+		fields = ('search',)
+
+'''
+('companyName', 'companyLocation', 'reportDate', 'companyCountry',
+                  'currentProjects', 'industry', 'sector', 'ceoName', 'filename')
+'''
+

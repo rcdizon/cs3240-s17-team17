@@ -1,58 +1,35 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Search</title>
-</head>
-<body>
-<h2>Search</h2>
-<form method="post" action="/login/">
-    <table>
-        <tr>
-            <td>Report Date:</td>
-            <td><input type="text" name="reportDate"/></td>
-        </tr>
-        <tr>
-            <td>Company Name:</td>
-            <td><input type="text" name="password"/></td>
-        </tr>
-         <tr>
-            <td>CEO Name:</td>
-            <td><input type="text" name="ceoName"/></td>
-        </tr>
-        <tr>
-            <td>Sector:</td>
-            <td><input type="text" name="sector"/></td>
-        </tr>
-         <tr>
-            <td>Industry:</td>
-            <td><input type="text" name="industry"/></td>
-        </tr>
-        <tr>
-            <td>Company Location:</td>
-            <td><input type="text" name="companyLocation"/></td>
-        </tr>
-         <tr>
-            <td>Company Country:</td>
-            <td><input type="text" name="companyCountry"/></td>
-        </tr>
-        <tr>
-            <td>Current Projects:</td>
-            <td><input type="text" name="currentProjects"/></td>
-        </tr>
-        <tr>
-            <td>File Name:</td>
-            <td><input type="text" name="filename"/></td>
-        </tr>
-        <tr>
-            <td>
-           </td>
-            <td>
-                <button><a href="/LokahiApp/homepage/">Submit</a></button>
-                <button><a href="/LokahiApp/homepage/">Back</a></button>
-            </td>
-        </tr>
-    </table>
-</form>
-</body>
+{% load staticfiles %}
+<html>
+    <head>
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+        <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
+        <link rel="stylesheet" href="{% static 'css/reports.css' %}">
+        <link href="//fonts.googleapis.com/css?family=Lobster&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+        <title>Search</title>
+    </head>
+    <body>
+        <div class="page-header">
+            <h1>Search</h1>
+        </div>
+        <div class="content container">
+            <form method="POST" class="post-form">
+                <table>
+                    <tr>
+                        <td>Search Request:</td>
+                        <td><input type="search" name="search"/></td>
+                    </tr>
+                    <tr>
+                        <td>
+                       </td>
+                        <td>
+                                <button class="Send btn btn-default"><a href="/LokahiApp/search/">Submit</a></button>
+                        </td>
+                    </tr>
+                    <div>
+                        {{search_requests}}
+                    </div>
+                </table>
+            </form>
+        </div>
+    </body>
 </html>

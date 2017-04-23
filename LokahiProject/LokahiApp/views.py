@@ -13,6 +13,7 @@ from .models import Report
 from .forms import CreateReport
 from .models import Message
 from .forms import SendMessage
+from .forms import SearchForm
 from django.shortcuts import redirect
 import os
 from django.contrib.auth.models import User, Group, Permission
@@ -193,44 +194,17 @@ def sitemanagerindex(request):
 
 @login_required(login_url='/LokahiApp/login/')
 def search(request):
-    if request.method == 'POST':
-        reportDate = request.POST.get('reportDate')
-        companyName = request.POST.get('companyName')
-        ceoName = request.POST.get('ceoName')
-        sector = request.POST.get('sector')
-        industry = request.POST.get('industry')
-        companyLocation = request.POST.get('companyLocation')
-        companyCountry = request.POST.get('companyCountry')
-        currentProjects = request.POST.get('currentProjects')
-        filename = request.POST.get('filename')
+	if request.method == 'POST':
+		search_request = SearchForm(request.POST)
+		if search_request.is_valid():
+			search_name = search_request.save()
+			search_request.save()
+			search_requests= Report.objects.filter(companyName = search_name)
+	else:
+		search_request = SearchForm()
+	return render(request, 'search.html', {'search_request': search_request})
 
-        # adding the values in a context variable
-        context = {
-            'reportDate': reportDate,
-			'companyName': companyName, 
-			'ceoName':ceoName,
-			'sector':sector,
-			'industry':industry,
-			'companyLocation':companyLocation,
-			'companyCountry':companyCountry,
-			'currentProjects':currentProjects,
-			'filename':filename
-		}
 
-        # getting our showdata template
-        template = loader.get_template('search.html')
 
-        # returing the template
-        return HttpResponse(template.render(context, request))
 
-    else: 
-        # if post request is not true
-        # returing the form template
-        template = loader.get_template('search.html')
-        return HttpResponse(template.render())
-
-@login_required(login_url='/LokahiApp/login/')
-def search_results(request, pk):
-    search_requests = get_object_or_404(SearchForm, pk=pk)
-    return render(request, 'search_results.html', {'search_results': search_requests})
 
