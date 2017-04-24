@@ -15,6 +15,7 @@ from .models import Message
 from .forms import SendMessage
 from .forms import SearchForm
 from .models import Search
+from .forms import RegisterForm
 from django.shortcuts import redirect
 import os
 from django.views.generic import ListView
@@ -200,7 +201,7 @@ def search(request):
         form = SearchForm(request.POST)
         if form.is_valid():
             search_results = form.save()
-            results = []
+            results = ["Unfortunately there are no results for your Search :("]
             for g in Report.objects.all():
                 if (g.companyName == search_results.search):
                     results = Report.objects.filter(companyName = search_results.search)
@@ -217,8 +218,8 @@ def search(request):
                 elif (g.currentProjects == search_results.search):
                     results = Report.objects.filter(currentProjects = search_results.search)
             for j in User.objects.all():  
-                if (j == search_results.search):
-                    results = Report.objects.filter(j = search_results.search)
+                if (j.username == search_results.search):
+                    results = User.objects.filter(username = search_results.search)
             return render(request,'search.html', {'results': results} )
     else:
         form = SearchForm()

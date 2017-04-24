@@ -22,9 +22,6 @@
             <h1>Welcome {{ name }}!</h1>
             <div class="row">
                 <div class="col-md-8">
-                    {% if not reports %}
-                        No reports saved. Create report <a href="/LokahiApp/report/new/">here</a>.
-                    {% else %}
                         {% for report in reports %}
                             <div class="reports">
                                 <h3><a href="{% url 'result' pk=report.pk %}">{{ report.companyName }}</a></h3>
