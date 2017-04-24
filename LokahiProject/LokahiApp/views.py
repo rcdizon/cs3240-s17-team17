@@ -9,6 +9,7 @@ from django.shortcuts import render, get_object_or_404
 from django.utils import timezone
 from django.core.files import File
 from LokahiProject import settings
+from django.core.signing import Signer
 from .models import Report
 from .forms import CreateReport
 from .models import Message
@@ -102,13 +103,14 @@ def message(request):
     if request.method == "POST":
         form = SendMessage(request.POST)
         if form.is_valid():
+            message_signer = Signer()
             messenger = form.save(commit=False)
-            messenger.timestamp = timezone.now()
+            messenger.textbox = message_signer.sign(messenger.textbox)
             messenger.set(request.user)
+            original = message_signer.unsign(messenger.textbox)
             return redirect('sent_messages', pk=messenger.pk)
     else:
-    	data = {'sender': request.user}
-    	form = SendMessage(initial = data)
+    	form = SendMessage()
     return render(request, 'messenger.html', {'form': form})
 
 def sent_messages(request, pk):
