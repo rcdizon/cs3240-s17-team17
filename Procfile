@@ -1,1 +1,1 @@
-web: gunicorn --pythonpath LokahiProject/LokahiProject.wsgi
+web: gunicorn LokahiProject/LokahiProject.wsgi
