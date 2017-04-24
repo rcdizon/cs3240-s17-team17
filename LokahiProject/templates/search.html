@@ -18,16 +18,20 @@
                         <td>Search Request:</td>
                         <td><input type="search" name="search"/></td>
                     </tr>
-                    <tr>
-                        <td>
-                       </td>
-                        <td>
-                                <button class="Send btn btn-default"><a href="/LokahiApp/search/">Submit</a></button>
-                        </td>
-                    </tr>
+                       <form action="/LokahiApp/search/">
+                            {% csrf_token %}
+                            <input type="submit" name="Search" class="Send btn btn-default" value="Search" />
+                        </form>
                     <div>
                         {{search_requests}}
                     </div>
+                        <div class="col-md-8">
+                        {% for results in results %}
+                            <div class="reports">
+                                <h3>{{results}}</h3>
+                            </div>
+                        {% endfor %}
+                        </div>
                 </table>
             </form>
         </div>

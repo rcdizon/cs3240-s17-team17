@@ -49,5 +49,5 @@ class Message(models.Model):
         self.save()
 
 class Search(models.Model):
-	search = models.TextField(max_length=100)
+	search = models.CharField(max_length=100)
 

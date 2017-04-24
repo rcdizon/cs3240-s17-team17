@@ -14,8 +14,10 @@ from .forms import CreateReport
 from .models import Message
 from .forms import SendMessage
 from .forms import SearchForm
+from .models import Search
 from django.shortcuts import redirect
 import os
+from django.views.generic import ListView
 from django.contrib.auth.models import User, Group, Permission
 from django.contrib.auth.decorators import login_required
 import sys
@@ -194,15 +196,33 @@ def sitemanagerindex(request):
 
 @login_required(login_url='/LokahiApp/login/')
 def search(request):
-	if request.method == 'POST':
-		search_request = SearchForm(request.POST)
-		if search_request.is_valid():
-			search_name = search_request.save()
-			search_request.save()
-			search_requests= Report.objects.filter(companyName = search_name)
-	else:
-		search_request = SearchForm()
-	return render(request, 'search.html', {'search_request': search_request})
+    if request.method == "POST":
+        form = SearchForm(request.POST)
+        if form.is_valid():
+            search_results = form.save()
+            results = []
+            for g in Report.objects.all():
+                if (g.companyName == search_results.search):
+                    results = Report.objects.filter(companyName = search_results.search)
+                elif (g.companyCountry== search_results.search):
+                    results = Report.objects.filter(companyCountry = search_results.search)
+                elif (g.companyLocation == search_results.search):
+                    results = Report.objects.filter(companyLocation  = search_results.search)
+                elif (g.sector == search_results.search):
+                    results = Report.objects.filter(sector = search_results.search)
+                elif (g.industry== search_results.search):
+                    results = Report.objects.filter(industry = search_results.search)
+                elif (g.companyPhone== search_results.search):
+                    results = Report.objects.filter(companyPhone = search_results.search)
+                elif (g.currentProjects == search_results.search):
+                    results = Report.objects.filter(currentProjects = search_results.search)
+            for j in User.objects.all():  
+                if (j == search_results.search):
+                    results = Report.objects.filter(j = search_results.search)
+            return render(request,'search.html', {'results': results} )
+    else:
+        form = SearchForm()
+    return render(request, 'search.html', {'form': form})
 
 
 
