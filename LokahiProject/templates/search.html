@@ -21,14 +21,14 @@
                             <input type="submit" name="Search" class="Send btn btn-default" value="Search" />
                     </div>
                     <div class="col-md-8">
-                        {% if results == 0 %}
-                            <h3>Unfortunately there are no results for your Search :( </h3>
-                        {% endif %}
-                    </div>
-                    <div class="col-md-8">
                         {% for results in results %}
                             <div class="reports">
-                                <h3>{{results}}</h3>
+                                <h3>{{ results.companyName}}</h3>
+                                <p>{{ results.timestamp}}</p>
+                                <p>{{ results.companyPhone}}</p>
+                                <p>{{ results.sector}}</p>
+                                <p>{{ results.industry}}</p>
+                                <h3>{{ results.username}}</h3>
                             </div>
                         {% endfor %}
                     </div>
