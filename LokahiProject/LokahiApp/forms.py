@@ -26,7 +26,7 @@ class SendMessage(forms.ModelForm):
 
 class RegisterForm(UserCreationForm):
     fullname = forms.CharField(label="Full name")
-    CHOICES = (('Company User', 'Company User'), ('Investor', 'Investor'), ('Site Manager', 'Site Manager'),)
+    CHOICES = (('Company User', 'Company User'), ('Investor', 'Investor'),)
     user_type = forms.ChoiceField(choices=CHOICES)
 
     class Meta:
@@ -36,23 +36,25 @@ class RegisterForm(UserCreationForm):
     '''
     def save(self, commit=True):
         user = super(RegisterForm, self).save(commit=False)
-        first_name, last_name = self.cleaned_data["fullname"].split(None, 1)
-        user.first_name = first_name
-        user.last_name = last_name
+        if ' ' in self.cleaned_data["fullname"].split(None, 1):
+            first_name, last_name = self.cleaned_data["fullname"].split(None, 1)
+            user.first_name = first_name
+            user.last_name = last_name
+        else:
+            user.first_name = self.cleaned_data["fullname"]
 
         user_type = self.cleaned_data["user_type"]
-        if user_type == "Company User":
-            permission = Permission.objects.get(name='isCompanyUser')
-            user.user_permissions.add(permission)
-        elif user_type == "Investor":
-            permission = Permission.objects.get(name='isInvestor')
-            user.user_permissions.add(permission)
-        elif user_type == "Site Manager":
-            permission = Permission.objects.get(name='isSiteManager')
-            user.user_permissions.add(permission)
 
         if commit:
             user.save()
+
+        if user_type == "Company User":
+            g = Group.objects.get(id=1)
+            g.user_set.add(user)
+        elif user_type == "Investor":
+            g = Group.objects.get(id=2)
+            g.user_set.add(user)
+
         return user
     '''
 class SearchForm(forms.ModelForm):
@@ -64,4 +66,3 @@ class SearchForm(forms.ModelForm):
 ('companyName', 'companyLocation', 'reportDate', 'companyCountry',
                   'currentProjects', 'industry', 'sector', 'ceoName', 'filename')
 '''
-

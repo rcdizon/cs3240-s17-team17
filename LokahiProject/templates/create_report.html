@@ -1,4 +1,6 @@
 {% load staticfiles %}
+{% load lokahi_extras %}
+
 <html>
     <head>
         <title>Create Reports</title>
@@ -12,12 +14,16 @@
             <h1>Create a Report</h1>
         </div>
         <div class="content container">
+            {% if not request.user|has_group:"2" %}
             <form method="POST" class="post-form" enctype='multipart/form-data'>
                 {% csrf_token %}
                 {{ form.as_p }}
                 <button type="submit" class="save btn btn-default">Save</button>
             </form>
-            <a href="/LokahiApp/report"><button class="save btn btn-default">Return</button></a>
+            <a href="/LokahiApp/report"><button>Return</button></a>
+            {% else %}
+            You do not have permission to access this page.
+            {% endif %}
         </div>
     </body>
 </html>

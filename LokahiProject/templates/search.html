@@ -21,16 +21,20 @@
                             <input type="submit" name="Search" class="Send btn btn-default" value="Search" />
                     </div>
                     <div class="col-md-8">
-                        {% for results in results %}
-                            <div class="reports">
-                                <h3>{{ results.companyName}}</h3>
-                                <p>{{ results.timestamp}}</p>
-                                <p>{{ results.companyPhone}}</p>
-                                <p>{{ results.sector}}</p>
-                                <p>{{ results.industry}}</p>
-                                <h3>{{ results.username}}</h3>
-                            </div>
-                        {% endfor %}
+                        {% if results.0.companyName %}
+                        <div class="reports">
+                            {% for result in results %}
+                                    <h3>{{ result.companyName }}</h3>
+                                    <p>{{ result.timestamp }}</p>
+                                    <p>{{ result.companyPhone }}</p>
+                                    <p>{{ result.sector }}</p>
+                                    <p>{{ result.industry }}</p>
+                                    <h3>{{ result.username }}</h3>
+                            {% endfor %}
+                        </div>
+                        {% else %}
+                            {{ results.0 }}
+                        {% endif %}
                     </div>
             </form>
         </div>

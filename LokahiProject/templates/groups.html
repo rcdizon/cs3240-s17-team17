@@ -1,4 +1,6 @@
 {% load staticfiles %}
+{% load lokahi_extras %}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -13,17 +15,24 @@
 <body>
 <div class="page-header">
     <a href="/LokahiApp/homepage"><h1>Lokahi FinTech</h1></a>
+    {% if not request.user|has_group:"2" %}
     <a href="/LokahiApp/report/new/"><button class="createreport btn btn-default">Create a Report</button></a>
+    {% endif %}
     <a href="/LokahiApp/groups/"><button class="groups btn btn-default">Groups</button></a>
-    <!-- TODO: Remove for permissions -->
+    {% if request.user|has_group:"3" %}
     <a href="/LokahiApp/sitemanagerindex/"><button class="groups btn btn-default">Site Manager Panel</button></a>
+    {% endif %}
     <a href="/LokahiApp/messenger"><button class="messenger btn btn-default">Message</button></a>
     <a href="/LokahiApp/logout"><button class="logout btn btn-default">Log out</button></a>
 </div>
 <div class="content container">
 
     <!-- TODO: Boostrapify this stuff later -->
+    {% if request.user.first_name %}
+    <h1>Welcome {{ request.user.first_name }}!</h1>
+    {% else %}
     <h1>Welcome {{ name }}!</h1>
+    {% endif %}
 
     <!-- Group creation -->
     <a href="#" onclick="$('#hiddenForm').toggle(); return false;">Create group</a>
@@ -67,8 +76,8 @@
     </div>
     <br>
 
-    <!-- Join groups -->
-    <a href="#" onclick="$('#hiddenOtherGroups').toggle(); return false;">Other Groups</a>
+    <!-- Join groups: will remove because non-SM's shouldn't be allowed to add themselves to a group
+    <a href="#" onclick="$('#hiddenOtherGroups').show(); return false;">Other Groups</a>
     <div style="display: none;" id="hiddenOtherGroups">
         <table>
             {% for item in other_groups %}
@@ -82,6 +91,7 @@
             {% endfor %}
         </table>
     </div>
+    -->
 
 </div>
 
