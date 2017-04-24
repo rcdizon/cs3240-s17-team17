@@ -1,1 +1,1 @@
-web: gunicorn LokahiProject.wsgi
+web: gunicorn LokahiProject.LokahiProject.wsgi
