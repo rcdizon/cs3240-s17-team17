@@ -5,34 +5,28 @@
         <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
         <link rel="stylesheet" href="{% static 'css/reports.css' %}">
         <link href="//fonts.googleapis.com/css?family=Lobster&subset=latin,latin-ext" rel="stylesheet" type="text/css">
-        <title>Search</title>
     </head>
     <body>
         <div class="page-header">
-            <h1>Search</h1>
+            <a href="/LokahiApp/homepage"><h1>Lokahi FinTech</h1></a>
         </div>
         <div class="content container">
             <form method="POST" class="post-form">
-                <table>
+                <div class="col-md-8">
                     <tr>
                         <td>Search Request:</td>
                         <td><input type="search" name="search"/></td>
                     </tr>
-                       <form action="/LokahiApp/search/">
                             {% csrf_token %}
                             <input type="submit" name="Search" class="Send btn btn-default" value="Search" />
-                        </form>
-                    <div>
-                        {{search_requests}}
                     </div>
-                        <div class="col-md-8">
+                    <div class="col-md-8">
                         {% for results in results %}
                             <div class="reports">
                                 <h3>{{results}}</h3>
                             </div>
                         {% endfor %}
-                        </div>
-                </table>
+                    </div>
             </form>
         </div>
     </body>
