@@ -20,7 +20,6 @@
             <a href="/LokahiApp/sitemanagerindex/"><button class="groups btn btn-default">Site Manager Panel</button></a>
             {% endif %}
             <a href="/LokahiApp/messenger"><button class="messenger btn btn-default">Message</button></a>
-            <a href="/LokahiApp/search"><button class="Search btn btn-default">Search</button></a>
             <a href="/LokahiApp/logout"><button class="logout btn btn-default">Log out</button></a>
         </div>
         <div class="content container">
@@ -29,6 +28,7 @@
             {% else %}
             <h1>Welcome {{ name }}!</h1>
             {% endif %}
+            <a href="/LokahiApp/search"><button class="Search btn btn-default">Search for report</button></a>
             <div class="row">
                 <div class="col-md-8">
                     {% if not reports %}
