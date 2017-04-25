@@ -21,6 +21,8 @@ import os
 from django.views.generic import ListView
 from django.contrib.auth.models import User, Group, Permission
 from django.contrib.auth.decorators import login_required
+from django.db import IntegrityError
+from django.shortcuts import render_to_response
 import sys
 
 @csrf_exempt
@@ -159,9 +161,14 @@ def groups(request):
 @login_required(login_url='/LokahiApp/login/')
 def create_group(request):
     info = request.POST['groupName']
-    my_group = Group.objects.create(name=str(info))
-    my_group.save()
-    return render(request, 'group_successful.html', {'groups': groups})
+    try:
+        my_group = Group.objects.create(name=str(info))
+        my_group.save()
+        my_group.user_set.add(request.user)
+        return render(request, 'group_successful.html', {'groups': groups, "message": "You have created and have been added to " + str(info)})
+    except IntegrityError:
+        return render_to_response('group_successful.html', {"message": 'A group with that name already exists.'})
+
 
 @login_required(login_url='/LokahiApp/login/')
 def edit_group(request, pk, qk):
@@ -288,8 +295,3 @@ def search(request):
     else:
         form = SearchForm()
     return render(request, 'search.html', {'form': form})
-
-
-
-
-

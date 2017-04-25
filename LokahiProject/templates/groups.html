@@ -27,6 +27,13 @@
 </div>
 <div class="content container">
 
+    <script>
+        function clicked(e)
+        {
+            if(!confirm('Are you sure?'))e.preventDefault();
+        }
+    </script>
+
     <!-- TODO: Boostrapify this stuff later -->
     {% if request.user.first_name %}
     <h1>Welcome {{ request.user.first_name }}!</h1>
@@ -39,7 +46,7 @@
     <div style="display: none;" id="hiddenForm">
         <form action="/LokahiApp/createGroup/" method="post">
           {% csrf_token %}
-            Group Name:
+            <b>Group Name: </b>
           <input type="text" name="groupName" id="groupName">
           <input type="submit" value="Create" class="btn btn-primary">
         </form>
@@ -54,25 +61,49 @@
             {% csrf_token %}
             <tr>
             <td>{{ item }}</td>
-            <td><a href="/LokahiApp/leaveGroup/{{ item.id }}/"><button class="btn btn-primary" name=item>Leave group</button></a></td>
-            <td>
-                <a href="#" onclick="$('#hiddenUser').toggle(); return false;"><button class="btn btn-primary" name=item>Add other user</button></a>
-                <div style="display: none;" id="hiddenUser">
-                    <select>
-                        {% for user in users %}
-                        {% if not user.is_superuser and user != name %}
-                        <option>{{ user }}</option>
-                        {% endif %}
-                        {% endfor %}
-                    </select>
-                	<a href="/LokahiApp/editGroup/{{ item.id }}/{{ user.id }}"><button class="btn btn-primary" name=item>Add to group</button></a>
-                </div>
-            </td>
+            <td><a href="/LokahiApp/leaveGroup/{{ item.id }}/"><button class="btn btn-primary" name=item onclick="clicked(event)">Leave group</button></a></td>
             {% empty %}
             <td>User is not in any groups</td>
             </tr>
         {% endfor %}
         </table>
+    </div>
+    <br>
+
+    <!-- Add other to groups -->
+    <a href="#" onclick="$('#hiddenUser').toggle(); return false;">Add other user to group</a>
+    <div style="display: none;" id="hiddenUser">
+        <form action="/LokahiApp/editGroup/" method="post">
+        <table>
+            {% if my_groups %}
+                <tr>
+                    <td>
+                        {% csrf_token %}
+                        <b>Group: </b><select id="select_group" name="select">
+                        {% for item in my_groups %}
+                            <option value="{{ item.id }}">{{ item }}</option>
+                        {% endfor %}
+                        </select>
+                    </td>
+                    <td>
+                        <b>User: </b>
+                        <select id="select_user" name="select">
+                        {% for user in users %}
+                        {% if not user.is_superuser and user != name and user.is_active %}
+                        <option value="{{ user.id }}">{{ user }}</option>
+                        {% endif %}
+                        {% endfor %}
+                        </select>
+                    </td>
+                    <td>
+                        <input class="btn btn-primary" type="submit" value="Add to group" onclick="clicked(event)" />
+                    </td>
+                </tr>
+            {% else %}
+                <td>User is not in any groups</td>
+            {% endif %}
+        </table>
+        </form>
     </div>
     <br>
 
