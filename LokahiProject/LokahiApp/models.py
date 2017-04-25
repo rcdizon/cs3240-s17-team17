@@ -48,3 +48,6 @@ class Message(models.Model):
         self.sender = request.user
         self.save()
 
+class Search(models.Model):
+	search = models.CharField(max_length=100)
+

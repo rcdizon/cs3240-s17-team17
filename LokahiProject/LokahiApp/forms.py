@@ -1,6 +1,7 @@
 from django import forms
 from .models import Report
 from .models import Message
+from .models import Search
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User, Group, Permission
 
@@ -32,6 +33,7 @@ class RegisterForm(UserCreationForm):
         model = User
         fields = ("username", "fullname", "user_type",)
 
+    '''
     def save(self, commit=True):
         user = super(RegisterForm, self).save(commit=False)
         if ' ' in self.cleaned_data["fullname"].split(None, 1):
@@ -54,3 +56,13 @@ class RegisterForm(UserCreationForm):
             g.user_set.add(user)
 
         return user
+    '''
+class SearchForm(forms.ModelForm):
+	class Meta:
+		model = Search
+		fields = ('search',)
+
+'''
+('companyName', 'companyLocation', 'reportDate', 'companyCountry',
+                  'currentProjects', 'industry', 'sector', 'ceoName', 'filename')
+'''

@@ -1,0 +1,45 @@
+{% load staticfiles %}
+<html>
+    <head>
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+        <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
+        <link rel="stylesheet" href="{% static 'css/reports.css' %}">
+        <link href="//fonts.googleapis.com/css?family=Lobster&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+    </head>
+    <body>
+        <div class="page-header">
+            <a href="/LokahiApp/homepage"><h1>Lokahi FinTech</h1></a>
+        </div>
+        <div class="content container">
+            <form method="POST" class="post-form">
+            	{% csrf_token %}
+                <div class="col-md-8">
+                    <tr>
+                        <td>Search Request:</td>
+                        <td><input type="text" name="search"/></td>
+                    </tr>
+                            <input type="submit" name="Search" class="Send btn btn-default" value="Search" />
+                    </div>
+                    <div class="col-md-8">
+                    	{% if search_results %}
+                    	{{ search_results }}
+                    	{% endif %}
+                        {% if results.0.companyName %}
+                        <div class="reports">
+                            {% for result in results %}
+                                <h3><a href="/LokahiApp/result/{{ result.id }}">{{ result.companyName }}</a></h3>
+                                <p>{{ result.timestamp }}</p>
+                                <p>{{ result.companyPhone }}</p>
+                                <p>{{ result.sector }}</p>
+                                <p>{{ result.industry }}</p>
+                                <h3>{{ result.username }}</h3>
+                            {% endfor %}
+                        </div>
+                        {% else %}
+                            {{ results.0 }}
+                        {% endif %}
+                    </div>
+            </form>
+        </div>
+    </body>
+</html>

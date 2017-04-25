@@ -13,8 +13,12 @@ from .models import Report
 from .forms import CreateReport
 from .models import Message
 from .forms import SendMessage
+from .forms import SearchForm
+from .models import Search
+from .forms import RegisterForm
 from django.shortcuts import redirect
 import os
+from django.views.generic import ListView
 from django.contrib.auth.models import User, Group, Permission
 from django.contrib.auth.decorators import login_required
 import sys
@@ -255,3 +259,37 @@ def restore_user(request):
     u.is_active=True
     u.save()
     return render(request, 'sitemanagerindex.html', {'name': name, 'my_groups': my_groups, "users": users})
+
+@login_required(login_url='/LokahiApp/login/')
+def search(request):
+    if request.method == "POST":
+        form = SearchForm(request.POST)
+        if form.is_valid():
+            search_results = request.POST.get("search", "")
+            results = ["Oh... No! You fucked up"] 
+
+            for g in Report.objects.all():
+                if search_results.lower() in g.companyName.lower():
+                    results = Report.objects.filter(companyName__icontains = search_results)
+                elif search_results.lower() in g.companyCountry.lower():
+                    results = Report.objects.filter(companyCountry__icontains = search_results)
+                elif search_results.lower() in g.companyLocation.lower():
+                    results = Report.objects.filter(companyLocation__icontains = search_results)
+                elif search_results.lower() in g.sector.lower():
+                    results = Report.objects.filter(sector__icontains = search_results)
+                elif search_results.lower() in g.industry.lower():
+                    results = Report.objects.filter(industry__icontains = search_results)
+                elif search_results.lower() in g.companyPhone.lower():
+                    results = Report.objects.filter(companyPhone__icontains = search_results)
+                elif search_results.lower() in g.currentProjects.lower():
+                    results = Report.objects.filter(currentProjects__icontains = search_results)
+
+            return render(request,'search.html', {'results': results} )
+    else:
+        form = SearchForm()
+    return render(request, 'search.html', {'form': form})
+
+
+
+
+
