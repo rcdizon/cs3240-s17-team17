@@ -1,5 +1,3 @@
-# importing required packages
-
 from django.http import Http404
 from django.http import HttpResponse
 from django.template import loader
@@ -103,9 +101,9 @@ def result(request, pk):
     reports = get_object_or_404(Report, pk=pk)
     return render(request, 'result.html', {'reports': reports})
 
+
 @login_required(login_url='/LokahiApp/login/')
 def message(request):
-    messages = Message.objects.filter(recipient = request.user)
     if request.method == "POST":
         form = SendMessage(request.POST)
         if form.is_valid():
@@ -114,19 +112,22 @@ def message(request):
             messenger.save()
             return redirect('sent_messages', pk=messenger.pk)
     else:
-    	data = {'sender': request.user}
-    	form = SendMessage(initial = data)
+        data = {'sender': request.user}
+        form = SendMessage(initial = data)
     return render(request, 'messenger.html', {'form': form})
+
 
 @login_required(login_url='/LokahiApp/login/')
 def sent_messages(request, pk):
     sent_messages = get_object_or_404(Message, pk=pk)
     return render(request, 'sent_messages.html', {'sent_messages': sent_messages})
 
+
 @login_required(login_url='/LokahiApp/login/')
 def inbox(request):
     inbox_messages = Message.objects.filter(recipient=request.user)
     return render(request, 'inbox.html', {'inbox_messages': inbox_messages })
+
 
 @login_required(login_url='/LokahiApp/login/')
 def download(request, path):
@@ -139,6 +140,7 @@ def download(request, path):
         return response
     else:
         raise Http404
+
 
 @login_required(login_url='/LokahiApp/login/')
 def groups(request):
@@ -158,6 +160,7 @@ def groups(request):
     users = User.objects.all()
     return render(request, 'groups.html', {'name': name, 'my_groups': my_groups, "other_groups": other_groups, "users": users})
 
+
 @login_required(login_url='/LokahiApp/login/')
 def create_group(request):
     info = request.POST['groupName']
@@ -176,6 +179,7 @@ def edit_group(request, pk, qk):
     u = User.objects.get(id=qk)
     g.user_set.add(u)
     return render(request, 'group_successful.html', {'groups': groups})
+
 
 @login_required(login_url='/LokahiApp/login/')
 def sm_groups(request):
@@ -197,16 +201,19 @@ def sm_groups(request):
         g.user_set.remove(u)
     return render(request, 'sitemanagerindex.html', {'name': name, 'my_groups': my_groups, "users": users})
 
+
 @login_required(login_url='/LokahiApp/login/')
 def join_group(request, pk):
     request.user.groups.add(Group.objects.get(id=pk))
     return render(request, 'group_successful.html', {'groups': groups})
+
 
 @login_required(login_url='/LokahiApp/login/')
 def leave_group(request, pk):
     g = Group.objects.get(id=pk)
     g.user_set.remove(request.user)
     return render(request, 'group_successful.html', {'groups': groups})
+
 
 @login_required(login_url='/LokahiApp/login/')
 def sitemanagerindex(request):
@@ -225,6 +232,7 @@ def sitemanagerindex(request):
 
     return render(request, 'sitemanagerindex.html', {'name': name, 'my_groups': my_groups, "users": users, "sm_users": sm_users, "group_dict": group_dict})
 
+
 @login_required(login_url='/LokahiApp/login/')
 def promote_user(request):
     name = request.user
@@ -238,6 +246,7 @@ def promote_user(request):
     u.groups.add(Group.objects.get(id=3))
     u.save()
     return render(request, 'sitemanagerindex.html', {'name': name, 'my_groups': my_groups, "users": users})
+
 
 @login_required(login_url='/LokahiApp/login/')
 def suspend_user(request):
@@ -253,6 +262,7 @@ def suspend_user(request):
     u.save()
     return render(request, 'sitemanagerindex.html', {'name': name, 'my_groups': my_groups, "users": users})
 
+
 @login_required(login_url='/LokahiApp/login/')
 def restore_user(request):
     name = request.user
@@ -266,6 +276,7 @@ def restore_user(request):
     u.is_active=True
     u.save()
     return render(request, 'sitemanagerindex.html', {'name': name, 'my_groups': my_groups, "users": users})
+
 
 @login_required(login_url='/LokahiApp/login/')
 def search(request):
@@ -295,3 +306,13 @@ def search(request):
     else:
         form = SearchForm()
     return render(request, 'search.html', {'form': form})
+
+
+@login_required(login_url='/LokahiApp/login/')
+def delete_report(request, pk):
+    r = Report.objects.get(id=pk)
+    r.delete()
+
+    name = request.user
+    reports = Report.objects.filter(timestamp__lte=timezone.now()).order_by('timestamp')
+    return render(request, 'report.html', {'reports': reports, 'name': name})

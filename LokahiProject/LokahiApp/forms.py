@@ -13,16 +13,19 @@ class LoginForm(forms.Form):
         'password': forms.PasswordInput(),
     }
 
+
 class CreateReport(forms.ModelForm):
     class Meta:
         model = Report
         fields = ('companyName', 'companyLocation', 'companyPhone', 'companyCountry',
                   'currentProjects', 'industry', 'sector', 'upload', 'encrypted', 'privacy')
 
+
 class SendMessage(forms.ModelForm):
 	class Meta:
 		model = Message
 		fields = ('recipient','textbox','sender',)
+
 
 class RegisterForm(UserCreationForm):
     fullname = forms.CharField(label="Full name")
