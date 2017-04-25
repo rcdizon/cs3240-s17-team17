@@ -12,15 +12,18 @@
         </div>
         <div class="content container">
             <form method="POST" class="post-form">
+            	{% csrf_token %}
                 <div class="col-md-8">
                     <tr>
                         <td>Search Request:</td>
-                        <td><input type="search" name="search"/></td>
+                        <td><input type="text" value="search" name="search"/></td>
                     </tr>
-                            {% csrf_token %}
                             <input type="submit" name="Search" class="Send btn btn-default" value="Search" />
                     </div>
                     <div class="col-md-8">
+                    	{% if search_results %}
+                    	{{ search_results }}
+                    	{% endif %}
                         {% if results.0.companyName %}
                         <div class="reports">
                             {% for result in results %}

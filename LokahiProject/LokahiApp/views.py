@@ -265,26 +265,25 @@ def search(request):
     if request.method == "POST":
         form = SearchForm(request.POST)
         if form.is_valid():
-            search_results = form.save()
-            results = ["Unfortunately there are no results for your Search :("]
+            search_results = request.POST.get("search", "")
+            results = ["Oh... No! You fucked up"] 
+
             for g in Report.objects.all():
-                if (g.companyName == search_results.search):
-                    results = Report.objects.filter(companyName = search_results.search)
-                elif (g.companyCountry== search_results.search):
-                    results = Report.objects.filter(companyCountry = search_results.search)
-                elif (g.companyLocation == search_results.search):
-                    results = Report.objects.filter(companyLocation  = search_results.search)
-                elif (g.sector == search_results.search):
-                    results = Report.objects.filter(sector = search_results.search)
-                elif (g.industry== search_results.search):
-                    results = Report.objects.filter(industry = search_results.search)
-                elif (g.companyPhone== search_results.search):
-                    results = Report.objects.filter(companyPhone = search_results.search)
-                elif (g.currentProjects == search_results.search):
-                    results = Report.objects.filter(currentProjects = search_results.search)
-            for j in User.objects.all():  
-                if (j.username == search_results.search):
-                    results = User.objects.filter(username = search_results.search)
+                if search_results.lower() in g.companyName.lower():
+                    results = Report.objects.filter(companyName__icontains = search_results)
+                elif search_results.lower() in g.companyCountry.lower():
+                    results = Report.objects.filter(companyCountry__icontains = search_results)
+                elif search_results.lower() in g.companyLocation.lower():
+                    results = Report.objects.filter(companyLocation__icontains = search_results)
+                elif search_results.lower() in g.sector.lower():
+                    results = Report.objects.filter(sector__icontains = search_results)
+                elif search_results.lower() in g.industry.lower():
+                    results = Report.objects.filter(industry__icontains = search_results)
+                elif search_results.lower() in g.companyPhone.lower():
+                    results = Report.objects.filter(companyPhone__icontains = search_results)
+                elif search_results.lower() in g.currentProjects.lower():
+                    results = Report.objects.filter(currentProjects__icontains = search_results)
+
             return render(request,'search.html', {'results': results} )
     else:
         form = SearchForm()
