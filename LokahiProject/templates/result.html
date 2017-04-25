@@ -45,9 +45,6 @@
                         <p>Encrypted: {{ reports.encrypted|linebreaksbr}}</p>
                         <p>Privacy: {{ reports.privacy|linebreaksbr}}</p>
                         <a class="btn btn-default" href="{% url 'report_edit' pk=reports.pk %}" ><span class="glyphicon glyphicon-pencil"></span></a>
-                        {% if request.user|has_group:"3" %}
-                        <a class="btn btn-default" href="{% url 'report_edit' pk=reports.pk %}" onclick="clicked(event)"><span class="glyphicon glyphicon-remove-circle"></span></a>
-                        {% endif %}
                         <script>
                             function clicked(e)
                             {

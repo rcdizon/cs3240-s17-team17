@@ -15,6 +15,7 @@ urlpatterns = [
     )),
     url('^accounts/', include('django.contrib.auth.urls')),
     url(r'^createGroup', views.create_group),
+    url(r'^delete_report/(?P<pk>[0-9]+)/$', views.delete_report),
     url(r'^editGroup/(?P<pk>[0-9]+)/(?P<qk>[0-9]+)/$', views.edit_group),
     url(r'^smGroups', views.sm_groups),
     url(r'^joinGroup/(?P<pk>[0-9]+)/$', views.join_group),

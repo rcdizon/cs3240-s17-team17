@@ -35,13 +35,16 @@
                         No reports saved. Create report <a href="/LokahiApp/report/new/">here</a>.
                     {% else %}
                         {% for report in reports %}
+                            <!-- Following line allows SMs to see ALL reports -->
+                            {% if report.privacy == 'Public' or request.user|has_group:"3" %}
                             <div class="reports">
                                 <h3><a href="{% url 'result' pk=report.pk %}">{{ report.companyName }}</a></h3>
-                                <p>{{ report.timestamp}}</p>
-                                <p>{{ report.companyPhone}}</p>
-                                <p>{{ report.sector}}</p>
-                                <p>{{ report.industry}}</p>
+                                <p>{{ report.timestamp }}</p>
+                                <p>{{ report.companyPhone }}</p>
+                                <p>{{ report.sector }}</p>
+                                <p>{{ report.industry }}</p>
                             </div>
+                            {% endif %}
                         {% empty %}
                             No reports saved. Create report <a href="/LokahiApp/report/new/">here</a>.
                         {% endfor %}
