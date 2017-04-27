@@ -43,6 +43,7 @@ class Message(models.Model):
     textbox = models.TextField(max_length=10000)
     timestamp = models.DateTimeField(default=timezone.now)
 
-    def set(self,sender):
+    def set(self,sender,text):
         self.sender = sender
+        self.textbox = text
         self.save()
