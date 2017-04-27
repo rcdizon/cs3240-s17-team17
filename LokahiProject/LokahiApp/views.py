@@ -115,7 +115,7 @@ def message(request):
                 random_generator = Random.new().read
                 key = RSA.generate(1024, random_generator)
                 public_key = key.publickey()
-                enc_data = public_key.encrypt(b'abcdefgh', 32)
+                enc_data = public_key.encrypt(str.encode(messenger.textbox), 32)
                 messenger.set(request.user, enc_data)
         return redirect('sent_messages', pk=messenger.pk)
     else:
