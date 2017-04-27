@@ -32,7 +32,7 @@ class RegisterForm(UserCreationForm):
         model = User
         fields = ("username", "fullname", "user_type",)
 
-    '''
+
     def save(self, commit=True):
         user = super(RegisterForm, self).save(commit=False)
         first_name, last_name = self.cleaned_data["fullname"].split(None, 1)
@@ -53,4 +53,4 @@ class RegisterForm(UserCreationForm):
         if commit:
             user.save()
         return user
-    '''
+

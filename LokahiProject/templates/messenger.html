@@ -22,7 +22,9 @@
             <form method="POST" class="post-form">
                 {% csrf_token %}
                 {{ form.as_p }}
-                <input class="Send btn btn-default" type="submit" value="Send" />
+                <p><label for="encrypt">Encrypt My Message:</label>
+            <input type="checkbox" name="encrypt" id="encrypted" /></p>
+            <input class="Send btn btn-default" type="submit" value="Send" />
             </form>
         </div>
          <div class="content container">

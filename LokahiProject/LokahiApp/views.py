@@ -103,20 +103,24 @@ def result(request, pk):
     return render(request, 'result.html', {'reports': reports})
 
 def message(request):
-	messages = Message.objects.filter(recipient = request.user)
-	if request.method == "POST":
-		form = SendMessage(request.POST)
-		if form.is_valid():
-			messenger = form.save(commit=False)
-			random_generator = Random.new().read
-			key = RSA.generate(1024, random_generator)
-			public_key = key.publickey()
-			enc_data = public_key.encrypt(b'abcdefgh', 32)
-			messenger.set(request.user, enc_data)
-			return redirect('sent_messages', pk=messenger.pk)
-	else:
-		form = SendMessage()
-	return render(request, 'messenger.html', {'form': form})
+    messages = Message.objects.filter(recipient = request.user)
+    if request.method == "POST":
+        form = SendMessage(request.POST)
+        encrypt_bool = request.POST.get('encrypt')
+        if form.is_valid():
+            messenger = form.save(commit=False)
+            if encrypt_bool == None:
+                messenger.set(request.user, messenger.textbox)
+            else: 
+                random_generator = Random.new().read
+                key = RSA.generate(1024, random_generator)
+                public_key = key.publickey()
+                enc_data = public_key.encrypt(b'abcdefgh', 32)
+                messenger.set(request.user, enc_data)
+        return redirect('sent_messages', pk=messenger.pk)
+    else:
+        form = SendMessage()
+    return render(request, 'messenger.html', {'form': form})
 
 def sent_messages(request, pk):
     sent_messages = get_object_or_404(Message, pk=pk)
