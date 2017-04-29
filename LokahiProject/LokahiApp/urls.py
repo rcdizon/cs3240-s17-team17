@@ -26,6 +26,8 @@ urlpatterns = [
     url(r'^logout/$', auth_views.logout, {'template_name': 'index.html'}, name='logout'),
     url(r'^homepage/', views.homepage),
     url(r'^inbox/', views.inbox),
+    url(r'^individual_message/(?P<pk>\d+)/$', views.individual_message, name="individual_message"),
+    url(r'^delete_message/(?P<pk>\d+)/$', views.delete_message, name="delete_message"),
     url(r'^sent_messages/(?P<pk>\d+)/$', views.sent_messages, name="sent_messages"),
     url(r'^search/$', views.search),
     url(r'^media/(?P<path>.*)$', views.download),

@@ -42,16 +42,15 @@ class Report(models.Model):
         return self.companyName
 
 class Message(models.Model):
-     recipient = models.ForeignKey(User, related_name="recipient")
-     sender = models.ForeignKey(User, related_name="sender", null=True)
-     textbox = models.TextField(max_length=10000)
-     timestamp = models.DateTimeField(default=timezone.now)
+    recipient = models.ForeignKey(User, related_name="recipient")
+    sender = models.ForeignKey(User, related_name="sender", null=True)
+    textbox = models.TextField(max_length=10000)
+    timestamp = models.DateTimeField(default=timezone.now)
 
-     def publish(self):
-        self.published_date = timezone.now()
-        self.sender = request.user
+    def set(self,sender,text):
+        self.sender = sender
+        self.textbox = text
         self.save()
 
 class Search(models.Model):
 	search = models.CharField(max_length=100)
-
