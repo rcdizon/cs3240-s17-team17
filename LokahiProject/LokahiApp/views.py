@@ -130,6 +130,19 @@ def inbox(request):
     inbox_messages = Message.objects.filter(recipient=request.user)
     return render(request, 'inbox.html', {'inbox_messages': inbox_messages })
 
+def individual_message(request,pk):
+    message = get_object_or_404(Message, pk=pk)
+    form = SendMessage(instance=message)
+    return render(request, 'individual_message.html', {'form': form})
+
+def delete_message(request,pk):
+    message = get_object_or_404(Message, pk=pk)
+    form = SendMessage(instance=message)
+    instance = Message.objects.get(id=pk)
+    instance.delete()
+    inbox_messages = Message.objects.filter(recipient=request.user)
+    return render(request, 'inbox.html', {'inbox_messages': inbox_messages })
+
 def submit(request):
     info=request.POST['info']
     user = User.objects.create_user('john', 'lennon@thebeatles.com', 'johnpassword')
