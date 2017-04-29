@@ -67,6 +67,7 @@ def create_report(request):
         form = CreateReport(request.POST, request.FILES)
         if form.is_valid():
             report = form.save(commit=False)
+            report.author = request.user
             report.timestamp = timezone.now()
             report.save()
             return redirect('result', pk=report.pk)
