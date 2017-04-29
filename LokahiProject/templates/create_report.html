@@ -1,4 +1,6 @@
 {% load staticfiles %}
+{% load lokahi_extras %}
+
 <html>
     <head>
         <title>Create Reports</title>
@@ -11,13 +13,29 @@
         <div class="page-header">
             <h1>Create a Report</h1>
         </div>
+
+        <script>
+            function clicked(e)
+            {
+                if(!confirm('Are you sure you want to delete this report?'))e.preventDefault();
+            }
+        </script>
+
         <div class="content container">
+            {% if not request.user|has_group:"2" %}
             <form method="POST" class="post-form" enctype='multipart/form-data'>
                 {% csrf_token %}
                 {{ form.as_p }}
                 <button type="submit" class="save btn btn-default">Save</button>
+                <!-- TODO: Allow owner to delete as well -->
+                {% if request.user|has_group:"3" %}
+                <a class="btn btn-default" href="/LokahiApp/delete_report/{{ form.instance.id }}" onclick="clicked(event)"><span class="glyphicon glyphicon-remove-circle"></span></a>
+                {% endif %}
             </form>
-            <a href="/LokahiApp/report"><button class="save btn btn-default">Return</button></a>
+            <a href="/LokahiApp/report"><button class="btn btn-default">Return</button></a>
+            {% else %}
+            You do not have permission to access this page.
+            {% endif %}
         </div>
     </body>
 </html>
