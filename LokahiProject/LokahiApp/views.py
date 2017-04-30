@@ -64,7 +64,8 @@ def login(request):
 def homepage(request):
     name = request.user
     reports = Report.objects.filter(timestamp__lte=timezone.now()).order_by('timestamp')
-    return render(request, 'report.html', {'reports': reports, 'name': name})
+    read_messages = Message.objects.filter(read=True)
+    return render(request, 'report.html', {'reports': reports, 'name': name, 'read_messages': read_messages })
 
 @login_required(login_url='/LokahiApp/login/')
 def create_report(request):
@@ -138,12 +139,16 @@ def sent_messages(request, pk):
 @login_required(login_url='/LokahiApp/login/')
 def inbox(request):
     inbox_messages = Message.objects.filter(recipient=request.user)
-    return render(request, 'inbox.html', {'inbox_messages': inbox_messages })
+    read_messages = Message.objects.filter(read=True)
+    return render(request, 'inbox.html', {'inbox_messages': inbox_messages, 'read_messages': read_messages })
 
 def individual_message(request,pk):
     message = get_object_or_404(Message, pk=pk)
     form = SendMessage(instance=message)
-    return render(request, 'individual_message.html', {'form': form})
+    message = form.save(commit=False)
+    message.read = False
+    message.set(request.user, message.textbox)
+    return render(request, 'individual_message.html', {'message': message })
 
 def delete_message(request,pk):
     message = get_object_or_404(Message, pk=pk)
@@ -151,7 +156,8 @@ def delete_message(request,pk):
     instance = Message.objects.get(id=pk)
     instance.delete()
     inbox_messages = Message.objects.filter(recipient=request.user)
-    return render(request, 'inbox.html', {'inbox_messages': inbox_messages })
+    read_messages = Message.objects.filter(read=True)
+    return render(request, 'inbox.html', {'inbox_messages': inbox_messages, 'read_messages': read_messages })
 
 def submit(request):
     info=request.POST['info']

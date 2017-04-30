@@ -45,6 +45,7 @@ class Message(models.Model):
     recipient = models.ForeignKey(User, related_name="recipient")
     sender = models.ForeignKey(User, related_name="sender", null=True)
     textbox = models.TextField(max_length=10000)
+    read = models.BooleanField(default=True)
     timestamp = models.DateTimeField(default=timezone.now)
 
     def set(self,sender,text):

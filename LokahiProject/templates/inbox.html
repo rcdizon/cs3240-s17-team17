@@ -25,6 +25,7 @@
             <h1>{{ request.user.first_name }} Inbox</h1>
             {% else %}
             <h1>{{ name }} Inbox</h1>
+            <h3>You Have {{read_messages.count}} Unread Messages</h3>
             {% endif %}
             <div class="row">
                 <div class="col-md-8">
