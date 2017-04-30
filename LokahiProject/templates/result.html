@@ -37,11 +37,13 @@
                         {% if reports.timestamp %}
                             <div class="date">
                                 {{ reports.timestamp }}
+                                Author: {{ reports.author }}
                             </div>
                         {% endif %}
                         <h1>{{ reports.companyName }}</h1>
                         <p><b>Location: </b>{{ reports.companyLocation|linebreaksbr }}</p>
                         <p><b>Country: </b>{{ reports.companyCountry|linebreaksbr}}</p>
+                        <p><b>CEO: </b>{{ reports.companyCEO|linebreaksbr }}</p>
                         <p><b>Phone Number: </b>{{ reports.companyPhone|linebreaksbr}}</p>
                         <p><b>Sector: </b>{{ reports.sector|linebreaksbr}}</p>
                         <p><b>Industry: </b>{{ reports.industry|linebreaksbr}}</p>
@@ -51,6 +53,7 @@
                         {% endif %}
                         <p><b>Encrypted: </b>{{ reports.encrypted|linebreaksbr}}</p>
                         <p><b>Privacy: </b>{{ reports.privacy|linebreaksbr}}</p>
+                        <p><b>Keywords: </b>{{ reports.keywords|linebreaksbr }}</p>
                         <a class="btn btn-default" href="{% url 'report_edit' pk=reports.pk %}" ><span class="glyphicon glyphicon-pencil"></span></a>
                         <script>
                             function clicked(e)

@@ -38,8 +38,9 @@
                 <div class="col-md-8">
                     {% for inbox in inbox_messages %}
                         <div class="reports">
-                            <h3>{{ inbox.sender }}</h3>
+                            <h3><a href="{% url 'individual_message' pk=inbox.pk %}">{{ inbox.sender }}</a></h3>
                             <p>{{ inbox.textbox }}</p>
+                            <a href="{% url 'delete_message' pk=inbox.pk %}"><button class="messenger btn btn-default">Delete</button></a>
                         </div>
                     {% endfor %}
                 </div>
