@@ -64,7 +64,17 @@ def login(request):
 def homepage(request):
     name = request.user
     reports = Report.objects.filter(timestamp__lte=timezone.now()).order_by('timestamp')
-    return render(request, 'report.html', {'reports': reports, 'name': name})
+    my_groups = []
+    mutual_users = []
+    for g in Group.objects.all():
+        if g.id == 1 or g.id == 2 or g.id == 3:
+            continue
+        else:
+            my_groups.append(g)
+    for g in my_groups:
+        for u in User.objects.filter(groups__id=g.id):
+            mutual_users.append(u.id)
+    return render(request, 'report.html', {'reports': reports, 'name': name, 'mutual_users': mutual_users})
 
 @login_required(login_url='/LokahiApp/login/')
 def create_report(request):
@@ -99,7 +109,17 @@ def report_edit(request, pk):
 def report(request):
     name = request.user
     reports = Report.objects.filter(timestamp__lte=timezone.now()).order_by('timestamp')
-    return render(request, 'report.html', {'reports': reports, 'name': name})
+    my_groups = []
+    mutual_users = []
+    for g in Group.objects.all():
+        if g.id == 1 or g.id == 2 or g.id == 3:
+            continue
+        else:
+            my_groups.append(g)
+    for g in my_groups:
+        for u in User.objects.filter(groups__id=g.id):
+            mutual_users.append(u.id)
+    return render(request, 'report.html', {'reports': reports, 'name': name, 'mutual_users': mutual_users})
 
 
 @login_required(login_url='/LokahiApp/login/')
