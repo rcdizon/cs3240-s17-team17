@@ -34,6 +34,7 @@
                             </div>
                         {% endif %}
                         <h1>{{ reports.companyName }}</h1>
+                        <p>{{ reports.companyCEO|linebreaksbr }}</p>
                         <p>{{ reports.companyLocation|linebreaksbr }}</p>
                         <p>{{ reports.companyCountry|linebreaksbr}}</p>
                         <p>{{ reports.companyPhone|linebreaksbr}}</p>
@@ -45,6 +46,7 @@
                         {% endif %}
                         <p>Encrypted: {{ reports.encrypted|linebreaksbr}}</p>
                         <p>Privacy: {{ reports.privacy|linebreaksbr}}</p>
+                        <p>Keywords: {{ reports.keywords|linebreaksbr }}</p>
                         <a class="btn btn-default" href="{% url 'report_edit' pk=reports.pk %}" ><span class="glyphicon glyphicon-pencil"></span></a>
                         <script>
                             function clicked(e)
