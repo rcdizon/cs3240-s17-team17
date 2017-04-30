@@ -4,14 +4,20 @@
 <html>
     <head>
         <title>Report</title>
-        <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
-        <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
-        <link rel="stylesheet" href="{% static 'css/reports.css' %}">
-        <link href="//fonts.googleapis.com/css?family=Lobster&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="description" content="">
+        <meta name="author" content="">
+        <link href="{% static 'startbootstrap-clean-blog2/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+        <link href="{% static 'startbootstrap-clean-blog2/css/clean-blog.css' %}" rel="stylesheet">
+        <link href="{% static 'startbootstrap-clean-blog2/vendor/font-awesome/css/font-awesome.min.css' %}" rel="stylesheet" type="text/css">
+        <link href='https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+        <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
     </head>
-    <body>
+    <body style="margin-left:20;padding-left:0">
         <div class="page-header">
-            <a href="/LokahiApp/homepage"><h1>Lokahi FinTech</h1></a>
+            <a href="/LokahiApp/homepage"><h1>Lokahi FinTech</h1{display: inline;}></a>
             {% if not request.user|has_group:"2" %}
             <a href="/LokahiApp/report/new/"><button class="createreport btn btn-default">Create a Report</button></a>
             {% endif %}
@@ -20,6 +26,7 @@
             <a href="/LokahiApp/sitemanagerindex/"><button class="groups btn btn-default">Site Manager Panel</button></a>
             {% endif %}
             <a href="/LokahiApp/messenger"><button class="messenger btn btn-default">Message</button></a>
+            <a href="/LokahiApp/search"><button class="Search btn btn-default">Search for report</button></a>
             <a href="/LokahiApp/logout"><button class="logout btn btn-default">Log out</button></a>
         </div>
         <div class="content container">
@@ -34,19 +41,19 @@
                             </div>
                         {% endif %}
                         <h1>{{ reports.companyName }}</h1>
-                        <p>{{ reports.companyCEO|linebreaksbr }}</p>
-                        <p>{{ reports.companyLocation|linebreaksbr }}</p>
-                        <p>{{ reports.companyCountry|linebreaksbr}}</p>
-                        <p>{{ reports.companyPhone|linebreaksbr}}</p>
-                        <p>{{ reports.sector|linebreaksbr}}</p>
-                        <p>{{ reports.industry|linebreaksbr}}</p>
-                        <p>Current Projects: {{ reports.currentProjects }}</p>
+                        <p><b>Location: </b>{{ reports.companyLocation|linebreaksbr }}</p>
+                        <p><b>Country: </b>{{ reports.companyCountry|linebreaksbr}}</p>
+                        <p><b>CEO: </b>{{ reports.companyCEO|linebreaksbr }}</p>
+                        <p><b>Phone Number: </b>{{ reports.companyPhone|linebreaksbr}}</p>
+                        <p><b>Sector: </b>{{ reports.sector|linebreaksbr}}</p>
+                        <p><b>Industry: </b>{{ reports.industry|linebreaksbr}}</p>
+                        <p><b>Current Projects: </b>{{ reports.currentProjects }}</p>
                         {% if user.is_authenticated %}
                             <a href="/LokahiApp/{{ reports.upload }}"><p>{{ reports.upload|linebreaksbr}}</p></a>
                         {% endif %}
-                        <p>Encrypted: {{ reports.encrypted|linebreaksbr}}</p>
-                        <p>Privacy: {{ reports.privacy|linebreaksbr}}</p>
-                        <p>Keywords: {{ reports.keywords|linebreaksbr }}</p>
+                        <p><b>Encrypted: </b>{{ reports.encrypted|linebreaksbr}}</p>
+                        <p><b>Privacy: </b>{{ reports.privacy|linebreaksbr}}</p>
+                        <p><b>Keywords: </b>{{ reports.keywords|linebreaksbr }}</p>
                         <a class="btn btn-default" href="{% url 'report_edit' pk=reports.pk %}" ><span class="glyphicon glyphicon-pencil"></span></a>
                         <script>
                             function clicked(e)
