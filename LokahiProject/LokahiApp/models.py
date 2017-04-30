@@ -7,6 +7,7 @@ class Report(models.Model):
     author = models.OneToOneField('auth.User')
     timestamp = models.DateTimeField(default=timezone.now)
     companyName = models.CharField(max_length=200, default='')
+    companyCEO = models.CharField(max_length=200, default='')
     companyPhone = models.CharField(max_length=200, default='')
     companyLocation = models.CharField(max_length=200, default='')
     companyCountry = models.CharField(max_length=200, default='')
@@ -33,6 +34,7 @@ class Report(models.Model):
     )
 
     privacy = models.CharField(choices=PRIVACY_CHOICES, default=PUBLIC, max_length=10)
+    keywords = models.CharField(max_length=200, default='')
 
     def publish(self):
         self.published_date = timezone.now()
