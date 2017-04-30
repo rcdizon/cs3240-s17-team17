@@ -106,24 +106,6 @@
         </form>
     </div>
     <br>
-
-    <!-- Join groups: will remove because non-SM's shouldn't be allowed to add themselves to a group
-    <a href="#" onclick="$('#hiddenOtherGroups').show(); return false;">Other Groups</a>
-    <div style="display: none;" id="hiddenOtherGroups">
-        <table>
-            {% for item in other_groups %}
-            {% csrf_token %}
-            <tr>
-                <td>{{ item }}</td>
-                <td><a href="/LokahiApp/joinGroup/{{ item.id }}/"><button value="Join group" class="btn btn-primary" name=item id='joinGroup'>Join group</button></a></td>
-                {% empty %}
-                <td>No other groups</td>
-            </tr>
-            {% endfor %}
-        </table>
-    </div>
-    -->
-
 </div>
 
 </body>

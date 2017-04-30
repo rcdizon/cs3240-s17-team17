@@ -38,9 +38,14 @@
                     {% else %}
                         {% for report in reports %}
                             <!-- Following line allows SMs to see ALL reports -->
-                            {% if report.privacy == 'Public' or request.user|has_group:"3" %}
+                            {% if report.privacy == 'Public' or request.user|has_group:"3" or report.author_id in mutual_users %}
                             <div class="reports">
-                                <h3><a href="{% url 'result' pk=report.pk %}">{{ report.companyName }}</a></h3>
+                                <h3>
+                                    <a href="{% url 'result' pk=report.pk %}">{{ report.companyName }} </a>
+                                    {% if report.privacy == 'Private' %}
+                                    (PRIVATE)
+                                    {% endif %}
+                                </h3>
                                 <p>{{ report.timestamp }}</p>
                                     <p>{{ report.author }}</p>
                                 <p>{{ report.companyPhone }}</p>
@@ -56,5 +61,4 @@
             </div>
         </div>
     </body>
-
 </html>
