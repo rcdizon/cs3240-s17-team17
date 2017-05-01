@@ -336,6 +336,8 @@ def search(request):
                         results = Report.objects.filter(currentProjects__icontains = a)
                     elif a.lower() in g.companyCEO.lower():
                         results = Report.objects.filter(companyCEO__icontains = a)
+                    elif a.lower() in g.keywords.lower():
+                        results = Report.objects.filter(keywords__icontains = a)
                     elif a.lower() in User.objects.get(id=g.author_id).username:
                         auth = User.objects.get(id=g.author_id)
                         results = Report.objects.filter(author= auth)
