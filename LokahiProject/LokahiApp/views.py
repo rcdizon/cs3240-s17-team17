@@ -64,6 +64,7 @@ def login(request):
 def homepage(request):
     name = request.user
     reports = Report.objects.filter(timestamp__lte=timezone.now()).order_by('timestamp')
+    read_messages = Message.objects.filter(read=True)
     my_groups = []
     mutual_users = []
     for g in Group.objects.all():
@@ -74,7 +75,7 @@ def homepage(request):
     for g in my_groups:
         for u in User.objects.filter(groups__id=g.id):
             mutual_users.append(u.id)
-    return render(request, 'report.html', {'reports': reports, 'name': name, 'mutual_users': mutual_users})
+    return render(request, 'report.html', {'reports': reports, 'name': name, 'mutual_users': mutual_users, 'read_messages': read_messages })
 
 @login_required(login_url='/LokahiApp/login/')
 def create_report(request):
@@ -111,6 +112,7 @@ def report(request):
     reports = Report.objects.filter(timestamp__lte=timezone.now()).order_by('timestamp')
     my_groups = []
     mutual_users = []
+    read_messages = Message.objects.filter(read=True)
     for g in Group.objects.all():
         if g.id == 1 or g.id == 2 or g.id == 3:
             continue
@@ -119,7 +121,7 @@ def report(request):
     for g in my_groups:
         for u in User.objects.filter(groups__id=g.id):
             mutual_users.append(u.id)
-    return render(request, 'report.html', {'reports': reports, 'name': name, 'mutual_users': mutual_users})
+    return render(request, 'report.html', {'reports': reports, 'name': name, 'mutual_users': mutual_users, 'read_messages': read_messages})
 
 
 @login_required(login_url='/LokahiApp/login/')
@@ -158,12 +160,16 @@ def sent_messages(request, pk):
 @login_required(login_url='/LokahiApp/login/')
 def inbox(request):
     inbox_messages = Message.objects.filter(recipient=request.user)
-    return render(request, 'inbox.html', {'inbox_messages': inbox_messages })
+    read_messages = Message.objects.filter(read=True)
+    return render(request, 'inbox.html', {'inbox_messages': inbox_messages, 'read_messages': read_messages })
 
 def individual_message(request,pk):
     message = get_object_or_404(Message, pk=pk)
     form = SendMessage(instance=message)
-    return render(request, 'individual_message.html', {'form': form})
+    message = form.save(commit=False)
+    message.read = False
+    message.set(request.user, message.textbox)
+    return render(request, 'individual_message.html', {'message': message })
 
 def delete_message(request,pk):
     message = get_object_or_404(Message, pk=pk)
@@ -171,7 +177,8 @@ def delete_message(request,pk):
     instance = Message.objects.get(id=pk)
     instance.delete()
     inbox_messages = Message.objects.filter(recipient=request.user)
-    return render(request, 'inbox.html', {'inbox_messages': inbox_messages })
+    read_messages = Message.objects.filter(read=True)
+    return render(request, 'inbox.html', {'inbox_messages': inbox_messages, 'read_messages': read_messages })
 
 def submit(request):
     info=request.POST['info']
