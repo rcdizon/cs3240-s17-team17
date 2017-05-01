@@ -41,7 +41,3 @@ class Report(models.Model):
 class Upload(models.Model):
     fileupload = models.FileField(upload_to='media', default=None, null=True, blank=True)
     company = models.ForeignKey(Report, related_name="company")
-
-    def set(self, company):
-        self.company = company
-        self.save()

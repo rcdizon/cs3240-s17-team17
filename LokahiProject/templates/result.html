@@ -37,6 +37,7 @@
                         <p>Encrypted: {{ reports.encrypted|linebreaksbr}}</p>
                         <p>Privacy: {{ reports.privacy|linebreaksbr}}</p>
                         <a class="btn btn-default" href="{% url 'report_edit' pk=reports.pk %}" ><span class="glyphicon glyphicon-pencil"></span></a>
+                        <a class="btn btn-default" href="{% url 'upload' pk=reports.pk %}" >Upload another file</a>
                     </div>
                 </div>
             </div>
