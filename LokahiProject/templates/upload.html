@@ -31,16 +31,17 @@
 {#                        {% if user.is_authenticated %}#}
 {#                            <a href="/LokahiApp/{{ reports.upload }}"><p>{{ reports.upload|linebreaksbr}}</p></a>#}
 {#                        {% endif %}#}
-                        {% for result in uploads %}
-                            <p>Files: <a href="/LokahiApp/{{ result.fileupload }}">{{ result.fileupload }}</a></p>
-                        {% endfor %}
-                        <p>Encrypted: {{ reports.encrypted|linebreaksbr}}</p>
+{#                        <p>Encrypted: {{ reports.encrypted|linebreaksbr}}</p>#}
                         <p>Privacy: {{ reports.privacy|linebreaksbr}}</p>
-                        <a class="btn btn-default" href="{% url 'report_edit' pk=reports.pk %}" ><span class="glyphicon glyphicon-pencil"></span></a>
+                        <hr>
+                        <form method="POST" class="post-form" enctype='multipart/form-data'>
+                            {% csrf_token %}
+                            {{ form.as_p }}
+                            <button type="submit" class="save btn btn-default">Save</button>
+                        </form>
                     </div>
                 </div>
             </div>
         </div>
     </body>
-
 </html>

@@ -19,7 +19,7 @@ class Report(models.Model):
         (NO, 'No')
     )
     encrypted = models.CharField(choices=ENCRYPTED_CHOICES, default=NO, max_length=4)
-    upload = models.FileField(upload_to='media', default=None, null=True, blank=True)
+    # upload = models.ManyToManyField(Upload, default="No uploads yet")
 
     PUBLIC = 'Public'
     PRIVATE = 'Private'
@@ -35,3 +35,13 @@ class Report(models.Model):
 
     def __str__(self):
         return self.companyName
+
+
+
+class Upload(models.Model):
+    fileupload = models.FileField(upload_to='media', default=None, null=True, blank=True)
+    company = models.ForeignKey(Report, related_name="company")
+
+    def set(self, company):
+        self.company = company
+        self.save()

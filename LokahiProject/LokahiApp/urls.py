@@ -27,6 +27,7 @@ urlpatterns = [
     url(r'^report/new/$', views.create_report, name="create_report"),
     url(r'^report/', views.report),
     url(r'^result/(?P<pk>\d+)/$', views.result, name="result"),
+    url(r'^upload/(?P<pk>\d+)/$', views.upload, name="upload"),
     url(r'^result/(?P<pk>\d+)/edit/$', views.report_edit, name='report_edit'),
     url(r'^media/(?P<path>.*)$', views.download),
     url(r'^$', views.index),

@@ -10,7 +10,9 @@ from django.utils import timezone
 from django.core.files import File
 from LokahiProject import settings
 from .models import Report
+from .models import Upload
 from .forms import CreateReport
+from .forms import CreateReportUpload
 from django.shortcuts import redirect
 import os
 from django.contrib.auth.models import User, Group, Permission
@@ -63,10 +65,25 @@ def create_report(request):
             report = form.save(commit=False)
             report.timestamp = timezone.now()
             report.save()
-            return redirect('result', pk=report.pk)
+            return redirect('upload', pk=report.pk)
     else:
         form = CreateReport()
     return render(request, 'create_report.html', {'form': form})
+
+
+@login_required(login_url='/LokahiApp/login/')
+def upload(request, pk):
+    reports = get_object_or_404(Report, pk=pk)
+    if request.method == "POST":
+        form = CreateReportUpload(request.POST, request.FILES)
+        if form.is_valid():
+            form.set(reports.pk)
+            return redirect('result', pk=reports.pk)
+    else:
+        form = CreateReportUpload()
+
+    return render(request, 'upload.html', {'reports': reports, 'form': form})
+
 
 @login_required(login_url='/LokahiApp/login/')
 def report_edit(request, pk):
@@ -93,7 +110,8 @@ def report(request):
 @login_required(login_url='/LokahiApp/login/')
 def result(request, pk):
     reports = get_object_or_404(Report, pk=pk)
-    return render(request, 'result.html', {'reports': reports})
+    uploads = Upload.objects.filter(company=reports.pk)
+    return render(request, 'result.html', {'reports': reports, 'uploads': uploads})
 
 def download(request, path):
     file_path = os.path.join(settings.MEDIA_ROOT + "/media/", path)
