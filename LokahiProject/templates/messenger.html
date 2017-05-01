@@ -15,7 +15,7 @@
     </head>
     <body style="margin-left:20;padding-left:0">
         <div class="page-header">
-            <a href="/LokahiApp/homepage"><h1>Lokahi FinTech</h1{display: inline;}></a>
+            <a href="/LokahiApp/homepage"><h1>Lokahi FinTech</h1></a>
             {% if not request.user|has_group:"2" %}
             <a href="/LokahiApp/report/new/"><button class="createreport btn btn-default">Create a Report</button></a>
             {% endif %}
@@ -28,10 +28,13 @@
             <a href="/LokahiApp/logout"><button class="logout btn btn-default">Log out</button></a>
         </div>
         <div class="content container">
+            <h1>Messenger</h1>
             <form method="POST" class="post-form">
                 {% csrf_token %}
                 {{ form.as_p }}
-                <input class="Send btn btn-default" type="submit" value="Send" />
+                <p><label for="encrypt">Encrypt My Message:</label>
+            <input type="checkbox" name="encrypt" id="encrypted" /></p>
+            <input class="Send btn btn-default" type="submit" value="Send" />
             </form>
         </div>
          <div class="content container">

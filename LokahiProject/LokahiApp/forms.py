@@ -17,14 +17,14 @@ class LoginForm(forms.Form):
 class CreateReport(forms.ModelForm):
     class Meta:
         model = Report
-        fields = ('companyName', 'companyLocation', 'companyPhone', 'companyCountry',
-                  'currentProjects', 'industry', 'sector', 'upload', 'encrypted', 'privacy')
+        fields = ('companyName', 'companyCEO', 'companyLocation', 'companyPhone', 'companyCountry',
+                  'currentProjects', 'industry', 'sector', 'upload', 'encrypted', 'privacy', 'keywords')
 
 
 class SendMessage(forms.ModelForm):
-	class Meta:
-		model = Message
-		fields = ('recipient','textbox','sender',)
+    class Meta:
+        model = Message
+        fields = ('recipient','textbox',)
 
 
 class RegisterForm(UserCreationForm):
@@ -36,7 +36,7 @@ class RegisterForm(UserCreationForm):
         model = User
         fields = ("username", "fullname", "user_type",)
 
-    '''
+
     def save(self, commit=True):
         user = super(RegisterForm, self).save(commit=False)
         if ' ' in self.cleaned_data["fullname"].split(None, 1):
@@ -59,13 +59,9 @@ class RegisterForm(UserCreationForm):
             g.user_set.add(user)
 
         return user
-    '''
+
+
 class SearchForm(forms.ModelForm):
 	class Meta:
 		model = Search
 		fields = ('search',)
-
-'''
-('companyName', 'companyLocation', 'reportDate', 'companyCountry',
-                  'currentProjects', 'industry', 'sector', 'ceoName', 'filename')
-'''

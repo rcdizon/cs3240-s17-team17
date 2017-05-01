@@ -7,6 +7,7 @@ from django.shortcuts import render, get_object_or_404
 from django.utils import timezone
 from django.core.files import File
 from LokahiProject import settings
+from django.core.signing import Signer
 from .models import Report
 from .forms import CreateReport
 from .models import Message
@@ -15,6 +16,10 @@ from .forms import SearchForm
 from .models import Search
 from .forms import RegisterForm
 from django.shortcuts import redirect
+import Crypto
+from Crypto.PublicKey import RSA
+from Crypto import Random
+from Crypto.Cipher import ARC4
 import os
 from django.views.generic import ListView
 from django.contrib.auth.models import User, Group, Permission
@@ -67,6 +72,7 @@ def create_report(request):
         form = CreateReport(request.POST, request.FILES)
         if form.is_valid():
             report = form.save(commit=False)
+            report.author = request.user
             report.timestamp = timezone.now()
             report.save()
             return redirect('result', pk=report.pk)
@@ -106,14 +112,20 @@ def result(request, pk):
 def message(request):
     if request.method == "POST":
         form = SendMessage(request.POST)
+        encrypt_bool = request.POST.get('encrypt')
         if form.is_valid():
             messenger = form.save(commit=False)
-            messenger.timestamp = timezone.now()
-            messenger.save()
-            return redirect('sent_messages', pk=messenger.pk)
+            if encrypt_bool == None:
+                messenger.set(request.user, messenger.textbox)
+            else: 
+                random_generator = Random.new().read
+                key = RSA.generate(1024, random_generator)
+                public_key = key.publickey()
+                enc_data = public_key.encrypt(str.encode(messenger.textbox), 32)
+                messenger.set(request.user, enc_data)
+        return redirect('sent_messages', pk=messenger.pk)
     else:
-        data = {'sender': request.user}
-        form = SendMessage(initial = data)
+        form = SendMessage()
     return render(request, 'messenger.html', {'form': form})
 
 
@@ -128,6 +140,23 @@ def inbox(request):
     inbox_messages = Message.objects.filter(recipient=request.user)
     return render(request, 'inbox.html', {'inbox_messages': inbox_messages })
 
+def individual_message(request,pk):
+    message = get_object_or_404(Message, pk=pk)
+    form = SendMessage(instance=message)
+    return render(request, 'individual_message.html', {'form': form})
+
+def delete_message(request,pk):
+    message = get_object_or_404(Message, pk=pk)
+    form = SendMessage(instance=message)
+    instance = Message.objects.get(id=pk)
+    instance.delete()
+    inbox_messages = Message.objects.filter(recipient=request.user)
+    return render(request, 'inbox.html', {'inbox_messages': inbox_messages })
+
+def submit(request):
+    info=request.POST['info']
+    user = User.objects.create_user('john', 'lennon@thebeatles.com', 'johnpassword')
+    user.save()
 
 @login_required(login_url='/LokahiApp/login/')
 def download(request, path):
