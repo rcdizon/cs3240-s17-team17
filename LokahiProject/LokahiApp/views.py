@@ -397,36 +397,37 @@ def fda_login(request):
 
 @csrf_exempt
 def fda_viewreports(request):
-    results1 = Report.objects.all()
-    reportList = list(results1)
+    username = request.POST.get('username')
+    user = User.objects.get(username=username)
 
     my_groups = []
     mutual_users = []
     for g in Group.objects.all():
         if g.id == 1 or g.id == 2 or g.id == 3:
             continue
-        elif request.user.groups.filter(name=g.name).exists():
+        elif user.groups.filter(name=g.name).exists():
             my_groups.append(g)
+
     for g in my_groups:
         for u in User.objects.filter(groups__id=g.id):
             mutual_users.append(u.id)
 
     all_users = {}
-    for user in User.objects.all():
-        all_users[user.id] = user.username
+    for u in User.objects.all():
+        all_users[u.id] = u.username
 
-    for report in reportList:
-        if request.user.groups.filter(id=3).exists():
-            continue
-        elif report.privacy == 'Private' and (not mutual_users or report.owner not in mutual_users):
-            reportList.remove(report)
+    reportList = []
+
+    for report in Report.objects.all():
+        if user.groups.filter(id=3).exists() or report.privacy == 'Public' or report.author_id in mutual_users:
+            reportList.append(report)
 
     if len(reportList) == 0:
-        return HttpResponse("You don't have any reports to view.")
+        return HttpResponse("========================================\nYou don't have any reports to view.")
 
     else:
         myResponse = "========================================\n"
-        myResponse += ("These are the reports that are available to you:\n")
+        myResponse += "These are the reports that are available to you:\n"
         count = 1
         for report in reportList:
             myResponse += (str(count) + ") Name: " + report.companyName + "\n   " + "Report Creator: " + str(all_users[report.author_id]) + "\n")
