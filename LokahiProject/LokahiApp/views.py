@@ -76,7 +76,7 @@ def homepage(request):
     for g in Group.objects.all():
         if g.id == 1 or g.id == 2 or g.id == 3:
             continue
-        else:
+        elif request.user.groups.filter(name=g.name).exists():
             my_groups.append(g)
     for g in my_groups:
         for u in User.objects.filter(groups__id=g.id):
@@ -123,7 +123,7 @@ def report(request):
     for g in Group.objects.all():
         if g.id == 1 or g.id == 2 or g.id == 3:
             continue
-        else:
+        elif request.user.groups.filter(name=g.name).exists():
             my_groups.append(g)
     for g in my_groups:
         for u in User.objects.filter(groups__id=g.id):
@@ -405,7 +405,7 @@ def fda_viewreports(request):
     for g in Group.objects.all():
         if g.id == 1 or g.id == 2 or g.id == 3:
             continue
-        else:
+        elif request.user.groups.filter(name=g.name).exists():
             my_groups.append(g)
     for g in my_groups:
         for u in User.objects.filter(groups__id=g.id):
@@ -416,7 +416,9 @@ def fda_viewreports(request):
         all_users[user.id] = user.username
 
     for report in reportList:
-        if request.user.groups.filter(id=3).exists() and report.privacy == 'Private' and report.owner not in mutual_users:
+        if request.user.groups.filter(id=3).exists():
+            continue
+        elif report.privacy == 'Private' and (not mutual_users or report.owner not in mutual_users):
             reportList.remove(report)
 
     if len(reportList) == 0:
