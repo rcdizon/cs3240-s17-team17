@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 
 
 class Report(models.Model):
-    author = models.OneToOneField('auth.User')
+    author = models.ForeignKey('auth.User')
     timestamp = models.DateTimeField(default=timezone.now)
     companyName = models.CharField(max_length=200, default='')
     companyCEO = models.CharField(max_length=200, default='')
