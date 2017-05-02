@@ -7,6 +7,7 @@ class Report(models.Model):
     author = models.OneToOneField('auth.User')
     timestamp = models.DateTimeField(default=timezone.now)
     companyName = models.CharField(max_length=200, default='')
+    companyCEO = models.CharField(max_length=200, default='')
     companyPhone = models.CharField(max_length=200, default='')
     companyLocation = models.CharField(max_length=200, default='')
     companyCountry = models.CharField(max_length=200, default='')
@@ -33,6 +34,7 @@ class Report(models.Model):
     )
 
     privacy = models.CharField(choices=PRIVACY_CHOICES, default=PUBLIC, max_length=10)
+    keywords = models.CharField(max_length=200, default='')
 
     def publish(self):
         self.published_date = timezone.now()
@@ -42,16 +44,15 @@ class Report(models.Model):
         return self.companyName
 
 class Message(models.Model):
-     recipient = models.ForeignKey(User, related_name="recipient")
-     sender = models.ForeignKey(User, related_name="sender", null=True)
-     textbox = models.TextField(max_length=10000)
-     timestamp = models.DateTimeField(default=timezone.now)
+    recipient = models.ForeignKey(User, related_name="recipient")
+    sender = models.ForeignKey(User, related_name="sender", null=True)
+    textbox = models.TextField(max_length=10000)
+    timestamp = models.DateTimeField(default=timezone.now)
 
-     def publish(self):
-        self.published_date = timezone.now()
-        self.sender = request.user
+    def set(self,sender,text):
+        self.sender = sender
+        self.textbox = text
         self.save()
 
 class Search(models.Model):
 	search = models.CharField(max_length=100)
-
