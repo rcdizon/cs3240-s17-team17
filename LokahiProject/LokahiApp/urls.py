@@ -4,6 +4,7 @@ from django.contrib.auth import views as auth_views
 from django.views.generic.edit import CreateView
 from .forms import RegisterForm
 
+from LokahiProject import settings
 from . import views
 
 urlpatterns = [
@@ -38,10 +39,11 @@ urlpatterns = [
     url(r'^report/', views.report),
     url(r'^restoreUser/', views.restore_user),
     url(r'^result/(?P<pk>\d+)/$', views.result, name="result"),
+    url(r'^upload/(?P<pk>\d+)/$', views.upload, name="upload"),
     url(r'^result/(?P<pk>\d+)/edit/$', views.report_edit, name='report_edit'),
+    url(r'^media/(?P<path>.*)$', views.download),
     url(r'^sent_messages/(?P<pk>\d+)/$', views.sent_messages, name="sent_messages"),
     url(r'^sitemanagerindex/', views.sitemanagerindex),
-    #promote suspend restore
     url(r'^$', views.index),
 ]
 
