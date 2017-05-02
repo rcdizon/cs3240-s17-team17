@@ -24,25 +24,20 @@
                 <div class="col-md-8">
                     <p>Search Request: <input type="text" name="search"/></p><br>
                     <p>Date Range:</p> <input type="text" name="datefilter" value="" />
-
                         <script type="text/javascript">
                         $(function() {
-
                           $('input[name="datefilter"]').daterangepicker({
                               autoUpdateInput: false,
                               locale: {
                                   cancelLabel: 'Clear'
                               }
                           });
-
                           $('input[name="datefilter"]').on('apply.daterangepicker', function(ev, picker) {
                               $(this).val(picker.startDate.format('YYYY-MM-DD') + ' - ' + picker.endDate.format('YYYY-MM-DD'));
                           });
-
                           $('input[name="datefilter"]').on('cancel.daterangepicker', function(ev, picker) {
                               $(this).val('');
                           });
-
                         });
                         </script>
                     <br>

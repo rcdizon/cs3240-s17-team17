@@ -438,9 +438,14 @@ def search(request):
 
             date_results = request.POST.get("datefilter", "")
 
-            values = date_results.split(' - ')
-            from_date = values[0]
-            to_date = values[1]
+            if date_results is '':
+                from_date = '1900-12-31'
+                to_date = '3000-05-03'
+
+            else:
+                values = date_results.split(' - ')
+                from_date = values[0]
+                to_date = values[1]
 
             for a in search_parse:
                 for g in Report.objects.all():
