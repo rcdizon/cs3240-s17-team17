@@ -62,6 +62,16 @@ def login(request):
 
 @login_required(login_url='/LokahiApp/login/')
 def homepage(request):
+    user = request.user
+    user.save()
+    if user.profile.public == '':
+        random_generator = Random.new().read
+        key = RSA.generate(1024, random_generator)
+        public_key = key.publickey()
+        user = request.user
+        user.profile.public = str(public_key)
+        user.save()
+        return render(request,'encrypt_user.html')
     name = request.user
     reports = Report.objects.filter(timestamp__lte=timezone.now()).order_by('timestamp')
     my_groups = []
@@ -138,11 +148,7 @@ def message(request):
             if encrypt_bool == None:
                 messenger.set(request.user, messenger.textbox)
             else: 
-                random_generator = Random.new().read
-                key = RSA.generate(1024, random_generator)
-                public_key = key.publickey()
-                enc_data = public_key.encrypt(str.encode(messenger.textbox), 32)
-                messenger.set(request.user, enc_data)
+                messenger.set(request.user, messenger.textbox)
         return redirect('sent_messages', pk=messenger.pk)
     else:
         form = SendMessage()

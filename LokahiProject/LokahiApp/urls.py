@@ -11,7 +11,7 @@ urlpatterns = [
     url('^register/', CreateView.as_view(
         template_name='register.html',
         form_class=RegisterForm,
-        success_url='/LokahiApp/homepage'
+        success_url='/LokahiApp/login'
     )),
     url('^accounts/', include('django.contrib.auth.urls')),
     url(r'^createGroup', views.create_group),
