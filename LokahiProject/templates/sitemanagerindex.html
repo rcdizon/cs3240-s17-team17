@@ -4,20 +4,17 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="">
-    <meta name="author" content="">
-    <link href="{% static 'startbootstrap-clean-blog2/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
-    <link href="{% static 'startbootstrap-clean-blog2/css/clean-blog.css' %}" rel="stylesheet">
-    <link href="{% static 'startbootstrap-clean-blog2/vendor/font-awesome/css/font-awesome.min.css' %}" rel="stylesheet" type="text/css">
-    <link href='https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
-    <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+    <meta charset="UTF-8">
+    <title>Group Successful</title>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="{% static 'css/reports.css' %}">
+    <link href="//fonts.googleapis.com/css?family=Lobster&subset=latin,latin-ext" rel="stylesheet" type="text/css">
 </head>
 <body>
-<div class="page-header" style="margin:20;padding:20">
-    <a href="/LokahiApp/homepage"><h1>Lokahi FinTech</h1{display: inline;}></a>
+<div class="page-header">
+    <a href="/LokahiApp/homepage"><h1>Lokahi FinTech</h1></a>
     {% if not request.user|has_group:"2" %}
     <a href="/LokahiApp/report/new/"><button class="createreport btn btn-default">Create a Report</button></a>
     {% endif %}
@@ -27,7 +24,173 @@
     {% endif %}
     <a href="/LokahiApp/messenger"><button class="messenger btn btn-default">Message</button></a>
     <a href="/LokahiApp/logout"><button class="logout btn btn-default">Log out</button></a>
+</div>
+<div class="content container">
+    {% if request.user|has_group:"3" %}
+    <!--
+    1.	SM users can give other users SM status.
+    2.	SMs can create groups, assign any user to any group
+    3.	SMs can delete any user from any group.
+    4.	SMs can suspend and restore a user's access to his or her account.
+    5.	SMs can access, edit, and delete any user's reports, even if they are private
+    -->
+
+    <h1>Welcome Site Manager</h1>
+    <script>
+        function clicked(e)
+        {
+            if(!confirm('Are you sure?'))e.preventDefault();
+        }
+    </script>
+
+    <!-- Promotion -->
+    <a href="#" onclick="$('#hiddenPromotion').toggle(); return false;">Promote User</a>
+    <div style="display: none;" id="hiddenPromotion">
+        <form action="/LokahiApp/promoteUser/" method="post">
+            {% csrf_token %}
+            User Name:
+            <select id="select" name="select">
+                {% for user in sm_users %}
+                {% if not user.is_superuser and user != name and user.is_active %}
+                <option value="{{ user.id }}">{{ user }}</option>
+                {% endif %}
+                {% endfor %}
+            </select>
+            <input type="submit" value="Promote" onclick="clicked(event)" />
+        </form>
     </div>
+    <br>
+
+    <!-- Suspend User -->
+    <a href="#" onclick="$('#hiddenSuspend').toggle(); return false;">Suspend User</a>
+    <div style="display: none;" id="hiddenSuspend">
+        <form action="/LokahiApp/suspendUser/" method="post">
+            {% csrf_token %}
+            User Name:
+            <select id="select" name="select">
+                {% for user in users %}
+                {% if not user.is_superuser and user != name and user.is_active %}
+                <option value="{{ user.id }}">{{ user }}</option>
+                {% endif %}
+                {% endfor %}
+            </select>
+            <input type="submit" value="Suspend" onclick="clicked(event)" />
+        </form>
+    </div>
+    <br>
+
+    <!-- Restore User -->
+    <a href="#" onclick="$('#hiddenRestore').toggle(); return false;">Restore User</a>
+    <div style="display: none;" id="hiddenRestore">
+        <form action="/LokahiApp/restoreUser/" method="post">
+            {% csrf_token %}
+            User Name:
+            <select id="select" name="select">
+                {% for user in users %}
+                {% if not user.is_superuser and user != name and not user.is_active %}
+                <option value="{{ user.id }}">{{ user }}</option>
+                {% endif %}
+                {% endfor %}
+            </select>
+            <input type="submit" value="Restore" onclick="clicked(event)" />
+        </form>
+    </div>
+    <br>
+
+    <!-- Group creation -->
+    <a href="#" onclick="$('#hiddenForm').toggle(); return false;">Create Group</a>
+    <div style="display: none;" id="hiddenForm">
+        <form action="/LokahiApp/createGroup/" method="post">
+            {% csrf_token %}
+            Group Name:
+            <input type="text" name="groupName" id="groupName">
+            <input type="submit" value="Create" class="btn btn-primary" onclick="clicked(event)">
+        </form>
+    </div>
+    <br>
+
+    <!-- TODO: Make all buttons similar, i.e. bootstrapify things -->
+    <!-- All groups -->
+    <a href="#" onclick="$('#hiddenUserGroups').toggle(); return false;">All Groups</a>
+    <div style="display: none;" id="hiddenUserGroups">
+        <table>
+            <tr>
+                <form action="/LokahiApp/smGroups/" method="post">
+                 {% csrf_token %}
+                <td>
+                    <!-- TODO: Future refactor, only list users who are(n't) already in the group -->
+                    <select id="select" name="select">
+                        {% for group in my_groups %}
+                        <option value="{{ group }}">{{ group }}</option>
+                        {% endfor %}
+                    </select>
+                </td>
+                <td>
+                    <a href="#" onclick="$('#hiddenUser').toggle(); return false;"><button class="btn btn-primary" name=item>Add user</button></a>
+                    <div style="display: none;" id="hiddenUser">
+                        <select id="add" name="add">
+                            <option label=" "></option>
+                            {% for user in users %}
+                            {% if not user.is_superuser %}
+                            <option>{{ user }}</option>
+                            {% endif %}
+                            {% endfor %}
+                        </select>
+                    </div>
+                </td>
+                <td>
+                    <a href="#" onclick="$('#hiddenUserRemove').toggle(); return false;"><button class="btn btn-primary" name=item>Remove user</button></a>
+                    <div style="display: none;" id="hiddenUserRemove">
+                        <select id="remove" name="remove">
+                            <option label=" "></option>
+                            {% for user in users %}
+                            {% if not user.is_superuser %}
+                            <option>{{ user }}</option>
+                            {% endif %}
+                            {% endfor %}
+                        </select>
+                    </div>
+                </td>
+                <td>
+                    <input type="submit" value="Submit" onclick="clicked(event)" />
+                </td>
+                </form>
+            </tr>
+        </table>
+    </div>
+    {% else %}
+    You do not have permission to access this page.
+    {% endif %}
+</div>
+</body>
+</html>
+=======
+{% load staticfiles %}
+{% load lokahi_extras %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Group Successful</title>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="{% static 'css/reports.css' %}">
+    <link href="//fonts.googleapis.com/css?family=Lobster&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+</head>
+<body>
+<div class="page-header">
+    <a href="/LokahiApp/homepage"><h1>Lokahi FinTech</h1></a>
+    {% if not request.user|has_group:"2" %}
+    <a href="/LokahiApp/report/new/"><button class="createreport btn btn-default">Create a Report</button></a>
+    {% endif %}
+    <a href="/LokahiApp/groups/"><button class="groups btn btn-default">Groups</button></a>
+    {% if request.user|has_group:"3" %}
+    <a href="/LokahiApp/sitemanagerindex/"><button class="groups btn btn-default">Site Manager Panel</button></a>
+    {% endif %}
+    <a href="/LokahiApp/messenger"><button class="messenger btn btn-default">Message</button></a>
+    <a href="/LokahiApp/logout"><button class="logout btn btn-default">Log out</button></a>
 </div>
 <div class="content container">
     {% if request.user|has_group:"3" %}

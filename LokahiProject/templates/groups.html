@@ -1,133 +1,112 @@
 {% load staticfiles %}
 {% load lokahi_extras %}
 
+<!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="">
-    <meta name="author" content="">
-    <link href="{% static 'startbootstrap-clean-blog2/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
-    <link href="{% static 'startbootstrap-clean-blog2/css/clean-blog.css' %}" rel="stylesheet">
-    <link href="{% static 'startbootstrap-clean-blog2/vendor/font-awesome/css/font-awesome.min.css' %}" rel="stylesheet" type="text/css">
-    <link href='https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
-    <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+    <meta charset="UTF-8">
+    <title>Groups</title>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="{% static 'css/reports.css' %}">
+    <link href="//fonts.googleapis.com/css?family=Lobster&subset=latin,latin-ext" rel="stylesheet" type="text/css">
 </head>
-<body style="margin-left:20;padding-left:0">
-    <div class="page-header">
-        <a href="/LokahiApp/homepage"><h1>Lokahi FinTech</h1{display: inline;}></a>
-        {% if not request.user|has_group:"2" %}
-        <a href="/LokahiApp/report/new/"><button class="createreport btn btn-default">Create a Report</button></a>
-        {% endif %}
-        <a href="/LokahiApp/groups/"><button class="groups btn btn-default">Groups</button></a>
-        {% if request.user|has_group:"3" %}
-        <a href="/LokahiApp/sitemanagerindex/"><button class="groups btn btn-default">Site Manager Panel</button></a>
-        {% endif %}
-        <a href="/LokahiApp/messenger"><button class="messenger btn btn-default">Message</button></a>
-        <a href="/LokahiApp/search"><button class="Search btn btn-default">Search for report</button></a>
-        <a href="/LokahiApp/logout"><button class="logout btn btn-default">Log out</button></a>
+<body>
+<div class="page-header">
+    <a href="/LokahiApp/homepage"><h1>Lokahi FinTech</h1></a>
+    {% if not request.user|has_group:"2" %}
+    <a href="/LokahiApp/report/new/"><button class="createreport btn btn-default">Create a Report</button></a>
+    {% endif %}
+    <a href="/LokahiApp/groups/"><button class="groups btn btn-default">Groups</button></a>
+    {% if request.user|has_group:"3" %}
+    <a href="/LokahiApp/sitemanagerindex/"><button class="groups btn btn-default">Site Manager Panel</button></a>
+    {% endif %}
+    <a href="/LokahiApp/messenger"><button class="messenger btn btn-default">Message</button></a>
+    <a href="/LokahiApp/logout"><button class="logout btn btn-default">Log out</button></a>
+</div>
+<div class="content container">
+
+    <script>
+        function clicked(e)
+        {
+            if(!confirm('Are you sure?'))e.preventDefault();
+        }
+    </script>
+
+    <!-- TODO: Boostrapify this stuff later -->
+    {% if request.user.first_name %}
+    <h1>Welcome {{ request.user.first_name }}!</h1>
+    {% else %}
+    <h1>Welcome {{ name }}!</h1>
+    {% endif %}
+
+    <!-- Group creation -->
+    <a href="#" onclick="$('#hiddenForm').toggle(); return false;">Create group</a>
+    <div style="display: none;" id="hiddenForm">
+        <form action="/LokahiApp/createGroup/" method="post">
+          {% csrf_token %}
+            <b>Group Name: </b>
+          <input type="text" name="groupName" id="groupName">
+          <input type="submit" value="Create" class="btn btn-primary">
+        </form>
     </div>
-    <div class="content container">
+    <br>
 
-        <script>
-            function clicked(e)
-            {
-                if(!confirm('Are you sure?'))e.preventDefault();
-            }
-        </script>
+    <!-- View groups -->
+    <a href="#" onclick="$('#hiddenUserGroups').toggle(); return false;">User's Groups</a>
+    <div style="display: none;" id="hiddenUserGroups">
+        <table>
+        {% for item in my_groups %}
+            {% csrf_token %}
+            <tr>
+            <td>{{ item }}</td>
+            <td><a href="/LokahiApp/leaveGroup/{{ item.id }}/"><button class="btn btn-primary" name=item onclick="clicked(event)">Leave group</button></a></td>
+            {% empty %}
+            <td>User is not in any groups</td>
+            </tr>
+        {% endfor %}
+        </table>
+    </div>
+    <br>
 
-        <!-- TODO: Boostrapify this stuff later -->
-        {% if request.user.first_name %}
-        <h1>Welcome {{ request.user.first_name }}!</h1>
-        {% else %}
-        <h1>Welcome {{ name }}!</h1>
-        {% endif %}
-
-        <!-- Group creation -->
-        <a href="#" onclick="$('#hiddenForm').toggle(); return false;">Create group</a>
-        <div style="display: none;" id="hiddenForm">
-            <form action="/LokahiApp/createGroup/" method="post">
-              {% csrf_token %}
-                <b>Group Name: </b>
-              <input type="text" name="groupName" id="groupName">
-              <input type="submit" value="Create" class="btn btn-primary">
-            </form>
-        </div>
-        <br>
-
-        <!-- View groups -->
-        <a href="#" onclick="$('#hiddenUserGroups').toggle(); return false;">User's Groups</a>
-        <div style="display: none;" id="hiddenUserGroups">
-            <table>
-            {% for item in my_groups %}
-                {% csrf_token %}
+    <!-- Add other to groups -->
+    <a href="#" onclick="$('#hiddenUser').toggle(); return false;">Add other user to group</a>
+    <div style="display: none;" id="hiddenUser">
+        <form action="/LokahiApp/editGroup/" method="post">
+        <table>
+            {% if my_groups %}
                 <tr>
-                <td>{{ item }}</td>
-                <td><a href="/LokahiApp/leaveGroup/{{ item.id }}/"><button class="btn btn-primary" name=item onclick="clicked(event)">Leave group</button></a></td>
-                {% empty %}
+                    <td>
+                        {% csrf_token %}
+                        <b>Group: </b><select id="select_group" name="select">
+                        {% for item in my_groups %}
+                            <option value="{{ item.id }}">{{ item }}</option>
+                        {% endfor %}
+                        </select>
+                    </td>
+                    <td>
+                        <b>User: </b>
+                        <select id="select_user" name="select">
+                        {% for user in users %}
+                        {% if not user.is_superuser and user != name and user.is_active %}
+                        <option value="{{ user.id }}">{{ user }}</option>
+                        {% endif %}
+                        {% endfor %}
+                        </select>
+                    </td>
+                    <td>
+                        <input class="btn btn-primary" type="submit" value="Add to group" onclick="clicked(event)" />
+                    </td>
+                </tr>
+            {% else %}
                 <td>User is not in any groups</td>
-                </tr>
-            {% endfor %}
-            </table>
-        </div>
-        <br>
-
-        <!-- Add other to groups -->
-        <a href="#" onclick="$('#hiddenUser').toggle(); return false;">Add other user to group</a>
-        <div style="display: none;" id="hiddenUser">
-            <form action="/LokahiApp/editGroup/" method="post">
-            <table>
-                {% if my_groups %}
-                    <tr>
-                        <td>
-                            {% csrf_token %}
-                            <b>Group: </b><select id="select_group" name="select">
-                            {% for item in my_groups %}
-                                <option value="{{ item.id }}">{{ item }}</option>
-                            {% endfor %}
-                            </select>
-                        </td>
-                        <td>
-                            <b>User: </b>
-                            <select id="select_user" name="select">
-                            {% for user in users %}
-                            {% if not user.is_superuser and user != name and user.is_active %}
-                            <option value="{{ user.id }}">{{ user }}</option>
-                            {% endif %}
-                            {% endfor %}
-                            </select>
-                        </td>
-                        <td>
-                            <input class="btn btn-primary" type="submit" value="Add to group" onclick="clicked(event)" />
-                        </td>
-                    </tr>
-                {% else %}
-                    <td>User is not in any groups</td>
-                {% endif %}
-            </table>
-            </form>
-        </div>
-        <br>
-
-        <!-- Join groups: will remove because non-SM's shouldn't be allowed to add themselves to a group
-        <a href="#" onclick="$('#hiddenOtherGroups').show(); return false;">Other Groups</a>
-        <div style="display: none;" id="hiddenOtherGroups">
-            <table>
-                {% for item in other_groups %}
-                {% csrf_token %}
-                <tr>
-                    <td>{{ item }}</td>
-                    <td><a href="/LokahiApp/joinGroup/{{ item.id }}/"><button value="Join group" class="btn btn-primary" name=item id='joinGroup'>Join group</button></a></td>
-                    {% empty %}
-                    <td>No other groups</td>
-                </tr>
-                {% endfor %}
-            </table>
-        </div>
-        -->
-
+            {% endif %}
+        </table>
+        </form>
     </div>
+    <br>
+</div>
 
 </body>
 </html>
