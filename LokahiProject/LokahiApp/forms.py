@@ -21,4 +21,4 @@ class CreateReport(forms.ModelForm):
 class CreateReportUpload(forms.ModelForm):
     class Meta:
         model = Upload
-        fields = ('fileupload', 'company')
+        fields = ('fileupload',)

@@ -77,7 +77,9 @@ def upload(request, pk):
     if request.method == "POST":
         form = CreateReportUpload(request.POST, request.FILES)
         if form.is_valid():
-            form.save()
+            report = form.save(commit=False)
+            report.company = Report.objects.get(companyName=reports.companyName)
+            report.save()
             return redirect('result', pk=reports.pk)
     else:
         form = CreateReportUpload()
