@@ -1,4 +1,12 @@
 {% load staticfiles %}
+<!-- Include Required Prerequisites -->
+<script type="text/javascript" src="//cdn.jsdelivr.net/jquery/1/jquery.min.js"></script>
+<script type="text/javascript" src="//cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+<link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/bootstrap/3/css/bootstrap.css" />
+
+<!-- Include Date Range Picker -->
+<script type="text/javascript" src="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.js"></script>
+<link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.css" />
 <html>
     <head>
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
@@ -14,12 +22,34 @@
             <form method="POST" class="post-form">
             	{% csrf_token %}
                 <div class="col-md-8">
-                    <tr>
-                        <td>Search Request:</td>
-                        <td><input type="text" name="search"/></td>
-                    </tr>
-                            <input type="submit" name="Search" class="Send btn btn-default" value="Search" />
-                    </div>
+                    <p>Search Request: <input type="text" name="search"/></p><br>
+                    <p>Date Range:</p> <input type="text" name="datefilter" value="" />
+
+                        <script type="text/javascript">
+                        $(function() {
+
+                          $('input[name="datefilter"]').daterangepicker({
+                              autoUpdateInput: false,
+                              locale: {
+                                  cancelLabel: 'Clear'
+                              }
+                          });
+
+                          $('input[name="datefilter"]').on('apply.daterangepicker', function(ev, picker) {
+                              $(this).val(picker.startDate.format('YYYY-MM-DD') + ' - ' + picker.endDate.format('YYYY-MM-DD'));
+                          });
+
+                          $('input[name="datefilter"]').on('cancel.daterangepicker', function(ev, picker) {
+                              $(this).val('');
+                          });
+
+                        });
+                        </script>
+                    <br>
+                    <hr>
+                    <button type="submit" name="Search" class="btn btn-default" value="Search">Search</button>
+                    <a href="/LokahiApp/report"><button class="btn btn-default">Return</button></a>
+                </div>
                     <div class="col-md-8">
                     	{% if search_results %}
                     	{{ search_results }}
@@ -40,7 +70,6 @@
                         {% endif %}
                     </div>
             </form>
-            <a href="/LokahiApp/report"><button class="btn btn-default">Return</button></a>
         </div>
     </body>
 </html>

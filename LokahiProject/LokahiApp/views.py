@@ -436,9 +436,16 @@ def search(request):
             results = [] 
             search = []
 
+            date_results = request.POST.get("datefilter", "")
+
+            values = date_results.split(' - ')
+            from_date = values[0]
+            to_date = values[1]
+
             for a in search_parse:
                 for g in Report.objects.all():
                     # TODO: check for repeats and for empty search
+                        results += Report.objects.filter(timestamp__range=[from_date, to_date])
                         if a.lower() in g.companyName.lower():
                             results += Report.objects.filter(companyName__icontains = a)
                             results = list(set(results))
