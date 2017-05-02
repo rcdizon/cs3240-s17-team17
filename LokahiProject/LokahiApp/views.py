@@ -438,6 +438,7 @@ def search(request):
 
             for a in search_parse:
                 for g in Report.objects.all():
+                    # TODO: check for repeats and for empty search
                     if a.lower() in g.companyName.lower():
                         results += Report.objects.filter(companyName__icontains = a)
                     if a.lower() in g.companyCountry.lower():
