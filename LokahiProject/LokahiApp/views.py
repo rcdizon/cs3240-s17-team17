@@ -428,11 +428,48 @@ def fda_viewreports(request):
     else:
         myResponse = "========================================\n"
         myResponse += "These are the reports that are available to you:\n"
-        count = 1
         for report in reportList:
-            myResponse += (str(count) + ") Name: " + report.companyName + "\n   " + "Report Creator: " + str(all_users[report.author_id]) + "\n")
-            count += 1
-            # myResponse += ("\nReport ID: " + str(report.id) + "\n   Name: " + report.name + "\n   Owner: " + str(
-            #     report.owner) + "\n   Short description: " + report.short_description + "\n   Encrypted = " + str(
-            #     report.encrypt) + "\n" + "\n")
+            myResponse += (str(report.id) + ') Company Name: ' + report.companyName + "\n   Report Creator: " +
+                           str(all_users[report.author_id]) + "\n   Encrypted: " + str(report.encrypted) + "\n")
         return HttpResponse(myResponse)
+
+
+@csrf_exempt
+def fda_displayreport(request):
+    username = request.POST.get('username')
+    user = User.objects.get(username=username)
+    r_id = request.POST.get('reportID')
+    if not Report.objects.filter(id=r_id):
+        return HttpResponse('Invalid report ID. Try again.')
+
+    my_groups = []
+    mutual_users = []
+    for g in Group.objects.all():
+        if g.id == 1 or g.id == 2 or g.id == 3:
+            continue
+        elif user.groups.filter(name=g.name).exists():
+            my_groups.append(g)
+
+    for g in my_groups:
+        for u in User.objects.filter(groups__id=g.id):
+            mutual_users.append(u.id)
+
+    all_users = {}
+    for u in User.objects.all():
+        all_users[u.id] = u.username
+
+    r = Report.objects.get(id=r_id)
+    myResponse = (str(r.id) + ') Company Name: ' + r.companyName +
+                  "\n   Report Creator: " + str(all_users[r.author_id]) +
+                  "\n   Company CEO: " + str(r.companyCEO) +
+                  "\n   Company Phone: " + str(r.companyPhone) +
+                  "\n   Location: " + str(r.companyLocation) +
+                  "\n   Country: " + str(r.companyCountry) +
+                  "\n   Sector: " + str(r.sector) +
+                  "\n   Industry: " + str(r.industry) +
+                  "\n   Current Projects: " + str(r.currentProjects) +
+                  "\n   Encrypted: " + str(r.encrypted) +
+                  "\n   Privacy: " + str(r.privacy) +
+                  "\n")
+    return HttpResponse(myResponse)
+

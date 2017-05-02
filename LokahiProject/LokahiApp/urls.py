@@ -17,8 +17,11 @@ urlpatterns = [
     url(r'^createGroup', views.create_group),
     url(r'^delete_report/(?P<pk>[0-9]+)/$', views.delete_report),
     url(r'^editGroup/(?P<pk>[0-9]+)/(?P<qk>[0-9]+)/$', views.edit_group),
+
     url(r'^fda_login/$', views.fda_login, name='fda_login'),
     url(r'^fda_viewreports/$', views.fda_viewreports, name='fda_viewreports'),
+    url(r'^fda_displayreport/$', views.fda_displayreport, name='fda_displayreport'),
+
     url(r'^smGroups', views.sm_groups),
     url(r'^joinGroup/(?P<pk>[0-9]+)/$', views.join_group),
     url(r'^leaveGroup/(?P<pk>[0-9]+)/$', views.leave_group),

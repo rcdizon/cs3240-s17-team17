@@ -21,10 +21,6 @@ payload = {
     'username': username,
     'password': password
 }
-# payload = {
-#     'username': 'richard',
-#     'password': 'mbdi0m3.'
-# }
 
 host = "http://127.0.0.1:8000"
 
@@ -36,13 +32,19 @@ with requests.session() as s:
 
     p1 = s.post(host + '/LokahiApp/fda_viewreports/', data=payload)
     print(p1.text)
-    # if p1.text == "You don't have any reports to view.":
-    #     print("The FDA will now exit.")
-    #     exit()
-    #
-    # reportid = input("Enter the ID of the report you wish to display: ")
-    # payload['reportid'] = reportid
-    #
-    # p2 = s.post(host + '/LokahiApp/fda_displayreport/', data=payload)
+    if p1.text == "You don't have any reports to view.":
+        print("The FDA will now exit.")
+        exit()
+    reportID = input("Input the # of the report you wish to display: ")
+    payload['reportID'] = reportID
+
+    p2 = s.post(host + '/LokahiApp/fda_displayreport/', data=payload)
+    print(p2.text)
+    while p2.text == 'Invalid report ID. Try again.':
+        reportID = input("\nInput the # of the report you wish to display: ")
+        payload['reportID'] = reportID
+        p2 = s.post(host + '/LokahiApp/fda_displayreport/', data=payload)
+        print(p2.text)
+
     # parse = p2.text
     # parse2 = p2.text
