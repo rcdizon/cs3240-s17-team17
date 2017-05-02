@@ -15,16 +15,43 @@
     <title>Landing Page</title>
 </head>
 <body>
-<h2>Welcome to Lokahi</h2>
-
-    <table>
-        <td>
-            <a href="/LokahiApp/register/"><button class="Signup btn btn-default">Signup</button></a>
+    <header class="intro-header" style="background-image: url({% static 'background2.png' %}); background-color: #ccc">
+        <table style="position: absolute; right: 0;">
+            <td>
+                <a href="/LokahiApp/register/"><button class="Signup btn btn-default" style="border: 1px solid #789;">Signup</button></a>
+                </td>
+            <td>
+                <a href="/LokahiApp/login/"><button class="Login btn btn-default" style="border: 1px solid #789;">Login</button></a>
             </td>
-        <td>
-            <a href="/LokahiApp/login/"><button class="Login btn btn-default">Login</button></a>
-        </td>
-    </table>
-
+        </table>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                    <div class="site-heading">
+                        <h1 style="color:black;">Lokahi FinTech</h1>
+                        <hr class="small">
+                        <span style="color:black;" class="subheading">A Crowdfunding Project</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+    <div class="container">
+        <div class="row">
+            <div class="col-8">
+                <header class="intro-header"><h2>About</h2></header>
+                <div class="col-12">
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis accumsan sollicitudin dolor, non accumsan quam ornare at. Mauris non consequat tellus, ac fringilla metus. Vivamus eget ex ut metus imperdiet vehicula. Morbi erat urna, maximus ut rutrum nec, ultrices sed dolor. In sed magna nulla. Phasellus consequat vestibulum sapien, nec tempus dui sodales eu. Ut id elit dui.
+                    <br><br>
+                </div>
+            </div>
+            <div class="col-8">
+                <header class="intro-header"><h2>Our Team</h2></header>
+                <div class="col-12">
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis accumsan sollicitudin dolor, non accumsan quam ornare at. Mauris non consequat tellus, ac fringilla metus. Vivamus eget ex ut metus imperdiet vehicula. Morbi erat urna, maximus ut rutrum nec, ultrices sed dolor. In sed magna nulla. Phasellus consequat vestibulum sapien, nec tempus dui sodales eu. Ut id elit dui.
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
-</html>
+    
