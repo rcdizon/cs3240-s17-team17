@@ -15,7 +15,6 @@ class Report(models.Model):
     industry = models.CharField(max_length=200, default='')
     currentProjects = models.TextField(default='')
 
-
     PUBLIC = 'Public'
     PRIVATE = 'Private'
     PRIVACY_CHOICES = (

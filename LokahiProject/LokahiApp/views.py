@@ -95,6 +95,7 @@ def create_report(request):
         form = CreateReport()
     return render(request, 'create_report.html', {'form': form})
 
+
 @login_required(login_url='/LokahiApp/login/')
 def upload(request, pk):
     reports = get_object_or_404(Report, pk=pk)
@@ -143,7 +144,6 @@ def report(request):
     return render(request, 'report.html', {'reports': reports, 'name': name, 'mutual_users': mutual_users})
 
 
-
 @login_required(login_url='/LokahiApp/login/')
 def result(request, pk):
     reports = get_object_or_404(Report, pk=pk)
@@ -160,6 +160,70 @@ def download(request, path):
         return response
     else:
         raise Http404
+
+
+@login_required(login_url='/LokahiApp/login/')
+def message(request):
+    if request.method == "POST":
+        form = SendMessage(request.POST)
+        encrypt_bool = request.POST.get('encrypt')
+        if form.is_valid():
+            messenger = form.save(commit=False)
+            if encrypt_bool == None:
+                messenger.set(request.user, messenger.textbox)
+            else: 
+                random_generator = Random.new().read
+                key = RSA.generate(1024, random_generator)
+                public_key = key.publickey()
+                enc_data = public_key.encrypt(str.encode(messenger.textbox), 32)
+                messenger.set(request.user, enc_data)
+        return redirect('sent_messages', pk=messenger.pk)
+    else:
+        form = SendMessage()
+    return render(request, 'messenger.html', {'form': form})
+
+
+@login_required(login_url='/LokahiApp/login/')
+def sent_messages(request, pk):
+    sent_messages = get_object_or_404(Message, pk=pk)
+    return render(request, 'sent_messages.html', {'sent_messages': sent_messages})
+
+
+@login_required(login_url='/LokahiApp/login/')
+def inbox(request):
+    inbox_messages = Message.objects.filter(recipient=request.user)
+    return render(request, 'inbox.html', {'inbox_messages': inbox_messages })
+
+def individual_message(request,pk):
+    message = get_object_or_404(Message, pk=pk)
+    form = SendMessage(instance=message)
+    return render(request, 'individual_message.html', {'form': form})
+
+def delete_message(request,pk):
+    message = get_object_or_404(Message, pk=pk)
+    form = SendMessage(instance=message)
+    instance = Message.objects.get(id=pk)
+    instance.delete()
+    inbox_messages = Message.objects.filter(recipient=request.user)
+    return render(request, 'inbox.html', {'inbox_messages': inbox_messages })
+
+def submit(request):
+    info=request.POST['info']
+    user = User.objects.create_user('john', 'lennon@thebeatles.com', 'johnpassword')
+    user.save()
+
+@login_required(login_url='/LokahiApp/login/')
+def download(request, path):
+    file_path = os.path.join(settings.MEDIA_ROOT + "/media/", path)
+    if os.path.exists(file_path):
+        f = open(file_path, 'rb')
+        file = File(f)
+        response = HttpResponse(file, content_type='application/force_download')
+        response['Content-Disposition'] = 'attachment; filename=%s' %smart_str(os.path.basename(file_path))
+        return response
+    else:
+        raise Http404
+
 
 
 @login_required(login_url='/LokahiApp/login/')
