@@ -17,7 +17,7 @@ urlpatterns = [
     url('^accounts/', include('django.contrib.auth.urls')),
     url(r'^createGroup', views.create_group),
     url(r'^delete_report/(?P<pk>[0-9]+)/$', views.delete_report),
-    url(r'^editGroup/(?P<pk>[0-9]+)/(?P<qk>[0-9]+)/$', views.edit_group),
+    url(r'^editGroup/$', views.edit_group),
 
     url(r'^fda_login/$', views.fda_login, name='fda_login'),
     url(r'^fda_viewreports/$', views.fda_viewreports, name='fda_viewreports'),

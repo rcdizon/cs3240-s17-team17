@@ -332,7 +332,9 @@ def create_group(request):
 
 
 @login_required(login_url='/LokahiApp/login/')
-def edit_group(request, pk, qk):
+def edit_group(request):
+    pk = request.POST.get('select_group')
+    qk = request.POST.get('select_user')
     g = Group.objects.get(id=pk)
     u = User.objects.get(id=qk)
     g.user_set.add(u)
@@ -401,11 +403,14 @@ def promote_user(request):
         my_groups.append(g)
     # Get list of all users, TODO: cleanup later, don't add all users to this list
     users = User.objects.all()
+    sm_users = User.objects.filter(groups__id=1) | User.objects.filter(groups__id=2)
 
     u = User.objects.get(id=request.POST.get("select"))
     u.groups.add(Group.objects.get(id=3))
     u.save()
-    return render(request, 'sitemanagerindex.html', {'name': name, 'my_groups': my_groups, "users": users})
+    return render(request, 'sitemanagerindex.html',
+                  {'name': name, 'my_groups': my_groups, "users": users, "sm_users": sm_users,
+                   })
 
 
 @login_required(login_url='/LokahiApp/login/')
@@ -416,11 +421,14 @@ def suspend_user(request):
         my_groups.append(g)
     # Get list of all users, TODO: cleanup later, don't add all users to this list
     users = User.objects.all()
+    sm_users = User.objects.filter(groups__id=1) | User.objects.filter(groups__id=2)
 
     u = User.objects.get(id=request.POST.get("select"))
     u.is_active = False
     u.save()
-    return render(request, 'sitemanagerindex.html', {'name': name, 'my_groups': my_groups, "users": users})
+    return render(request, 'sitemanagerindex.html',
+                  {'name': name, 'my_groups': my_groups, "users": users, "sm_users": sm_users,
+                   })
 
 
 @login_required(login_url='/LokahiApp/login/')
@@ -431,11 +439,14 @@ def restore_user(request):
         my_groups.append(g)
     # Get list of all users, TODO: cleanup later, don't add all users to this list
     users = User.objects.all()
+    sm_users = User.objects.filter(groups__id=1) | User.objects.filter(groups__id=2)
 
     u = User.objects.get(id=request.POST.get("select"))
     u.is_active = True
     u.save()
-    return render(request, 'sitemanagerindex.html', {'name': name, 'my_groups': my_groups, "users": users})
+    return render(request, 'sitemanagerindex.html',
+                  {'name': name, 'my_groups': my_groups, "users": users, "sm_users": sm_users,
+                   })
 
 
 @login_required(login_url='/LokahiApp/login/')
