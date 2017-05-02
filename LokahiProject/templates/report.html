@@ -50,67 +50,41 @@
             <section class="bg-grey-50 padding-top-60 padding-top-sm-30">
             <div class="container">
                 <div class="row">
-                    <div class="col-md-3 col-sm-4 hidden-xs">
-                        {% if not reports %}
-                            No reports saved. Create report <a href="/LokahiApp/report/new/">here</a>.
-                        {% else %}
-                            {% for report in reports %}
-                                <!-- Following line allows SMs to see ALL reports -->
-                                {% if report.privacy == 'Public' or request.user|has_group:"3" or report.author_id in mutual_users %}
-                        <div class="widget">
-                            <div class="panel panel-default">
-                                <div class="panel-heading">
-                                    <h3>
-                                        <a href="{% url 'result' pk=report.pk %}">{{ report.companyName }} </a>
-                                        {% if report.privacy == 'Private' %}
-                                        (PRIVATE)
-                                        {% endif %}
-                                    </h3>
+                {% if not reports %}
+                    No reports saved. Create report <a href="/LokahiApp/report/new/">here</a>.
+                {% else %}
+                    {% for report in reports %}
+                        <!-- Following line allows SMs to see ALL reports -->
+                        {% if report.privacy == 'Public' or request.user|has_group:"3" or report.author_id in mutual_users %}
+                        <div class="col-lg-4 col-md-6 hidden-s">
+                            <div class="widget">
+                                <div class="panel panel-default">
+                                    <div class="panel-heading">
+                                        <h3>
+                                            <a href="{% url 'result' pk=report.pk %}">{{ report.companyName }} </a>
+                                            {% if report.privacy == 'Private' %}
+                                            (PRIVATE)
+                                            {% endif %}
+                                        </h3>
+                                    </div>
+                                    <div class="panel-body">
+                                        <p>{{ report.timestamp }}</p>
+                                        <p>{{ report.author }}</p>
+                                        <p>{{ report.companyPhone }}</p>
+                                        <p>{{ report.sector }}</p>
+                                        <p>{{ report.industry }}</p>
+                                    </div>
+
                                 </div>
-                                <div class="panel-body">
-                                    <p>{{ report.timestamp }}</p>
-                                    <p>{{ report.author }}</p>
-                                    <p>{{ report.companyPhone }}</p>
-                                    <p>{{ report.sector }}</p>
-                                    <p>{{ report.industry }}</p>
-                                </div>
-                                {% endif %}
-                            </div>
-                            {% empty %}
-                                No reports saved. Create report <a href="/LokahiApp/report/new/">here</a>.
-                            {% endfor %}
-                        </div>
-                        {% endif %}
-                    </div>
-                </div>
-            </div>
-        </section>
-            <div class="row">
-                <div class="col-md-8">
-                    {% if not reports %}
-                        No reports saved. Create report <a href="/LokahiApp/report/new/">here</a>.
-                    {% else %}
-                        {% for report in reports %}
-                            <!-- Following line allows SMs to see ALL reports -->
-                            {% if report.privacy == 'Public' or request.user|has_group:"3" or report.author_id in mutual_users %}
-                            <div class="reports">
-                                <h3>
-                                    <a href="{% url 'result' pk=report.pk %}">{{ report.companyName }} </a>
-                                    {% if report.privacy == 'Private' %}
-                                    (PRIVATE)
-                                    {% endif %}
-                                </h3>
-                                <p>{{ report.timestamp }}</p>
-                                <p>{{ report.author }}</p>
-                                <p>{{ report.companyPhone }}</p>
-                                <p>{{ report.sector }}</p>
-                                <p>{{ report.industry }}</p>
+                                
+                    
                             </div>
                             {% endif %}
-                        {% empty %}
-                            No reports saved. Create report <a href="/LokahiApp/report/new/">here</a>.
-                        {% endfor %}
-                    {% endif %}
+                        </div>
+                    {% empty %}
+                        No reports saved. Create report <a href="/LokahiApp/report/new/">here</a>.
+                    {% endfor %}
+                {% endif %}
                 </div>
             </div>
         </div>
