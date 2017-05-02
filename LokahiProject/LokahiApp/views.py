@@ -67,11 +67,12 @@ def homepage(request):
     if user.profile.public == '':
         random_generator = Random.new().read
         key = RSA.generate(1024, random_generator)
-        public_key = key.publickey()
+        public_key = key.publickey().exportKey()
+        private_key = key.exportKey()
         user = request.user
-        user.profile.public = str(public_key)
+        user.profile.public = public_key
         user.save()
-        return render(request,'encrypt_user.html')
+        return render(request,'encrypt_user.html', {'private_key': private_key})
     name = request.user
     reports = Report.objects.filter(timestamp__lte=timezone.now()).order_by('timestamp')
     my_groups = []
@@ -147,7 +148,12 @@ def message(request):
             messenger = form.save(commit=False)
             if encrypt_bool == None:
                 messenger.set(request.user, messenger.textbox)
-            else: 
+            else:
+                reciever = messenger.recipient 
+                pub_string = reciever.profile.public
+                pub_key = RSA.importKey(pub_string)
+                text = messenger.textbox
+                messenger.textbox = pub_key.encrypt(str.encode(text), 32)
                 messenger.set(request.user, messenger.textbox)
         return redirect('sent_messages', pk=messenger.pk)
     else:

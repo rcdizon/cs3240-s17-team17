@@ -61,7 +61,7 @@ class Search(models.Model):
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    public = models.TextField(max_length=1000, blank=True)
+    public = models.TextField(max_length=2000, blank=True)
 
     @receiver(post_save, sender=User)
     def create_user_profile(sender, instance, created, **kwargs):
