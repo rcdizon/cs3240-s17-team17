@@ -41,12 +41,18 @@
                         <p>{{ reports.sector|linebreaksbr}}</p>
                         <p>{{ reports.industry|linebreaksbr}}</p>
                         <p>Current Projects: {{ reports.currentProjects }}</p>
-                        {% if user.is_authenticated %}
-                            <a href="/LokahiApp/{{ reports.upload }}"><p>{{ reports.upload|linebreaksbr}}</p></a>
-                        {% endif %}
-                        <p>Encrypted: {{ reports.encrypted|linebreaksbr}}</p>
                         <p>Privacy: {{ reports.privacy|linebreaksbr}}</p>
                         <p>Keywords: {{ reports.keywords|linebreaksbr }}</p>
+                        <hr>
+                        <p>Files:</p>
+                        {% if user.is_authenticated %}
+                            {% for result in uploads %}
+                                <p><a href="/LokahiApp/{{ result.fileupload }}">{{ result.fileupload }}</a>
+                                 [Encrypted: {{ result.encrypted|linebreaksbr}}]</p>
+                            {% endfor %}
+                        {% endif %}
+                        <hr>
+                        <a class="btn btn-default" href="{% url 'upload' pk=reports.pk %}" >Upload another file</a>
                         <a class="btn btn-default" href="{% url 'report_edit' pk=reports.pk %}" ><span class="glyphicon glyphicon-pencil"></span></a>
                         <script>
                             function clicked(e)

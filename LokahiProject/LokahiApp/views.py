@@ -6,10 +6,14 @@ from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import render, get_object_or_404
 from django.utils import timezone
 from django.core.files import File
-from LokahiProject import settings
+# from LokahiProject import settings
 from django.core.signing import Signer
 from .models import Report
+from .models import Upload
 from .forms import CreateReport
+from .forms import CreateReportUpload
+from django.shortcuts import redirect
+import os
 from .models import Message
 from .forms import SendMessage
 from .forms import SearchForm
@@ -71,6 +75,7 @@ def login(request):
 def homepage(request):
     name = request.user
     reports = Report.objects.filter(timestamp__lte=timezone.now()).order_by('timestamp')
+
     my_groups = []
     mutual_users = []
     for g in Group.objects.all():
@@ -93,10 +98,27 @@ def create_report(request):
             report.author = request.user
             report.timestamp = timezone.now()
             report.save()
-            return redirect('result', pk=report.pk)
+            return redirect('upload', pk=report.pk)
     else:
         form = CreateReport()
     return render(request, 'create_report.html', {'form': form})
+
+
+
+@login_required(login_url='/LokahiApp/login/')
+def upload(request, pk):
+    reports = get_object_or_404(Report, pk=pk)
+    if request.method == "POST":
+        form = CreateReportUpload(request.POST, request.FILES)
+        if form.is_valid():
+            report = form.save(commit=False)
+            report.company = Report.objects.get(companyName=reports.companyName)
+            report.save()
+            return redirect('result', pk=reports.pk)
+    else:
+        form = CreateReportUpload()
+
+    return render(request, 'upload.html', {'reports': reports, 'form': form})
 
 
 @login_required(login_url='/LokahiApp/login/')
@@ -134,7 +156,83 @@ def report(request):
 @login_required(login_url='/LokahiApp/login/')
 def result(request, pk):
     reports = get_object_or_404(Report, pk=pk)
-    return render(request, 'result.html', {'reports': reports})
+    uploads = Upload.objects.filter(company=reports.pk)
+    return render(request, 'result.html', {'reports': reports, 'uploads': uploads})
+
+def download(request, path):
+    file_path = os.path.join(settings.MEDIA_ROOT + "/media/", path)
+    if os.path.exists(file_path):
+        f = open(file_path, 'rb')
+        file = File(f)
+        response = HttpResponse(file, content_type='application/force_download')
+        response['Content-Disposition'] = 'attachment; filename=%s' %smart_str(os.path.basename(file_path))
+        return response
+    else:
+        raise Http404
+
+
+@login_required(login_url='/LokahiApp/login/')
+def message(request):
+    if request.method == "POST":
+        form = SendMessage(request.POST)
+        encrypt_bool = request.POST.get('encrypt')
+        if form.is_valid():
+            messenger = form.save(commit=False)
+            if encrypt_bool == None:
+                messenger.set(request.user, messenger.textbox)
+            else: 
+                random_generator = Random.new().read
+                key = RSA.generate(1024, random_generator)
+                public_key = key.publickey()
+                enc_data = public_key.encrypt(str.encode(messenger.textbox), 32)
+                messenger.set(request.user, enc_data)
+        return redirect('sent_messages', pk=messenger.pk)
+    else:
+        form = SendMessage()
+    return render(request, 'messenger.html', {'form': form})
+
+
+@login_required(login_url='/LokahiApp/login/')
+def sent_messages(request, pk):
+    sent_messages = get_object_or_404(Message, pk=pk)
+    return render(request, 'sent_messages.html', {'sent_messages': sent_messages})
+
+
+@login_required(login_url='/LokahiApp/login/')
+def inbox(request):
+    inbox_messages = Message.objects.filter(recipient=request.user)
+    return render(request, 'inbox.html', {'inbox_messages': inbox_messages })
+
+def individual_message(request,pk):
+    message = get_object_or_404(Message, pk=pk)
+    form = SendMessage(instance=message)
+    return render(request, 'individual_message.html', {'form': form})
+
+def delete_message(request,pk):
+    message = get_object_or_404(Message, pk=pk)
+    form = SendMessage(instance=message)
+    instance = Message.objects.get(id=pk)
+    instance.delete()
+    inbox_messages = Message.objects.filter(recipient=request.user)
+    return render(request, 'inbox.html', {'inbox_messages': inbox_messages })
+
+def submit(request):
+    info=request.POST['info']
+    user = User.objects.create_user('john', 'lennon@thebeatles.com', 'johnpassword')
+    user.save()
+
+@login_required(login_url='/LokahiApp/login/')
+def download(request, path):
+    file_path = os.path.join(settings.MEDIA_ROOT + "/media/", path)
+    if os.path.exists(file_path):
+        f = open(file_path, 'rb')
+        file = File(f)
+        response = HttpResponse(file, content_type='application/force_download')
+        response['Content-Disposition'] = 'attachment; filename=%s' %smart_str(os.path.basename(file_path))
+        return response
+    else:
+        raise Http404
+
 
 
 @login_required(login_url='/LokahiApp/login/')
@@ -346,23 +444,35 @@ def search(request):
         form = SearchForm(request.POST)
         if form.is_valid():
             search_results = request.POST.get("search", "")
-            results = ["Oh... No! You fucked up"]
+            search_results.strip()
+            search_parse = search_results.split(" ")
+            results = [] 
+            search = []
 
-            for g in Report.objects.all():
-                if search_results.lower() in g.companyName.lower():
-                    results = Report.objects.filter(companyName__icontains=search_results)
-                elif search_results.lower() in g.companyCountry.lower():
-                    results = Report.objects.filter(companyCountry__icontains=search_results)
-                elif search_results.lower() in g.companyLocation.lower():
-                    results = Report.objects.filter(companyLocation__icontains=search_results)
-                elif search_results.lower() in g.sector.lower():
-                    results = Report.objects.filter(sector__icontains=search_results)
-                elif search_results.lower() in g.industry.lower():
-                    results = Report.objects.filter(industry__icontains=search_results)
-                elif search_results.lower() in g.companyPhone.lower():
-                    results = Report.objects.filter(companyPhone__icontains=search_results)
-                elif search_results.lower() in g.currentProjects.lower():
-                    results = Report.objects.filter(currentProjects__icontains=search_results)
+            for a in search_parse:
+                for g in Report.objects.all():
+                    # TODO: check for repeats and for empty search
+                    if a.lower() in g.companyName.lower():
+                        results += Report.objects.filter(companyName__icontains = a)
+                    if a.lower() in g.companyCountry.lower():
+                        results += Report.objects.filter(companyCountry__icontains = a)
+                    if a.lower() in g.companyLocation.lower():
+                        results += Report.objects.filter(companyLocation__icontains = a)
+                    if a.lower() in g.sector.lower():
+                        results += Report.objects.filter(sector__icontains = a)
+                    if a.lower() in g.industry.lower():
+                        results += Report.objects.filter(industry__icontains = a)
+                    if a.lower() in g.companyPhone.lower():
+                        results += Report.objects.filter(companyPhone__icontains = a)
+                    if a.lower() in g.currentProjects.lower():
+                        results += Report.objects.filter(currentProjects__icontains = a)
+                    if a.lower() in g.companyCEO.lower():
+                        results += Report.objects.filter(companyCEO__icontains = a)
+                    if a.lower() in g.keywords.lower():
+                        results += Report.objects.filter(keywords__icontains = a)
+                    if a.lower() in User.objects.get(id=g.author_id).username:
+                        auth = User.objects.get(id=g.author_id)
+                        results += Report.objects.filter(author= auth)
 
             return render(request, 'search.html', {'results': results})
     else:
@@ -430,7 +540,7 @@ def fda_viewreports(request):
         myResponse += "These are the reports that are available to you:\n"
         for report in reportList:
             myResponse += (str(report.id) + ') Company Name: ' + report.companyName + "\n   Report Creator: " +
-                           str(all_users[report.author_id]) + "\n   Encrypted: " + str(report.encrypted) + "\n")
+                           str(all_users[report.author_id]) + "\n")
         return HttpResponse(myResponse)
 
 
@@ -468,7 +578,6 @@ def fda_displayreport(request):
                   "\n   Sector: " + str(r.sector) +
                   "\n   Industry: " + str(r.industry) +
                   "\n   Current Projects: " + str(r.currentProjects) +
-                  "\n   Encrypted: " + str(r.encrypted) +
                   "\n   Privacy: " + str(r.privacy) +
                   "\n")
     return HttpResponse(myResponse)
