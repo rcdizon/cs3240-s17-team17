@@ -12,7 +12,7 @@
     <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
     <link href='https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
     <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
-    <title>Homepage</title>
+    <title>Groups</title>
 </head>
 <body style="margin-left:20;padding-left:0">
     <div class="page-header">
@@ -39,19 +39,22 @@
     </script>
 
     <!-- TODO: Boostrapify this stuff later -->
+    <h1>Groups</h1>
     {% if request.user.first_name %}
-    <h1>Welcome {{ request.user.first_name }}!</h1>
+    <h2>Welcome {{ request.user.first_name }}!</h2>
     {% else %}
-    <h1>Welcome {{ name }}!</h1>
+    <h2>Welcome {{ name }}!</h2>
     {% endif %}
 
     <!-- Group creation -->
     <!-- TODO: Fix for master later -->
-    <a href="#" onclick="$('#hiddenForm').toggle(); return false;">Create group</a>
+    <a href="#" onclick="$('#hiddenForm').toggle(); return false;">
+        <br>
+        <button class="creategroup btn btn-default btn-lg">Create Group</button></a>
     <div style="display: none;" id="hiddenForm">
         <form action="/LokahiApp/createGroup/" method="post">
           {% csrf_token %}
-            <b>Group Name: </b>
+            <b><br>Group Name: </b>
           <input type="text" name="groupName" id="groupName">
           <input type="submit" value="Create" class="btn btn-primary">
         </form>
@@ -59,16 +62,16 @@
     <br>
 
     <!-- View groups -->
-    <a href="#" onclick="$('#hiddenUserGroups').toggle(); return false;">User's Groups</a>
+    <a href="#" onclick="$('#hiddenUserGroups').toggle(); return false;"><button class="usergroups btn btn-default btn-lg">User's Groups</button></a>
     <div style="display: none;" id="hiddenUserGroups">
-        <table>
+        <table style="margin-top:20">
         {% for item in my_groups %}
             {% csrf_token %}
             <tr>
-            <td>{{ item }}</td>
-            <td><a href="/LokahiApp/leaveGroup/{{ item.id }}/"><button class="btn btn-primary" name=item onclick="clicked(event)">Leave group</button></a></td>
+            <td><b>{{ item }}</b></td>
+            <td><a href="/LokahiApp/leaveGroup/{{ item.id }}/"><button type="button" class="btn btn-primary btn-block" name=item style="margin-left:10;margin-bottom:5" onclick="clicked(event)">Leave group</button></a></td>
             {% empty %}
-            <td>User is not in any groups</td>
+            <td><b><br>User is not in any groups</b></td>
             </tr>
         {% endfor %}
         </table>
@@ -76,10 +79,10 @@
     <br>
 
     <!-- Add other to groups -->
-    <a href="#" onclick="$('#hiddenUser').toggle(); return false;">Add other user to group</a>
+    <a href="#" onclick="$('#hiddenUser').toggle(); return false;"><button class="adduser btn btn-default btn-lg">Add Another User to Group</button></a>
     <div style="display: none;" id="hiddenUser">
         <form action="/LokahiApp/editGroup/" method="post">
-        <table>
+        <table style="margin-top:20">
             {% if my_groups %}
                 <tr>
                     <td>
@@ -91,7 +94,7 @@
                         </select>
                     </td>
                     <td>
-                        <b>User: </b>
+                        <b> User: </b>
                         <select id="select_user" name="select_user">
                         {% for user in users %}
                         {% if not user.is_superuser and user != name and user.is_active %}
@@ -101,11 +104,11 @@
                         </select>
                     </td>
                     <td>
-                        <input class="btn btn-primary" type="submit" value="Add to group" onclick="clicked(event)" />
+                        <input class="btn btn-primary" type="submit" value="Add to group" style="margin-left:10" onclick="clicked(event)" />
                     </td>
                 </tr>
             {% else %}
-                <td>User is not in any groups</td>
+                <td><b><br>User is not in any groups</b></td>
             {% endif %}
         </table>
         </form>
