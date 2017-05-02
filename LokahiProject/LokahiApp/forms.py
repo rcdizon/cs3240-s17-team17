@@ -1,5 +1,6 @@
 from django import forms
 from .models import Report
+from .models import Upload
 from .models import Message
 from .models import Search
 from django.contrib.auth.forms import UserCreationForm
@@ -18,7 +19,13 @@ class CreateReport(forms.ModelForm):
     class Meta:
         model = Report
         fields = ('companyName', 'companyCEO', 'companyLocation', 'companyPhone', 'companyCountry',
-                  'currentProjects', 'industry', 'sector', 'upload', 'encrypted', 'privacy', 'keywords')
+                  'currentProjects', 'industry', 'sector', 'privacy', 'keywords')
+
+
+class CreateReportUpload(forms.ModelForm):
+    class Meta:
+        model = Upload
+        fields = ('fileupload', 'encrypted',)
 
 
 class SendMessage(forms.ModelForm):
