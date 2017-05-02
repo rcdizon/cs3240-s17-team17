@@ -54,6 +54,16 @@
                         <p><b>Encrypted: </b>{{ reports.encrypted|linebreaksbr}}</p>
                         <p><b>Privacy: </b>{{ reports.privacy|linebreaksbr}}</p>
                         <p><b>Keywords: </b>{{ reports.keywords|linebreaksbr }}</p>
+                        <hr>
+                        <p><b>Files: </b></p>
+                        {% if user.is_authenticated %}
+                            {% for result in uploads %}
+                                <p><a href="/LokahiApp/{{ result.fileupload }}">{{ result.fileupload }}</a>
+                                 [Encrypted: {{ result.encrypted|linebreaksbr}}]</p>
+                            {% endfor %}
+                        {% endif %}
+                        <hr>
+                        <a class="btn btn-default" href="{% url 'upload' pk=reports.pk %}" >Upload another file</a>
                         <a class="btn btn-default" href="{% url 'report_edit' pk=reports.pk %}" ><span class="glyphicon glyphicon-pencil"></span></a>
                         <script>
                             function clicked(e)
