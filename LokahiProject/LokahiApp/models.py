@@ -48,12 +48,14 @@ class Report(models.Model):
 class Message(models.Model):
     recipient = models.ForeignKey(User, related_name="recipient")
     sender = models.ForeignKey(User, related_name="sender", null=True)
+    encrypted = models.BooleanField(default=True)
     textbox = models.TextField(max_length=10000)
     timestamp = models.DateTimeField(default=timezone.now)
 
-    def set(self,sender,text):
+    def set(self,sender,text, encbool):
         self.sender = sender
         self.textbox = text
+        self.encrypted = encbool
         self.save()
 
 class Search(models.Model):

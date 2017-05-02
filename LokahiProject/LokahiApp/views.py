@@ -147,14 +147,14 @@ def message(request):
         if form.is_valid():
             messenger = form.save(commit=False)
             if encrypt_bool == None:
-                messenger.set(request.user, messenger.textbox)
+                messenger.set(request.user, messenger.textbox, False)
             else:
                 reciever = messenger.recipient 
                 pub_string = reciever.profile.public
                 pub_key = RSA.importKey(pub_string)
                 text = messenger.textbox
                 messenger.textbox = pub_key.encrypt(str.encode(text), 32)
-                messenger.set(request.user, messenger.textbox)
+                messenger.set(request.user, messenger.textbox, True)
         return redirect('sent_messages', pk=messenger.pk)
     else:
         form = SendMessage()
@@ -170,7 +170,8 @@ def sent_messages(request, pk):
 @login_required(login_url='/LokahiApp/login/')
 def inbox(request):
     inbox_messages = Message.objects.filter(recipient=request.user)
-    return render(request, 'inbox.html', {'inbox_messages': inbox_messages })
+    encrypted_messages = Message.objects.filter(recipient=request.user).filter(encrypted=True)
+    return render(request, 'inbox.html', {'inbox_messages': inbox_messages,'encrypted_messages': encrypted_messages })
 
 def individual_message(request,pk):
     message = get_object_or_404(Message, pk=pk)
@@ -183,7 +184,7 @@ def delete_message(request,pk):
     instance = Message.objects.get(id=pk)
     instance.delete()
     inbox_messages = Message.objects.filter(recipient=request.user)
-    return render(request, 'inbox.html', {'inbox_messages': inbox_messages })
+    return render(request, 'inbox.html', {'inbox_messages': inbox_messages})
 
 def submit(request):
     info=request.POST['info']
