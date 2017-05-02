@@ -52,9 +52,7 @@
                             {% endfor %}
                         {% endif %}
                         <hr>
-                        <a class="btn btn-default" href="{% url 'report_edit' pk=reports.pk %}" ><span class="glyphicon glyphicon-pencil"></span></a>
                         <a class="btn btn-default" href="{% url 'upload' pk=reports.pk %}" >Upload another file</a>
-
                         <a class="btn btn-default" href="{% url 'report_edit' pk=reports.pk %}" ><span class="glyphicon glyphicon-pencil"></span></a>
                         <script>
                             function clicked(e)
