@@ -321,26 +321,26 @@ def search(request):
             for a in search_parse:
                 for g in Report.objects.all():
                     if a.lower() in g.companyName.lower():
-                        results = Report.objects.filter(companyName__icontains = a)
-                    elif a.lower() in g.companyCountry.lower():
-                        results = Report.objects.filter(companyCountry__icontains = a)
-                    elif a.lower() in g.companyLocation.lower():
-                        results = Report.objects.filter(companyLocation__icontains = a)
-                    elif a.lower() in g.sector.lower():
-                        results = Report.objects.filter(sector__icontains = a)
-                    elif a.lower() in g.industry.lower():
-                        results = Report.objects.filter(industry__icontains = a)
-                    elif a.lower() in g.companyPhone.lower():
-                        results = Report.objects.filter(companyPhone__icontains = a)
-                    elif a.lower() in g.currentProjects.lower():
-                        results = Report.objects.filter(currentProjects__icontains = a)
-                    elif a.lower() in g.companyCEO.lower():
-                        results = Report.objects.filter(companyCEO__icontains = a)
-                    elif a.lower() in g.keywords.lower():
-                        results = Report.objects.filter(keywords__icontains = a)
-                    elif a.lower() in User.objects.get(id=g.author_id).username:
+                        results += Report.objects.filter(companyName__icontains = a)
+                    if a.lower() in g.companyCountry.lower():
+                        results += Report.objects.filter(companyCountry__icontains = a)
+                    if a.lower() in g.companyLocation.lower():
+                        results += Report.objects.filter(companyLocation__icontains = a)
+                    if a.lower() in g.sector.lower():
+                        results += Report.objects.filter(sector__icontains = a)
+                    if a.lower() in g.industry.lower():
+                        results += Report.objects.filter(industry__icontains = a)
+                    if a.lower() in g.companyPhone.lower():
+                        results += Report.objects.filter(companyPhone__icontains = a)
+                    if a.lower() in g.currentProjects.lower():
+                        results += Report.objects.filter(currentProjects__icontains = a)
+                    if a.lower() in g.companyCEO.lower():
+                        results += Report.objects.filter(companyCEO__icontains = a)
+                    if a.lower() in g.keywords.lower():
+                        results += Report.objects.filter(keywords__icontains = a)
+                    if a.lower() in User.objects.get(id=g.author_id).username:
                         auth = User.objects.get(id=g.author_id)
-                        results = Report.objects.filter(author= auth)
+                        results += Report.objects.filter(author= auth)
 
             return render(request,'search.html', {'results': results} )
     else:
