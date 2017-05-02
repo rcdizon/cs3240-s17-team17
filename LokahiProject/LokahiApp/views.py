@@ -68,7 +68,7 @@ def login(request):
 def homepage(request):
     name = request.user
     reports = Report.objects.filter(timestamp__lte=timezone.now()).order_by('timestamp')
-    read_messages = Message.objects.filter(read=True)
+    read_messages = Message.objects.filter(read=True).filter(recipient_id=request.user.id)
 
     my_groups = []
     mutual_users = []
@@ -134,7 +134,7 @@ def report(request):
     reports = Report.objects.filter(timestamp__lte=timezone.now()).order_by('timestamp')
     my_groups = []
     mutual_users = []
-    read_messages = Message.objects.filter(read=True)
+    read_messages = Message.objects.filter(read=True).filter(recipient_id=request.user.id)
     for g in Group.objects.all():
         if g.id == 1 or g.id == 2 or g.id == 3:
             continue
@@ -258,7 +258,7 @@ def sent_messages(request, pk):
 @login_required(login_url='/LokahiApp/login/')
 def inbox(request):
     inbox_messages = Message.objects.filter(recipient=request.user)
-    read_messages = Message.objects.filter(read=True)
+    read_messages = Message.objects.filter(read=True).filter(recipient_id=request.user.id)
     return render(request, 'inbox.html', {'inbox_messages': inbox_messages, 'read_messages': read_messages })
 
 def individual_message(request,pk):
@@ -275,7 +275,7 @@ def delete_message(request,pk):
     instance = Message.objects.get(id=pk)
     instance.delete()
     inbox_messages = Message.objects.filter(recipient=request.user)
-    read_messages = Message.objects.filter(read=True)
+    read_messages = Message.objects.filter(read=True).filter(recipient_id=request.user.id)
     return render(request, 'inbox.html', {'inbox_messages': inbox_messages, 'read_messages': read_messages })
 
 def submit(request):
