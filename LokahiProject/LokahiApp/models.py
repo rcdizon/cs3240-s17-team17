@@ -12,13 +12,7 @@ class Report(models.Model):
     industry = models.CharField(max_length=200, default='DEFAULT')
     currentProjects = models.TextField(default='DEFAULT')
 
-    YES = 'Yes'
-    NO = 'No'
-    ENCRYPTED_CHOICES = (
-        (YES, 'Yes'),
-        (NO, 'No')
-    )
-    encrypted = models.CharField(choices=ENCRYPTED_CHOICES, default=NO, max_length=4)
+
     # upload = models.ManyToManyField(Upload, default="No uploads yet")
 
     PUBLIC = 'Public'
@@ -41,3 +35,10 @@ class Report(models.Model):
 class Upload(models.Model):
     fileupload = models.FileField(upload_to='media', default=None, null=True, blank=True)
     company = models.ForeignKey(Report, related_name="company")
+    YES = 'Yes'
+    NO = 'No'
+    ENCRYPTED_CHOICES = (
+        (YES, 'Yes'),
+        (NO, 'No')
+    )
+    encrypted = models.CharField(choices=ENCRYPTED_CHOICES, default=NO, max_length=4)

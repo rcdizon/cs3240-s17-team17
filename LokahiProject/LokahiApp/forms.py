@@ -15,10 +15,10 @@ class CreateReport(forms.ModelForm):
     class Meta:
         model = Report
         fields = ('companyName', 'companyLocation', 'companyPhone', 'companyCountry',
-                  'currentProjects', 'industry', 'sector', 'encrypted', 'privacy')
+                  'currentProjects', 'industry', 'sector', 'privacy')
 
 
 class CreateReportUpload(forms.ModelForm):
     class Meta:
         model = Upload
-        fields = ('fileupload',)
+        fields = ('fileupload', 'encrypted',)

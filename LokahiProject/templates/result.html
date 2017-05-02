@@ -32,9 +32,9 @@
 {#                            <a href="/LokahiApp/{{ reports.upload }}"><p>{{ reports.upload|linebreaksbr}}</p></a>#}
 {#                        {% endif %}#}
                         {% for result in uploads %}
-                            <p>Files: <a href="/LokahiApp/{{ result.fileupload }}">{{ result.fileupload }}</a></p>
+                            <p><a href="/LokahiApp/{{ result.fileupload }}">{{ result.fileupload }}</a>
+                             [Encrypted: {{ result.encrypted|linebreaksbr}}]</p>
                         {% endfor %}
-                        <p>Encrypted: {{ reports.encrypted|linebreaksbr}}</p>
                         <p>Privacy: {{ reports.privacy|linebreaksbr}}</p>
                         <a class="btn btn-default" href="{% url 'report_edit' pk=reports.pk %}" ><span class="glyphicon glyphicon-pencil"></span></a>
                         <a class="btn btn-default" href="{% url 'upload' pk=reports.pk %}" >Upload another file</a>
