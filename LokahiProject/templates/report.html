@@ -55,11 +55,11 @@
                     No reports saved. Create report <a href="/LokahiApp/report/new/">here</a>.
                 {% else %}
                     {% for report in reports %}
+                        <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12">
                         <!-- Following line allows SMs to see ALL reports -->
-                        {% if report.privacy == 'Public' or request.user|has_group:"3" or report.author_id in mutual_users or report.author_id == request.user.id %}
-                        <div class="col-lg-4 col-md-6 hidden-s">
                             <div class="widget">
                                 <div class="panel panel-default">
+                                    {% if report.privacy == 'Public' or request.user|has_group:"3" or report.author_id in mutual_users or report.author_id == request.user.id %}
                                     <div class="panel-heading">
                                         <h3>
                                             <a href="{% url 'result' pk=report.pk %}">{{ report.companyName }}</a>
@@ -75,12 +75,22 @@
                                         <p><b>Sector: </b>{{ report.sector }}</p>
                                         <p><b>Industry: </b>{{ report.industry }}</p>
                                     </div>
-
+                                    {% else %}
+                                    <div class="panel-heading">
+                                        <h3>
+                                            (PRIVATE REPORT)
+                                        </h3>
+                                    </div>
+                                    <div class="panel-body">
+                                        <p><b>Created: </b></p>
+                                        <p><b>Report Author: </b></p>
+                                        <p><b>Phone: </b></p>
+                                        <p><b>Sector: </b></p>
+                                        <p><b>Industry: </b></p>
+                                    </div>
+                                    {% endif %}
                                 </div>
-                                
-                    
                             </div>
-                            {% endif %}
                         </div>
                     {% empty %}
                         No reports saved. Create report <a href="/LokahiApp/report/new/">here</a>.

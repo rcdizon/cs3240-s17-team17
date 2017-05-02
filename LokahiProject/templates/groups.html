@@ -84,7 +84,7 @@
                 <tr>
                     <td>
                         {% csrf_token %}
-                        <b>Group: </b><select id="select_group" name="select">
+                        <b>Group: </b><select id="select_group" name="select_group">
                         {% for item in my_groups %}
                             <option value="{{ item.id }}">{{ item }}</option>
                         {% endfor %}
@@ -92,7 +92,7 @@
                     </td>
                     <td>
                         <b>User: </b>
-                        <select id="select_user" name="select">
+                        <select id="select_user" name="select_user">
                         {% for user in users %}
                         {% if not user.is_superuser and user != name and user.is_active %}
                         <option value="{{ user.id }}">{{ user }}</option>

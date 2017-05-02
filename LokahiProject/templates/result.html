@@ -63,7 +63,9 @@
                         {% endif %}
                         <hr>
                         <a class="btn btn-default" href="{% url 'upload' pk=reports.pk %}" >Upload another file</a>
+                        {% if not request.user|has_group:"2" %}
                         <a class="btn btn-default" href="{% url 'report_edit' pk=reports.pk %}" ><span class="glyphicon glyphicon-pencil"></span></a>
+                        {% endif %}
                         <script>
                             function clicked(e)
                             {
