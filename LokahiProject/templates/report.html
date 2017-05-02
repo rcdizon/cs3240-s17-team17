@@ -1,4 +1,6 @@
 {% load staticfiles %}
+{% load lokahi_extras %}
+
 <html>
     <head>
         <title>Homepage</title>
@@ -10,30 +12,53 @@
     <body>
         <div class="page-header">
             <a href="/LokahiApp/homepage"><h1>Lokahi FinTech</h1></a>
+            {% if not request.user|has_group:"2" %}
             <a href="/LokahiApp/report/new/"><button class="createreport btn btn-default">Create a Report</button></a>
+            {% endif %}
             <a href="/LokahiApp/groups/"><button class="groups btn btn-default">Groups</button></a>
+            {% if request.user|has_group:"3" %}
+            <a href="/LokahiApp/sitemanagerindex/"><button class="groups btn btn-default">Site Manager Panel</button></a>
+            {% endif %}
+            <a href="/LokahiApp/messenger"><button class="messenger btn btn-default">Message</button></a>
+            <!-- TODO: Add inbox to all headers -->
+            <a href="/LokahiApp/inbox"><button class="messenger btn btn-default">Inbox</button></a>
+            <a href="/LokahiApp/search"><button class="Search btn btn-default">Search for report</button></a>
             <a href="/LokahiApp/logout"><button class="logout btn btn-default">Log out</button></a>
         </div>
         <div class="content container">
+            {% if request.user.first_name %}
+            <h1>Welcome {{ request.user.first_name }}!</h1>
+            {% else %}
             <h1>Welcome {{ name }}!</h1>
+            {% endif %}
             <div class="row">
                 <div class="col-md-8">
                     {% if not reports %}
-                    {% for report in reports %}
-                        <div class="reports">
-                            <h3><a href="{% url 'result' pk=report.pk %}">{{ report.companyName }}</a></h3>
-                            <p>{{ report.timestamp}}</p>
-                            <p>{{ report.companyPhone}}</p>
-                            <p>{{ report.sector}}</p>
-                            <p>{{ report.industry}}</p>
-                        </div>
-                    {% endfor %}
+                        No reports saved. Create report <a href="/LokahiApp/report/new/">here</a>.
                     {% else %}
-                    No reports saved. Create report <a href="/LokahiApp/report/new/">here</a>.
+                        {% for report in reports %}
+                            <!-- Following line allows SMs to see ALL reports -->
+                            {% if report.privacy == 'Public' or request.user|has_group:"3" or report.author_id in mutual_users %}
+                            <div class="reports">
+                                <h3>
+                                    <a href="{% url 'result' pk=report.pk %}">{{ report.companyName }} </a>
+                                    {% if report.privacy == 'Private' %}
+                                    (PRIVATE)
+                                    {% endif %}
+                                </h3>
+                                <p>{{ report.timestamp }}</p>
+                                    <p>{{ report.author }}</p>
+                                <p>{{ report.companyPhone }}</p>
+                                <p>{{ report.sector }}</p>
+                                <p>{{ report.industry }}</p>
+                            </div>
+                            {% endif %}
+                        {% empty %}
+                            No reports saved. Create report <a href="/LokahiApp/report/new/">here</a>.
+                        {% endfor %}
                     {% endif %}
                 </div>
             </div>
         </div>
     </body>
-
 </html>
