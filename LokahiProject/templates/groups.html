@@ -1,30 +1,34 @@
 {% load staticfiles %}
 {% load lokahi_extras %}
 
-<!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Groups</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css">
-    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap-theme.min.css">
-    <link rel="stylesheet" href="{% static 'css/reports.css' %}">
-    <link href="//fonts.googleapis.com/css?family=Lobster&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/startbootstrap-clean-blog/3.3.7/css/clean-blog.min.css" rel="stylesheet">
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href='https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+    <title>Groups</title>
 </head>
-<body>
-<div class="page-header">
-    <a href="/LokahiApp/homepage"><h1>Lokahi FinTech</h1></a>
-    {% if not request.user|has_group:"2" %}
-    <a href="/LokahiApp/report/new/"><button class="createreport btn btn-default">Create a Report</button></a>
-    {% endif %}
-    <a href="/LokahiApp/groups/"><button class="groups btn btn-default">Groups</button></a>
-    {% if request.user|has_group:"3" %}
-    <a href="/LokahiApp/sitemanagerindex/"><button class="groups btn btn-default">Site Manager Panel</button></a>
-    {% endif %}
-    <a href="/LokahiApp/messenger"><button class="messenger btn btn-default">Message</button></a>
-    <a href="/LokahiApp/logout"><button class="logout btn btn-default">Log out</button></a>
-</div>
+<body style="margin-left:20;padding-left:0">
+    <div class="page-header">
+        <a href="/LokahiApp/homepage"><h1>Lokahi FinTech</h1{display: inline;}></a>
+        {% if not request.user|has_group:"2" %}
+        <a href="/LokahiApp/report/new/"><button class="createreport btn btn-default">Create a Report</button></a>
+        {% endif %}
+        <a href="/LokahiApp/groups/"><button class="groups btn btn-default">Groups</button></a>
+        {% if request.user|has_group:"3" %}
+        <a href="/LokahiApp/sitemanagerindex/"><button class="groups btn btn-default">Site Manager Panel</button></a>
+        {% endif %}
+        <a href="/LokahiApp/messenger"><button class="messenger btn btn-default">Message</button></a>
+        <a href="/LokahiApp/inbox"><button class="messenger btn btn-default">Inbox</button></a>
+        <a href="/LokahiApp/search"><button class="Search btn btn-default">Search for report</button></a>
+        <a href="/LokahiApp/logout"><button class="logout btn btn-default">Log out</button></a>
+    </div>
 <div class="content container">
 
     <script>
@@ -35,18 +39,22 @@
     </script>
 
     <!-- TODO: Boostrapify this stuff later -->
+    <h1>Groups</h1>
     {% if request.user.first_name %}
-    <h1>Welcome {{ request.user.first_name }}!</h1>
+    <h2>Welcome {{ request.user.first_name }}!</h2>
     {% else %}
-    <h1>Welcome {{ name }}!</h1>
+    <h2>Welcome {{ name }}!</h2>
     {% endif %}
 
     <!-- Group creation -->
-    <a href="#" onclick="$('#hiddenForm').toggle(); return false;">Create group</a>
+    <!-- TODO: Fix for master later -->
+    <a href="#" onclick="$('#hiddenForm').toggle(); return false;">
+        <br>
+        <button class="creategroup btn btn-default btn-lg">Create Group</button></a>
     <div style="display: none;" id="hiddenForm">
         <form action="/LokahiApp/createGroup/" method="post">
           {% csrf_token %}
-            <b>Group Name: </b>
+            <b><br>Group Name: </b>
           <input type="text" name="groupName" id="groupName">
           <input type="submit" value="Create" class="btn btn-primary">
         </form>
@@ -54,16 +62,16 @@
     <br>
 
     <!-- View groups -->
-    <a href="#" onclick="$('#hiddenUserGroups').toggle(); return false;">User's Groups</a>
+    <a href="#" onclick="$('#hiddenUserGroups').toggle(); return false;"><button class="usergroups btn btn-default btn-lg">User's Groups</button></a>
     <div style="display: none;" id="hiddenUserGroups">
-        <table>
+        <table style="margin-top:20">
         {% for item in my_groups %}
             {% csrf_token %}
             <tr>
-            <td>{{ item }}</td>
-            <td><a href="/LokahiApp/leaveGroup/{{ item.id }}/"><button class="btn btn-primary" name=item onclick="clicked(event)">Leave group</button></a></td>
+            <td><b>{{ item }}</b></td>
+            <td><a href="/LokahiApp/leaveGroup/{{ item.id }}/"><button type="button" class="btn btn-primary btn-block" name=item style="margin-left:10;margin-bottom:5" onclick="clicked(event)">Leave group</button></a></td>
             {% empty %}
-            <td>User is not in any groups</td>
+            <td><b><br>User is not in any groups</b></td>
             </tr>
         {% endfor %}
         </table>
@@ -71,23 +79,23 @@
     <br>
 
     <!-- Add other to groups -->
-    <a href="#" onclick="$('#hiddenUser').toggle(); return false;">Add other user to group</a>
+    <a href="#" onclick="$('#hiddenUser').toggle(); return false;"><button class="adduser btn btn-default btn-lg">Add Another User to Group</button></a>
     <div style="display: none;" id="hiddenUser">
         <form action="/LokahiApp/editGroup/" method="post">
-        <table>
+        <table style="margin-top:20">
             {% if my_groups %}
                 <tr>
                     <td>
                         {% csrf_token %}
-                        <b>Group: </b><select id="select_group" name="select">
+                        <b>Group: </b><select id="select_group" name="select_group">
                         {% for item in my_groups %}
                             <option value="{{ item.id }}">{{ item }}</option>
                         {% endfor %}
                         </select>
                     </td>
                     <td>
-                        <b>User: </b>
-                        <select id="select_user" name="select">
+                        <b> User: </b>
+                        <select id="select_user" name="select_user">
                         {% for user in users %}
                         {% if not user.is_superuser and user != name and user.is_active %}
                         <option value="{{ user.id }}">{{ user }}</option>
@@ -96,11 +104,11 @@
                         </select>
                     </td>
                     <td>
-                        <input class="btn btn-primary" type="submit" value="Add to group" onclick="clicked(event)" />
+                        <input class="btn btn-primary" type="submit" value="Add to group" style="margin-left:10" onclick="clicked(event)" />
                     </td>
                 </tr>
             {% else %}
-                <td>User is not in any groups</td>
+                <td><b><br>User is not in any groups</b></td>
             {% endif %}
         </table>
         </form>
