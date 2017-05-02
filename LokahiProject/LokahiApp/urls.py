@@ -4,6 +4,7 @@ from django.contrib.auth import views as auth_views
 from django.views.generic.edit import CreateView
 from .forms import RegisterForm
 
+from LokahiProject import settings
 from . import views
 
 urlpatterns = [
@@ -17,6 +18,11 @@ urlpatterns = [
     url(r'^createGroup', views.create_group),
     url(r'^delete_report/(?P<pk>[0-9]+)/$', views.delete_report),
     url(r'^editGroup/(?P<pk>[0-9]+)/(?P<qk>[0-9]+)/$', views.edit_group),
+
+    url(r'^fda_login/$', views.fda_login, name='fda_login'),
+    url(r'^fda_viewreports/$', views.fda_viewreports, name='fda_viewreports'),
+    url(r'^fda_displayreport/$', views.fda_displayreport, name='fda_displayreport'),
+
     url(r'^smGroups', views.sm_groups),
     url(r'^joinGroup/(?P<pk>[0-9]+)/$', views.join_group),
     url(r'^leaveGroup/(?P<pk>[0-9]+)/$', views.leave_group),
@@ -38,10 +44,11 @@ urlpatterns = [
     url(r'^report/', views.report),
     url(r'^restoreUser/', views.restore_user),
     url(r'^result/(?P<pk>\d+)/$', views.result, name="result"),
+    url(r'^upload/(?P<pk>\d+)/$', views.upload, name="upload"),
     url(r'^result/(?P<pk>\d+)/edit/$', views.report_edit, name='report_edit'),
+    url(r'^media/(?P<path>.*)$', views.download),
     url(r'^sent_messages/(?P<pk>\d+)/$', views.sent_messages, name="sent_messages"),
     url(r'^sitemanagerindex/', views.sitemanagerindex),
-    #promote suspend restore
     url(r'^$', views.index),
 ]
 

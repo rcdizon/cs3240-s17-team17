@@ -1,0 +1,47 @@
+{% load staticfiles %}
+<html>
+    <head>
+        <title>Report</title>
+        <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+        <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
+        <link rel="stylesheet" href="{% static 'css/reports.css' %}">
+        <link href="//fonts.googleapis.com/css?family=Lobster&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+    </head>
+    <body>
+        <div class="page-header">
+            <h1>Report Detail</h1>
+            <a class="btn btn-default" href="/LokahiApp/homepage" ><span class="glyphicon glyphicon-home"></span></a>
+        </div>
+        <div class="content container">
+            <div class="row">
+                <div class="col-md-8">
+                    <div class="post">
+                        {% if reports.timestamp %}
+                            <div class="date">
+                                {{ reports.timestamp }}
+                            </div>
+                        {% endif %}
+                        <h1>{{ reports.companyName }}</h1>
+                        <p>{{ reports.companyLocation|linebreaksbr }}</p>
+                        <p>{{ reports.companyCountry|linebreaksbr}}</p>
+                        <p>{{ reports.companyPhone|linebreaksbr}}</p>
+                        <p>{{ reports.sector|linebreaksbr}}</p>
+                        <p>{{ reports.industry|linebreaksbr}}</p>
+                        <p>Current Projects: {{ reports.currentProjects }}</p>
+{#                        {% if user.is_authenticated %}#}
+{#                            <a href="/LokahiApp/{{ reports.upload }}"><p>{{ reports.upload|linebreaksbr}}</p></a>#}
+{#                        {% endif %}#}
+{#                        <p>Encrypted: {{ reports.encrypted|linebreaksbr}}</p>#}
+                        <p>Privacy: {{ reports.privacy|linebreaksbr}}</p>
+                        <hr>
+                        <form method="POST" class="post-form" enctype='multipart/form-data'>
+                            {% csrf_token %}
+                            {{ form.as_p }}
+                            <button type="submit" class="save btn btn-default">Save</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

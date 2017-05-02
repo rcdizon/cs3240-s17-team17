@@ -17,17 +17,6 @@ class Report(models.Model):
     industry = models.CharField(max_length=200, default='')
     currentProjects = models.TextField(default='')
 
-    YES = 'Yes'
-    NO = 'No'
-
-    ENCRYPTED_CHOICES = (
-        (YES, 'Yes'),
-        (NO, 'No')
-    )
-
-    encrypted = models.CharField(choices=ENCRYPTED_CHOICES, default=NO, max_length=4)
-    upload = models.FileField(upload_to='media', default=None, null=True, blank=True)
-
     PUBLIC = 'Public'
     PRIVATE = 'Private'
     PRIVACY_CHOICES = (
@@ -44,6 +33,19 @@ class Report(models.Model):
 
     def __str__(self):
         return self.companyName
+
+
+class Upload(models.Model):
+    fileupload = models.FileField(upload_to='media', default=None, null=True, blank=True)
+    company = models.ForeignKey(Report, related_name="company")
+    YES = 'Yes'
+    NO = 'No'
+    ENCRYPTED_CHOICES = (
+        (YES, 'Yes'),
+        (NO, 'No')
+    )
+    encrypted = models.CharField(choices=ENCRYPTED_CHOICES, default=NO, max_length=4)
+
 
 class Message(models.Model):
     recipient = models.ForeignKey(User, related_name="recipient")
