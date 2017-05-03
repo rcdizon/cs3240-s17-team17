@@ -40,11 +40,21 @@ with requests.session() as s:
 
     p2 = s.post(host + '/LokahiApp/fda_displayreport/', data=payload)
     print(p2.text)
-    while p2.text == 'Invalid report ID. Try again.':
+    while p2.text == 'Invalid report ID.':
         reportID = input("\nInput the # of the report you wish to display: ")
         payload['reportID'] = reportID
         p2 = s.post(host + '/LokahiApp/fda_displayreport/', data=payload)
         print(p2.text)
+    if p2.text[-4:] == 'ing.':
+        exit()
+    file_download = input("Input one of the file numbers above to download the corresponding file: ")
+    payload['file_download'] = file_download
 
-    # parse = p2.text
-    # parse2 = p2.text
+    p3 = s.post(host + '/LokahiApp/fda_downloadfile/', data=payload)
+    while p3.text == "Invalid file number selection.":
+        file_download = input("\nTry again, input one of the file numbers above to download the corresponding file: ")
+        payload['file_download'] = file_download
+        p3 = s.post(host + '/LokahiApp/fda_downloadfile/', data=payload)
+    print(host + p3.text)
+    cwd = os.getcwd()
+    webbrowser.open(cwd + '\\LokahiApp' + p3.text)
