@@ -74,12 +74,14 @@
                         {% if results.0.companyName %}
                         <div class="reports">
                             {% for result in results %}
+                            {% if result.privacy == 'Public' or request.user|has_group:"3" or result.author_id in mutual_users or result.author_id == request.user.id %}
                                 <h3><a href="/LokahiApp/result/{{ result.id }}">{{ result.companyName }}</a></h3>
                                 <p>{{ result.timestamp }}</p>
                                 <p>{{ result.companyPhone }}</p>
                                 <p>{{ result.sector }}</p>
                                 <p>{{ result.industry }}</p>
                                 <h3>{{ result.username }}</h3>
+                            {% endif %}
                             {% endfor %}
                         </div>
                         {% else %}

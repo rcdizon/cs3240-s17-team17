@@ -451,7 +451,26 @@ def restore_user(request):
 
 @login_required(login_url='/LokahiApp/login/')
 def search(request):
+    my_groups = []
+    other_groups = []
+    mutual_users = []
     if request.method == "POST":
+        # Makes two lists, groups the user is in and groups the user isn't in
+        for g in Group.objects.all():
+            if g.id == 1 or g.id == 2 or g.id == 3:
+                continue
+            if not request.user.groups.filter(name=g.name).exists():
+                other_groups.append(g)
+            else:
+                my_groups.append(g)
+
+        for g in my_groups:
+            for u in User.objects.filter(groups__id=g.id):
+                mutual_users.append(u.id)
+
+        # Get list of all users, TODO: cleanup later, don't add all users to this list
+        users = User.objects.all()
+
         form = SearchForm(request.POST)
         if form.is_valid():
             search_results = request.POST.get("search", "")
@@ -503,10 +522,10 @@ def search(request):
                         results = list(set(results))
 
 
-            return render(request,'search.html', {'results': results} )
+            return render(request,'search.html', {'results': results, 'mutual_users': mutual_users} )
     else:
         form = SearchForm()
-    return render(request, 'search.html', {'form': form})
+    return render(request, 'search.html', {'form': form, 'mutual_users': mutual_users})
 
 
 @login_required(login_url='/LokahiApp/login/')
