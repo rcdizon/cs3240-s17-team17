@@ -198,7 +198,9 @@ def message(request):
                 pub_string = reciever.profile.public
                 pub_key = RSA.importKey(pub_string)
                 text = messenger.textbox
-                messenger.textbox = pub_key.encrypt(str.encode(text), 32)
+                pub_text = pub_key.encrypt(str.encode(text), 32)
+                pub_string = pub_text[0].decode('cp437')
+                messenger.textbox = pub_string
                 messenger.set(request.user, messenger.textbox, True)
         return redirect('sent_messages', pk=messenger.pk)
     else:
@@ -224,17 +226,16 @@ def individual_message(request,pk):
 
 def decrypt_message(request,pk):
     mes = get_object_or_404(Message, pk=pk)
-    instance = Message.objects.get(id=pk)
     if request.method == "POST":
         form = Private_Entry(request.POST)
         if form.is_valid():
-            message_instance = form.save()
-            # string_priv = str(message_instance.priv_key,'utf-8')
-            # priv_key = RSA.importKey(string_priv)
-            # mes_string = message.textbox.decode("utf-8")
-            # dec_message = priv_key.decrypt(mes_string)
-            instance.encrypted = False
-            instance.save()
+            message_instance = form.save(commit=False)
+            priv_key = RSA.importKey(message_instance.priv_key)
+            byte_mes = str.encode(mes.textbox, encoding='cp437')
+            dec_message = priv_key.decrypt(byte_mes)
+            mes.textbox = dec_message
+            mes.encrypted = False
+            mes.save()
             return redirect('individual_message', pk=mes.pk)      
     else:
         form = Private_Entry()
