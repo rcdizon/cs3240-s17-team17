@@ -23,6 +23,7 @@ payload = {
 }
 
 host = "http://127.0.0.1:8000"
+# host = "https://lokahiapp-team17.herokuapp.com"
 
 with requests.session() as s:
     p = s.post(host + '/LokahiApp/fda_login/', data=payload)
