@@ -50,7 +50,10 @@
     <!-- TODO: Fix for master later -->
     <a href="#" onclick="$('#hiddenForm').toggle(); return false;">
         <br>
-        <button class="creategroup btn btn-default btn-lg">Create Group</button></a>
+        <button class="creategroup btn btn-default btn-lg">Create Group
+            <span class="glyphicon glyphicon-chevron-down" aria-hidden="true"></span>
+        </button>
+    </a>
     <div style="display: none;" id="hiddenForm">
         <form action="/LokahiApp/createGroup/" method="post">
           {% csrf_token %}
@@ -62,7 +65,11 @@
     <br>
 
     <!-- View groups -->
-    <a href="#" onclick="$('#hiddenUserGroups').toggle(); return false;"><button class="usergroups btn btn-default btn-lg">User's Groups</button></a>
+    <a href="#" onclick="$('#hiddenUserGroups').toggle(); return false;">
+        <button class="usergroups btn btn-default btn-lg">User's Groups
+            <span class="glyphicon glyphicon-chevron-down" aria-hidden="true"></span>
+        </button>
+    </a>
     <div style="display: none;" id="hiddenUserGroups">
         <table style="margin-top:20">
         {% for item in my_groups %}
@@ -79,7 +86,11 @@
     <br>
 
     <!-- Add other to groups -->
-    <a href="#" onclick="$('#hiddenUser').toggle(); return false;"><button class="adduser btn btn-default btn-lg">Add Another User to Group</button></a>
+    <a href="#" onclick="$('#hiddenUser').toggle(); return false;">
+        <button class="adduser btn btn-default btn-lg">Add Another User to Group
+            <span class="glyphicon glyphicon-chevron-down" aria-hidden="true"></span>
+        </button>
+    </a>
     <div style="display: none;" id="hiddenUser">
         <form action="/LokahiApp/editGroup/" method="post">
         <table style="margin-top:20">
