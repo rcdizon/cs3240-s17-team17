@@ -3,15 +3,33 @@
 
 <html>
     <head>
-        <title>Homepage</title>
-        <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
-        <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
-        <link rel="stylesheet" href="{% static 'css/reports.css' %}">
-        <link href="//fonts.googleapis.com/css?family=Lobster&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="description" content="">
+        <meta name="author" content="">
+        <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css">
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/startbootstrap-clean-blog/3.3.7/css/clean-blog.min.css" rel="stylesheet">
+        <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+        <link href='https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+        <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
     </head>
     <body>
-        <div class="page-header">
-            <a href="/LokahiApp/homepage"><h1>Lokahi FinTech</h1></a>
+        <header class="intro-header" style="background-image: url({% static 'background2.png' %}); background-color: #ccc">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                        <div class="site-heading">
+                            <h1 style="color:black;">Lokahi FinTech</h1>
+                            <hr class="small">
+                            <span style="color:black;" class="subheading">A Crowdfunding Project</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+        <div class="page-header" style="margin-left:20;padding-left:0">
+            <a href="/LokahiApp/homepage"><h1>Lokahi FinTech</h1{display: inline;}></a>
             {% if not request.user|has_group:"2" %}
             <a href="/LokahiApp/report/new/"><button class="createreport btn btn-default">Create a Report</button></a>
             {% endif %}
@@ -20,7 +38,6 @@
             <a href="/LokahiApp/sitemanagerindex/"><button class="groups btn btn-default">Site Manager Panel</button></a>
             {% endif %}
             <a href="/LokahiApp/messenger"><button class="messenger btn btn-default">Message</button></a>
-            <!-- TODO: Add inbox to all headers -->
             <a href="/LokahiApp/inbox"><button class="messenger btn btn-default">Inbox</button></a>
             <a href="/LokahiApp/search"><button class="Search btn btn-default">Search for report</button></a>
             <a href="/LokahiApp/logout"><button class="logout btn btn-default">Log out</button></a>
@@ -31,32 +48,54 @@
             {% else %}
             <h1>Welcome {{ name }}!</h1>
             {% endif %}
-            <div class="row">
-                <div class="col-md-8">
-                    {% if not reports %}
-                        No reports saved. Create report <a href="/LokahiApp/report/new/">here</a>.
-                    {% else %}
-                        {% for report in reports %}
-                            <!-- Following line allows SMs to see ALL reports -->
-                            {% if report.privacy == 'Public' or request.user|has_group:"3" or report.author_id in mutual_users %}
-                            <div class="reports">
-                                <h3>
-                                    <a href="{% url 'result' pk=report.pk %}">{{ report.companyName }} </a>
-                                    {% if report.privacy == 'Private' %}
-                                    (PRIVATE)
+            <section class="bg-grey-50 padding-top-60 padding-top-sm-30">
+            <div class="container">
+                <div class="row">
+                {% if not reports %}
+                    No reports saved. Create report <a href="/LokahiApp/report/new/">here</a>.
+                {% else %}
+                    {% for report in reports %}
+                        <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12">
+                        <!-- Following line allows SMs to see ALL reports -->
+                            <div class="widget">
+                                <div class="panel panel-default">
+                                    {% if report.privacy == 'Public' or request.user|has_group:"3" or report.author_id in mutual_users or report.author_id == request.user.id %}
+                                    <div class="panel-heading">
+                                        <h3>
+                                            <a href="{% url 'result' pk=report.pk %}">{{ report.companyName }}</a>
+                                            {% if report.privacy == 'Private' %}
+                                             (PRIVATE)
+                                            {% endif %}
+                                        </h3>
+                                    </div>
+                                    <div class="panel-body">
+                                        <p><b>Created: </b>{{ report.timestamp }}</p>
+                                        <p><b>Report Author: </b>{{ report.author }}</p>
+                                        <p><b>Phone: </b>{{ report.companyPhone }}</p>
+                                        <p><b>Sector: </b>{{ report.sector }}</p>
+                                        <p><b>Industry: </b>{{ report.industry }}</p>
+                                    </div>
+                                    {% else %}
+                                    <div class="panel-heading">
+                                        <h3>
+                                            (PRIVATE REPORT)
+                                        </h3>
+                                    </div>
+                                    <div class="panel-body">
+                                        <p><b>Created: </b></p>
+                                        <p><b>Report Author: </b></p>
+                                        <p><b>Phone: </b></p>
+                                        <p><b>Sector: </b></p>
+                                        <p><b>Industry: </b></p>
+                                    </div>
                                     {% endif %}
-                                </h3>
-                                <p>{{ report.timestamp }}</p>
-                                    <p>{{ report.author }}</p>
-                                <p>{{ report.companyPhone }}</p>
-                                <p>{{ report.sector }}</p>
-                                <p>{{ report.industry }}</p>
+                                </div>
                             </div>
-                            {% endif %}
-                        {% empty %}
-                            No reports saved. Create report <a href="/LokahiApp/report/new/">here</a>.
-                        {% endfor %}
-                    {% endif %}
+                        </div>
+                    {% empty %}
+                        No reports saved. Create report <a href="/LokahiApp/report/new/">here</a>.
+                    {% endfor %}
+                {% endif %}
                 </div>
             </div>
         </div>

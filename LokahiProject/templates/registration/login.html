@@ -3,13 +3,31 @@ TODO: Remove old log-in files, or change layout so that this is in the original
 TODO: Add true log-out functionality
 -->
 
+{% load staticfiles %}
+{% load lokahi_extras %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/startbootstrap-clean-blog/3.3.7/css/clean-blog.min.css" rel="stylesheet">
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href='https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+    <title>Login</title>
+</head>
+
+
 <!DOCTYPE html>
 {% block content %}
-  <h2>Login</h2>
+  <h2 >Login</h2>
   <form method="post">
     {% csrf_token %}
     {{ form.as_p }}
-    <button type="submit">Login</button>
+    <button type="submit" class="login btn btn-default">Login</button></a>
   </form>
-<button><a href="/LokahiApp/">Return</a></button>
+<a href="/LokahiApp/"><button class="return btn btn-default">Return</button></a>
 {% endblock %}
