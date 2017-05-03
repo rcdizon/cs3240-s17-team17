@@ -1,0 +1,33 @@
+{% load staticfiles %}
+<html>
+    <head>
+        <title>Your Message</title>
+        <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+        <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
+        <link rel="stylesheet" href="{% static 'css/reports.css' %}">
+        <link href="//fonts.googleapis.com/css?family=Lobster&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+    </head>
+    <body>
+        <div class="page-header">
+            <h1>Your Decrypted Message</h1>
+        </div>
+        <div class="content container">
+            <div class="row">
+                <div class="col-md-8">
+                    <div class="post">
+                            <h1>{{message.sender}}</h1>
+                            <p>{{message.textbox}}</p>
+                            <h3> Please Enter Your Private Key Below to Decrypt Your Message </h3>
+                            <form method="POST" class="post-form" enctype='multipart/form-data'>
+                                {% csrf_token %}
+                                {{ form.as_p }}
+                                <button type="submit" name="Private" value="Private" class="save btn btn-default">Submit</button>
+                            </form>
+                    </div>
+                    <a href="/LokahiApp/inbox"><button class="inbox btn btn-default">Return to Inbox</button></a>
+                </div>
+            </div>
+        </div>
+    </body>
+
+</html>

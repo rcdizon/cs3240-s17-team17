@@ -1,0 +1,16 @@
+{% load staticfiles %}
+<html>
+    <head>
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+        <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
+        <link rel="stylesheet" href="{% static 'css/reports.css' %}">
+        <link href="//fonts.googleapis.com/css?family=Lobster&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+    </head>
+    <body>
+        <h1>Your Private Key!</h1>
+        <p>Below is a copy of your peronal private key. This key will allow you to decrypt private messages sent you on Lokahi Fintech's messenger apllication. Please keep this file somewhere secure as it is the only way you will be able to access your private messages.</p>
+        <p><small>{{private_key}}<small></p>
+
+        <h3><a href="/LokahiApp/homepage">Homepage</a></h3>
+    </body>
+</html>

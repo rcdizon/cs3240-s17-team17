@@ -1,6 +1,8 @@
 from django.db import models
 from django.utils import timezone
 from django.contrib.auth.models import User
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 
 
 class Report(models.Model):
@@ -48,13 +50,31 @@ class Upload(models.Model):
 class Message(models.Model):
     recipient = models.ForeignKey(User, related_name="recipient")
     sender = models.ForeignKey(User, related_name="sender", null=True)
+    encrypted = models.BooleanField(default=True)
     textbox = models.TextField(max_length=10000)
     timestamp = models.DateTimeField(default=timezone.now)
 
-    def set(self,sender,text):
+    def set(self,sender,text, encbool):
         self.sender = sender
         self.textbox = text
+        self.encrypted = encbool
         self.save()
 
 class Search(models.Model):
 	search = models.CharField(max_length=100)
+
+class Private_Key(models.Model):
+    priv_key = models.TextField(default='')
+
+class Profile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    public = models.TextField(max_length=2000, blank=True)
+
+    @receiver(post_save, sender=User)
+    def create_user_profile(sender, instance, created, **kwargs):
+        if created:
+            Profile.objects.create(user=instance)
+
+    @receiver(post_save, sender=User)
+    def save_user_profile(sender, instance, **kwargs):
+        instance.profile.save()

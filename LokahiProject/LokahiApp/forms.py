@@ -3,6 +3,7 @@ from .models import Report
 from .models import Upload
 from .models import Message
 from .models import Search
+from .models import Private_Key
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User, Group, Permission
 
@@ -72,3 +73,8 @@ class SearchForm(forms.ModelForm):
 	class Meta:
 		model = Search
 		fields = ('search',)
+
+class Private_Entry(forms.ModelForm):
+    class Meta:
+        model = Private_Key
+        fields = ('priv_key',)

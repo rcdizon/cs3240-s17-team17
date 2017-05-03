@@ -12,7 +12,7 @@ urlpatterns = [
     url('^register/', CreateView.as_view(
         template_name='register.html',
         form_class=RegisterForm,
-        success_url='/LokahiApp/homepage'
+        success_url='/LokahiApp/login'
     )),
     url('^accounts/', include('django.contrib.auth.urls')),
     url(r'^createGroup', views.create_group),
@@ -34,6 +34,7 @@ urlpatterns = [
     url(r'^homepage/', views.homepage),
     url(r'^inbox/', views.inbox),
     url(r'^individual_message/(?P<pk>\d+)/$', views.individual_message, name="individual_message"),
+    url(r'^decrypt_message/(?P<pk>\d+)/$', views.decrypt_message, name="decrypt_message"),
     url(r'^delete_message/(?P<pk>\d+)/$', views.delete_message, name="delete_message"),
     url(r'^sent_messages/(?P<pk>\d+)/$', views.sent_messages, name="sent_messages"),
     url(r'^search/$', views.search),

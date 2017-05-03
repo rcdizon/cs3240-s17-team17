@@ -27,14 +27,19 @@
             <a href="/LokahiApp/logout"><button class="logout btn btn-default">Log out</button></a>
         </div>
         <div class="page-header">
-            <h1>Your Message Was Sent</h1>
+            <h1>{{message.sender}}</h1>
         </div>
         <div class="content container">
             <div class="row">
                 <div class="col-md-8">
                     <div class="post">
-                            <h1>{{form.recipient}}</h1>
-                            <h1>{{form.textbox}}</h1>
+                            {% if message.encrypted == False %}
+                            <p>{{message.textbox}}</p>
+                            
+                            {% else %}
+                            <p>{{message.textbox}}</p>
+                            <a href="{% url 'decrypt_message' pk=message.pk %}"><button class="messenger btn btn-default">Decrypt This Message</button></a>
+                            {% endif %}
                     </div>
                     <a href="/LokahiApp/inbox"><button class="inbox btn btn-default">Return to Inbox</button></a>
                 </div>
