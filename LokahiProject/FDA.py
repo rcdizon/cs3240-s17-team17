@@ -15,11 +15,11 @@ django.setup()
 print('========================================')
 print('Welcome to the File Download Application')
 print('========================================')
-# username = input("Username: ")
-# password = getpass.getpass('Password: ')
+username = input("Username: ")
+password = getpass.getpass('Password: ')
 payload = {
-    'username': "manager",
-    'password': "admin123"
+    'username': username,
+    'password': password
 }
 
 host = "http://127.0.0.1:8000"
