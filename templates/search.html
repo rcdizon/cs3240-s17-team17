@@ -45,7 +45,7 @@
             	{% csrf_token %}
                 <div class="col-md-8">
                     <p>Search Request: <input type="text" name="search"/></p><br>
-                    <p>Date Range:</p> <input type="text" name="datefilter" value="" />
+                    <p>Date Range: <input type="text" name="datefilter" value="" /></p>
                         <script type="text/javascript">
                         $(function() {
                           $('input[name="datefilter"]').daterangepicker({
@@ -65,7 +65,6 @@
                     <br>
                     <hr>
                     <button type="submit" name="Search" class="btn btn-default" value="Search">Search</button>
-                    <a href="/LokahiApp/report"><button class="btn btn-default">Return</button></a>
                 </div>
                     <div class="col-md-8">
                     	{% if search_results %}
@@ -90,7 +89,6 @@
             </form>
         </div>
         <div style="margin-top:10;padding-top:0" class="content container">
-            <a href="/LokahiApp/report"><button class="btn btn-default">Return</button></a>
         </div>
     </body>
 </html>

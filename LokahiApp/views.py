@@ -558,7 +558,8 @@ def fda_viewreports(request):
     reportList = []
 
     for report in Report.objects.all():
-        if user.groups.filter(id=3).exists() or report.privacy == 'Public' or report.author_id in mutual_users:
+        if (user.groups.filter(id=3).exists() or report.privacy == 'Public' or report.author_id in mutual_users
+           or report.author_id == user.id):
             reportList.append(report)
 
     if len(reportList) == 0:
@@ -579,7 +580,7 @@ def fda_displayreport(request):
     user = User.objects.get(username=username)
     r_id = request.POST.get('reportID')
     if not Report.objects.filter(id=r_id):
-        return HttpResponse('Invalid report ID. Try again.')
+        return HttpResponse('Invalid report ID.')
 
     my_groups = []
     mutual_users = []
@@ -598,6 +599,9 @@ def fda_displayreport(request):
         all_users[u.id] = u.username
 
     r = Report.objects.get(id=r_id)
+    if r.privacy == "Private" and r.author_id not in mutual_users and not r.author_id == user.id:
+        return HttpResponse('You do not have access to this report. Terminating.')
+
     myResponse = (str(r.id) + ') Company Name: ' + r.companyName +
                   "\n   Report Creator: " + str(all_users[r.author_id]) +
                   "\n   Company CEO: " + str(r.companyCEO) +
@@ -609,5 +613,37 @@ def fda_displayreport(request):
                   "\n   Current Projects: " + str(r.currentProjects) +
                   "\n   Privacy: " + str(r.privacy) +
                   "\n")
+
+    file_list = []
+    for f in Upload.objects.all():
+        if f.fileupload and r.id == f.company_id:
+            file_list.append(f)
+    if file_list == []:
+        myResponse += "\n   No files! FDA closing."
+        return HttpResponse(myResponse)
+    else:
+        myResponse += "Files:\n"
+        count = 1
+        for item in file_list:
+            myResponse += "   " + str(item.id) + ") Name: " + str(item.fileupload).split('media/')[1] + "\n"
+            myResponse += "      Encrypted: " + str(item.encrypted) + "\n"
+            count += 1
+
     return HttpResponse(myResponse)
 
+
+@csrf_exempt
+def fda_downloadfile(request):
+    username = request.POST.get('username')
+    user = User.objects.get(username=username)
+    r_id = request.POST.get('reportID')
+    f_id = request.POST.get('file_download')
+
+    r = Report.objects.get(id=r_id)
+    f = Upload.objects.get(id=f_id)
+
+    if not f.company_id == r.id:
+        return HttpResponse("Invalid file number selection.")
+    downloadurl = str(f.fileupload)
+
+    return HttpResponse(downloadurl)
