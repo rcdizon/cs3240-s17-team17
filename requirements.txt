@@ -6,7 +6,6 @@ Django==1.8
 django-dirtyfields==1.2.1
 django-extensions==1.6.1
 django-multiupload==0.5.2
-django-typed-models==0.5.2
 docutils==0.12
 Flask==0.11.1
 Flask-Cors==2.1.2
