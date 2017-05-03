@@ -32,9 +32,9 @@
                         <div class="reports">
                         {% if inbox in encrypted_messages %}
                             <h3><a href="{% url 'individual_message' pk=inbox.pk %}">{{ inbox.sender }}</a></h3>
+                            <p>encrypted</p>
                             <p>{{ inbox.textbox }}</p>
                             <a href="{% url 'delete_message' pk=inbox.pk %}"><button class="messenger btn btn-default">Delete</button></a>
-                            <a href="{% url 'individual_message' pk=inbox.pk %}"><button class="messenger btn btn-default">Decrypt this Message</button></a>  
                             {% else %}
                             <h3><a href="{% url 'individual_message' pk=inbox.pk %}">{{ inbox.sender }}</a></h3>
                             <p>{{ inbox.textbox }}</p>

@@ -19,11 +19,14 @@ from .forms import SendMessage
 from .forms import SearchForm
 from .models import Search
 from .forms import RegisterForm
+from .models import Private_Key
+from .forms import Private_Entry
 from django.shortcuts import redirect
 import Crypto
 from Crypto.PublicKey import RSA
 from Crypto import Random
-from Crypto.Cipher import ARC4
+from Crypto.Util import asn1
+import codecs
 import os
 from django.views.generic import ListView
 from django.contrib.auth.models import User, Group, Permission
@@ -218,72 +221,25 @@ def inbox(request):
 
 def individual_message(request,pk):
     message = get_object_or_404(Message, pk=pk)
-    form = SendMessage(instance=message)
-    return render(request, 'individual_message.html', {'form': form})
+    return render(request, 'individual_message.html', {'message': message})
 
-def delete_message(request,pk):
-    message = get_object_or_404(Message, pk=pk)
-    form = SendMessage(instance=message)
+def decrypt_message(request,pk):
+    mes = get_object_or_404(Message, pk=pk)
     instance = Message.objects.get(id=pk)
-    instance.delete()
-    inbox_messages = Message.objects.filter(recipient=request.user)
-    return render(request, 'inbox.html', {'inbox_messages': inbox_messages})
-
-def submit(request):
-    info=request.POST['info']
-    user = User.objects.create_user('john', 'lennon@thebeatles.com', 'johnpassword')
-    user.save()
-
-@login_required(login_url='/LokahiApp/login/')
-def download(request, path):
-    file_path = os.path.join(settings.MEDIA_ROOT + "/media/", path)
-    if os.path.exists(file_path):
-        f = open(file_path, 'rb')
-        file = File(f)
-        response = HttpResponse(file, content_type='application/force_download')
-        response['Content-Disposition'] = 'attachment; filename=%s' %smart_str(os.path.basename(file_path))
-        return response
-    else:
-        raise Http404
-
-
-
-@login_required(login_url='/LokahiApp/login/')
-def message(request):
     if request.method == "POST":
-        form = SendMessage(request.POST)
-        encrypt_bool = request.POST.get('encrypt')
+        form = Private_Entry(request.POST)
         if form.is_valid():
-            messenger = form.save(commit=False)
-            if encrypt_bool == None:
-                messenger.set(request.user, messenger.textbox,False)
-            else: 
-                random_generator = Random.new().read
-                key = RSA.generate(1024, random_generator)
-                public_key = key.publickey()
-                enc_data = public_key.encrypt(str.encode(messenger.textbox), 32)
-                messenger.set(request.user, enc_data, True)
-        return redirect('sent_messages', pk=messenger.pk)
+            message_instance = form.save()
+            # string_priv = str(message_instance.priv_key,'utf-8')
+            # priv_key = RSA.importKey(string_priv)
+            # mes_string = message.textbox.decode("utf-8")
+            # dec_message = priv_key.decrypt(mes_string)
+            instance.encrypted = False
+            instance.save()
+            return redirect('individual_message', pk=mes.pk)      
     else:
-        form = SendMessage()
-    return render(request, 'messenger.html', {'form': form})
-
-
-@login_required(login_url='/LokahiApp/login/')
-def sent_messages(request, pk):
-    sent_messages = get_object_or_404(Message, pk=pk)
-    return render(request, 'sent_messages.html', {'sent_messages': sent_messages})
-
-
-@login_required(login_url='/LokahiApp/login/')
-def inbox(request):
-    inbox_messages = Message.objects.filter(recipient=request.user)
-    return render(request, 'inbox.html', {'inbox_messages': inbox_messages})
-
-def individual_message(request,pk):
-    message = get_object_or_404(Message, pk=pk)
-    form = SendMessage(instance=message)
-    return render(request, 'individual_message.html', {'form': form})
+        form = Private_Entry()
+    return render(request, 'decrypt_message.html', {'form': form,'message': message})
 
 def delete_message(request,pk):
     message = get_object_or_404(Message, pk=pk)

@@ -63,6 +63,9 @@ class Message(models.Model):
 class Search(models.Model):
 	search = models.CharField(max_length=100)
 
+class Private_Key(models.Model):
+    priv_key = models.TextField(default='')
+
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     public = models.TextField(max_length=2000, blank=True)

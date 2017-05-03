@@ -9,19 +9,20 @@
     </head>
     <body>
         <div class="page-header">
-            <h1>{{message.sender}}</h1>
+            <h1>Your Decrypted Message</h1>
         </div>
         <div class="content container">
             <div class="row">
                 <div class="col-md-8">
                     <div class="post">
-                            {% if message.encrypted == False %}
+                            <h1>{{message.sender}}</h1>
                             <p>{{message.textbox}}</p>
-                            
-                            {% else %}
-                            <p>{{message.textbox}}</p>
-                            <a href="{% url 'decrypt_message' pk=message.pk %}"><button class="messenger btn btn-default">Decrypt This Message</button></a>
-                            {% endif %}
+                            <h3> Please Enter Your Private Key Below to Decrypt Your Message </h3>
+                            <form method="POST" class="post-form" enctype='multipart/form-data'>
+                                {% csrf_token %}
+                                {{ form.as_p }}
+                                <button type="submit" name="Private" value="Private" class="save btn btn-default">Submit</button>
+                            </form>
                     </div>
                     <a href="/LokahiApp/inbox"><button class="inbox btn btn-default">Return to Inbox</button></a>
                 </div>
