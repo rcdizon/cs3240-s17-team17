@@ -85,7 +85,7 @@ def homepage(request):
         user = request.user
         user.profile.public = public_key
         user.save()
-        return render(request,'encrypt_user.html', {'private_key': private_key})
+        return render(request,'encrypt_user.html', {'private_key_correct': private_key})
     name = request.user
     reports = Report.objects.filter(timestamp__lte=timezone.now()).order_by('timestamp')
 
@@ -236,7 +236,6 @@ def decrypt_message(request,pk):
             mes.textbox = dec_message
             mes.encrypted = False
             mes.save()
-            form.save()
             return redirect('individual_message', pk=mes.pk)      
     else:
         form = Private_Entry()
