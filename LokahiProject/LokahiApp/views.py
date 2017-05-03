@@ -6,6 +6,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import render, get_object_or_404
 from django.utils import timezone
 from django.core.files import File
+from LokahiProject import settings
 from django.core.signing import Signer
 from .models import Report
 from .models import Upload
@@ -615,3 +616,6 @@ def fda_downloadfile(request):
     downloadurl = str(f.fileupload)
 
     return HttpResponse(downloadurl)
+
+
+# request.user.profile.public

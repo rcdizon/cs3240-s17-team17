@@ -6,7 +6,7 @@ from django.dispatch import receiver
 
 
 class Report(models.Model):
-    author = models.OneToOneField('auth.User')
+    author = models.ForeignKey('auth.User')
     timestamp = models.DateField(default=timezone.now)
     companyName = models.CharField(max_length=200, default='')
     companyCEO = models.CharField(max_length=200, default='')
